@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapeamento de Risco Psicológico no Esporte — Nicolas Artigas</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+
+    :root {
+      --bg: #0d0f0e;
+      --surface: #131614;
+      --surface2: #181b19;
+      --surface3: #1e2220;
+      --border: #252927;
+      --border2: #2e3330;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --rose: #f87171;
+      --teal: #2dd4bf;
+      --text: #e8ede9;
+      --text2: #a0aba2;
+      --text3: #5a6660;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 16px 64px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app { width: 100%; max-width: 600px; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .brand {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text3);
+    }
+    .brand em { color: var(--teal); font-style: normal; }
+    .progress-track {
+      flex: 1;
+      margin-left: 20px;
+      height: 2px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--green));
+      width: 0%;
+      transition: width .4s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .card-inner {
+      padding: 44px 40px;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── SCREENS ── */
+    .screen { display: none; flex-direction: column; flex: 1; animation: rise .35s ease; }
+    .screen.active { display: flex; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── TAGS & LABELS ── */
+    .eyebrow {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 20px;
+    }
+    .stage-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text3);
+      background: var(--surface3);
+      border: 1px solid var(--border2);
+      border-radius: 4px;
+      padding: 4px 10px;
+      margin-bottom: 18px;
+    }
+    .stage-tag .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); }
+
+    /* ── NOTICE BADGE ── */
+    .notice-badge {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(45, 212, 191, 0.06);
+      border: 1px solid rgba(45, 212, 191, 0.2);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+    }
+    .notice-badge .nb-icon {
+      font-size: 15px;
+      line-height: 1;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+    .notice-badge .nb-text {
+      font-size: 12.5px;
+      color: var(--text2);
+      line-height: 1.55;
+    }
+    .notice-badge .nb-text strong {
+      color: var(--teal);
+      font-weight: 600;
+    }
+
+    /* ── INTRO ── */
+    .intro-headline {
+      font-family: var(--serif);
+      font-size: 36px;
+      line-height: 1.12;
+      margin-bottom: 18px;
+      color: var(--text);
+    }
+    .intro-headline em { font-style: italic; color: var(--teal); }
+    .intro-body {
+      font-size: 14.5px;
+      color: var(--text2);
+      line-height: 1.7;
+      margin-bottom: 22px;
+    }
+    .intro-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .stat {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 26px;
+      color: var(--text);
+      display: block;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+
+    /* ── SETUP ── */
+    .setup-title { font-family: var(--serif); font-size: 26px; line-height: 1.2; margin-bottom: 8px; }
+    .setup-sub { font-size: 14px; color: var(--text2); margin-bottom: 24px; }
+    .setup-field { margin-bottom: 18px; }
+    .setup-field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px;
+    }
+    .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .setup-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+    .chip {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-size: 13px;
+      color: var(--text2);
+      cursor: pointer;
+      transition: all .15s ease;
+      font-family: var(--sans);
+      text-align: left;
+      line-height: 1.3;
+    }
+    .chip:hover { border-color: var(--teal); color: var(--text); }
+    .chip.selected { border-color: var(--teal); background: rgba(45,212,191,0.07); color: var(--text); }
+    .setup-name-input {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--text);
+      font-family: var(--sans);
+      width: 100%;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .setup-name-input:focus { border-color: var(--teal); }
+    .setup-name-input::placeholder { color: var(--text3); }
+
+    /* ── QUESTION ── */
+    .q-dim { font-size: 10.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); margin-bottom: 6px; }
+    .q-num { font-size: 10px; color: var(--text3); margin-bottom: 18px; font-weight: 500; }
+    .q-text { font-family: var(--serif); font-size: 22px; line-height: 1.38; margin-bottom: 22px; color: var(--text); }
+    .q-context { font-size: 13px; color: var(--text3); font-style: italic; margin-bottom: 18px; line-height: 1.55; }
+    .options { display: flex; flex-direction: column; gap: 9px; flex: 1; }
+    .opt {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      text-align: left;
+      color: var(--text2);
+      font-size: 14px;
+      font-family: var(--sans);
+      cursor: pointer;
+      transition: all .15s ease;
+      line-height: 1.45;
+    }
+    .opt:hover { border-color: var(--teal); color: var(--text); background: rgba(45,212,191,0.05); }
+    .opt:active { transform: scale(0.99); }
+
+    /* ── NAV ── */
+    .nav-row { display: flex; justify-content: space-between; margin-top: 20px; align-items: center; }
+    .nav-btn { background: none; border: none; color: var(--text3); font-size: 12.5px; cursor: pointer; font-family: var(--sans); transition: color .15s; }
+    .nav-btn:hover { color: var(--text2); }
+
+    /* ── LOADING ── */
+    .loading-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: 40px 0; }
+    .loading-ring { width: 48px; height: 48px; border: 2px solid var(--border2); border-top-color: var(--teal); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-family: var(--serif); font-size: 20px; color: var(--text2); text-align: center; line-height: 1.4; }
+    .loading-sub { font-size: 13px; color: var(--text3); text-align: center; }
+
+    /* ── RESULT ── */
+    .profile-header {
+      background: linear-gradient(135deg, var(--surface2), var(--surface3));
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 28px;
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .profile-header::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: linear-gradient(90deg, var(--teal), var(--green)); }
+    .profile-archetype { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
+    .profile-name { font-family: var(--serif); font-size: 28px; line-height: 1.1; color: var(--text); margin-bottom: 12px; }
+    .profile-essence { font-size: 14px; color: var(--text2); line-height: 1.65; font-style: italic; }
+
+    /* result notice — at top of result */
+    .result-notice {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: rgba(45,212,191,0.05);
+      border: 1px solid rgba(45,212,191,0.15);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+    }
+    .result-notice .rn-icon { font-size: 14px; margin-top: 2px; flex-shrink: 0; }
+    .result-notice .rn-text { font-size: 12px; color: var(--text3); line-height: 1.55; }
+    .result-notice .rn-text strong { color: var(--text2); font-weight: 500; }
+
+    .result-section { margin-bottom: 22px; }
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    .narrative-block { font-size: 14.5px; color: var(--text2); line-height: 1.72; }
+    .narrative-block p + p { margin-top: 12px; }
+
+    /* DIMENSIONS */
+    .dims-grid { display: flex; flex-direction: column; gap: 14px; }
+    .dim-row-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+    .dim-name { font-size: 13px; font-weight: 500; color: var(--text); }
+    .dim-score-label { font-size: 11px; font-weight: 600; }
+    .dim-score-label.high { color: var(--green); }
+    .dim-score-label.mid { color: var(--amber); }
+    .dim-score-label.low { color: var(--rose); }
+    .dim-track { height: 6px; background: var(--border2); border-radius: 6px; overflow: hidden; }
+    .dim-fill { height: 100%; border-radius: 6px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+    .dim-fill.high { background: linear-gradient(90deg, #16a34a, var(--green)); }
+    .dim-fill.mid { background: linear-gradient(90deg, #d97706, var(--amber)); }
+    .dim-fill.low { background: linear-gradient(90deg, #dc2626, var(--rose)); }
+    .dim-insight { font-size: 12px; color: var(--text3); margin-top: 5px; line-height: 1.5; }
+
+    /* FORCES / VULNERABILITIES */
+    .fv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fv-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+    .fv-card.force { border-color: rgba(74,222,128,0.25); }
+    .fv-card.vuln { border-color: rgba(248,113,113,0.2); }
+    .fv-icon { font-size: 18px; margin-bottom: 8px; }
+    .fv-title { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+    .fv-card.force .fv-title { color: var(--green); }
+    .fv-card.vuln .fv-title { color: var(--rose); }
+    .fv-text { font-size: 12.5px; color: var(--text3); line-height: 1.55; }
+
+    /* FUTURE RISK */
+    .risk-block { background: rgba(251,191,36,0.05); border: 1px solid rgba(251,191,36,0.2); border-radius: 8px; padding: 20px; }
+    .risk-block .risk-title { font-size: 12px; font-weight: 600; color: var(--amber); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
+    .risk-block .risk-text { font-size: 14px; color: var(--text2); line-height: 1.65; }
+
+    /* DEVELOPMENT */
+    .dev-list { display: flex; flex-direction: column; gap: 10px; }
+    .dev-item { display: flex; gap: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; align-items: flex-start; }
+    .dev-num { font-family: var(--serif); font-size: 22px; color: var(--teal); line-height: 1; min-width: 24px; }
+    .dev-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+    .dev-text { font-size: 12.5px; color: var(--text3); line-height: 1.55; }
+
+    /* CTA BLOCK */
+    .cta-block {
+      background: linear-gradient(135deg, var(--surface2), var(--surface3));
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 28px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .cta-block .cta-lead { font-family: var(--serif); font-size: 20px; margin-bottom: 10px; color: var(--text); }
+    .cta-block .cta-sub { font-size: 13.5px; color: var(--text2); line-height: 1.6; margin-bottom: 20px; }
+
+    /* PDF CTA BLOCK */
+    .pdf-cta-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 24px;
+      margin-bottom: 12px;
+    }
+    .pdf-cta-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 8px;
+    }
+    .pdf-cta-title {
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .pdf-cta-desc {
+      font-size: 13px;
+      color: var(--text3);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+    .pdf-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+    .pdf-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text2);
+      line-height: 1.45;
+    }
+    .pdf-step-num {
+      background: rgba(45,212,191,0.12);
+      color: var(--teal);
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* BUTTONS */
+    .btn-primary {
+      display: block;
+      background: var(--teal);
+      color: #0d0f0e;
+      font-family: var(--sans);
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 15px 24px;
+      border-radius: 8px;
+      transition: opacity .15s;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary {
+      display: block;
+      background: transparent;
+      border: 1px solid var(--border2);
+      color: var(--text3);
+      font-family: var(--sans);
+      font-size: 12.5px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .15s;
+      width: 100%;
+      margin-top: 8px;
+      text-align: center;
+    }
+    .btn-secondary:hover { color: var(--text2); border-color: var(--border); }
+    .btn-ghost {
+      display: block;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text2);
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 13px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all .15s;
+      width: 100%;
+      text-align: center;
+    }
+    .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+    .disclaimer-text { font-size: 11px; color: var(--text3); text-align: center; line-height: 1.6; margin-top: 12px; }
+
+    /* ERROR */
+    .error-block {
+      background: rgba(248,113,113,0.07);
+      border: 1px solid rgba(248,113,113,0.25);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      font-size: 13.5px;
+      color: var(--text2);
+      line-height: 1.6;
+      display: none;
+    }
+
+    @media (max-width: 520px) {
+      .card-inner { padding: 28px 22px; }
+      .intro-headline { font-size: 28px; }
+      .q-text { font-size: 19px; }
+      .fv-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">NICOLAS<em>.</em>PSICO</div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-inner">
+
+      <!-- ═══ INTRO ═══ -->
+      <div class="screen active" id="s-intro">
+        <div class="eyebrow">Mapeamento de Risco Psicológico · Gratuito</div>
+        <h1 class="intro-headline">O que a mente do atleta<br><em>revela sobre você.</em></h1>
+        <p class="intro-body">
+          Treinamento, dieta, periodização — esses pilares são monitorados com precisão. Mas os fatores psicológicos que limitam ou amplificam o rendimento raramente são examinados com o mesmo rigor.<br><br>
+          Este é um <strong>mapeamento de risco psicológico no rendimento e na vida do atleta</strong>: 15 perguntas baseadas em construtos da psicologia do esporte que identificam onde sua mente trabalha a seu favor — e onde ela pode estar cobrando um custo invisível.
+        </p>
+
+        <div class="notice-badge">
+          <span class="nb-icon">🔍</span>
+          <span class="nb-text"><strong>O que este mapeamento é:</strong> uma ferramenta de identificação de padrões psicológicos que afetam rendimento e qualidade de vida no esporte. <strong>O que ele não é:</strong> diagnóstico clínico, avaliação psicológica formal ou substituto de acompanhamento profissional. O resultado é um ponto de partida — não uma conclusão.</span>
+        </div>
+
+        <div class="intro-stats">
+          <div class="stat"><span class="stat-num">15</span><span class="stat-label">Perguntas</span></div>
+          <div class="stat"><span class="stat-num">6</span><span class="stat-label">Dimensões</span></div>
+          <div class="stat"><span class="stat-num">~5'</span><span class="stat-label">Duração</span></div>
+        </div>
+        <button class="btn-primary" onclick="goTo('s-setup')">Começar mapeamento →</button>
+        <p class="disclaimer-text" style="margin-top:14px;">Ferramenta de autoconhecimento em psicologia do esporte — não constitui diagnóstico ou avaliação clínica.</p>
+      </div>
+
+      <!-- ═══ SETUP ═══ -->
+      <div class="screen" id="s-setup">
+        <div class="stage-tag"><span class="dot"></span>Personalização</div>
+        <h2 class="setup-title">Antes de começar,<br>me conte sobre você.</h2>
+        <p class="setup-sub">Essas informações tornam o mapeamento específico para seu contexto — não genérico.</p>
+
+        <div class="setup-field">
+          <label>Seu nome</label>
+          <input class="setup-name-input" type="text" id="athleteName" placeholder="Como prefere ser chamado(a)?" maxlength="40" />
+        </div>
+
+        <div class="setup-field">
+          <label>Modalidade principal</label>
+          <div class="setup-grid">
+            <button class="chip" data-group="sport" data-value="fisiculturismo">🏋️ Fisiculturismo</button>
+            <button class="chip" data-group="sport" data-value="futebol">⚽ Futebol</button>
+            <button class="chip" data-group="sport" data-value="corrida">🏃 Corrida / Atletismo</button>
+            <button class="chip" data-group="sport" data-value="lutas">🥋 Lutas / MMA</button>
+            <button class="chip" data-group="sport" data-value="natacao">🏊 Natação</button>
+            <button class="chip" data-group="sport" data-value="outro">⚡ Outro</button>
+          </div>
+        </div>
+
+        <div class="setup-field">
+          <label>Nível competitivo</label>
+          <div class="setup-grid three">
+            <button class="chip" data-group="level" data-value="iniciante">Iniciante / Amador</button>
+            <button class="chip" data-group="level" data-value="intermediario">Intermediário</button>
+            <button class="chip" data-group="level" data-value="alto">Alto Rendimento</button>
+          </div>
+        </div>
+
+        <div class="setup-field">
+          <label>Objetivo principal agora</label>
+          <div class="setup-grid">
+            <button class="chip" data-group="goal" data-value="competir">Competir e vencer</button>
+            <button class="chip" data-group="goal" data-value="consistencia">Manter consistência</button>
+            <button class="chip" data-group="goal" data-value="superar">Superar meu limite</button>
+            <button class="chip" data-group="goal" data-value="bem-estar">Bem-estar e saúde</button>
+          </div>
+        </div>
+
+        <div class="error-block" id="setup-error">Selecione sua modalidade, nível e objetivo para continuar.</div>
+
+        <div class="nav-row">
+          <button class="nav-btn" onclick="goTo('s-intro')">← voltar</button>
+          <button class="btn-primary" style="width:auto;padding:12px 28px;" onclick="startQuestions()">Continuar →</button>
+        </div>
+      </div>
+
+      <!-- ═══ QUESTIONS ═══ -->
+      <div class="screen" id="s-question">
+        <div class="q-dim" id="qDim"></div>
+        <div class="q-num" id="qNum"></div>
+        <div class="q-text" id="qText"></div>
+        <div class="q-context" id="qContext" style="display:none;"></div>
+        <div class="options" id="qOptions"></div>
+        <div class="nav-row">
+          <button class="nav-btn" id="btnBack" onclick="goBack()">← voltar</button>
+          <span></span>
+        </div>
+      </div>
+
+      <!-- ═══ LOADING ═══ -->
+      <div class="screen" id="s-loading">
+        <div class="loading-wrap">
+          <div class="loading-ring"></div>
+          <div class="loading-text" id="loadingText">Analisando seu perfil…</div>
+          <div class="loading-sub" id="loadingSub">Cruzando dimensões psicológicas</div>
+        </div>
+      </div>
+
+      <!-- ═══ RESULT ═══ -->
+      <div class="screen" id="s-result">
+        <div id="resultContent"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════
+//  DADOS
+// ════════════════════════════════════════════
+const DIMS = {
+  perf:  { label: 'Perfeccionismo Funcional',  desc: 'Como você lida com padrões altos e erros.' },
+  motiv: { label: 'Motivação e Propósito',      desc: 'Fonte e qualidade da sua motivação.' },
+  reg:   { label: 'Autorregulação Emocional',   desc: 'Capacidade de gerenciar emoções sob pressão.' },
+  medo:  { label: 'Relação com o Fracasso',     desc: 'Como o medo de errar afeta suas decisões.' },
+  ident: { label: 'Identidade Atlética',        desc: 'Quanto o esporte define quem você é.' },
+  sup:   { label: 'Suporte e Conexão',          desc: 'Sua rede de apoio e disposição para buscar ajuda.' },
+};
+
+const QUESTIONS = [
+  {
+    dim: 'perf', label: 'Perfeccionismo',
+    text: 'Quando você comete um erro num treino ou competição, qual é a reação mais honesta que você tem?',
+    context: '',
+    opts: [
+      { text: 'Fico ruminando o erro por horas ou dias, difícil soltar.', d: { perf: 0, reg: 1 } },
+      { text: 'Me cobro bastante, mas consigo seguir em frente depois de um tempo.', d: { perf: 2, reg: 2 } },
+      { text: 'Analiso o que aconteceu, corrijo e sigo. Erro é dado.', d: { perf: 4, reg: 4 } },
+      { text: 'Tento não pensar muito — prefiro esquecer logo.', d: { perf: 1, reg: 2 } },
+    ]
+  },
+  {
+    dim: 'perf', label: 'Perfeccionismo',
+    text: 'Você consegue reconhecer um desempenho "bom o suficiente" ou sempre sente que poderia ter feito mais?',
+    context: '',
+    opts: [
+      { text: 'Quase nunca — sempre parece que ficou abaixo do que deveria.', d: { perf: 0 } },
+      { text: 'Às vezes consigo, mas é raro me sentir satisfeito(a) de verdade.', d: { perf: 1 } },
+      { text: 'Na maioria das vezes consigo reconhecer quando foi bom.', d: { perf: 3 } },
+      { text: 'Sim, consigo calibrar expectativas realisticamente.', d: { perf: 4 } },
+    ]
+  },
+  {
+    dim: 'motiv', label: 'Motivação',
+    text: 'Por que você realmente treina ou compete? O que vem primeiro quando pensa honestamente nisso?',
+    context: 'Não existe resposta certa — a honestidade aqui é o que torna o perfil preciso.',
+    opts: [
+      { text: 'A sensação de superação e o amor pelo esporte em si.', d: { motiv: 4, ident: 3 } },
+      { text: 'Reconhecimento externo: provar para outros (família, rivais, redes sociais).', d: { motiv: 1 } },
+      { text: 'Uma mistura: gosto genuíno e também validação de fora.', d: { motiv: 2 } },
+      { text: 'Ainda estou descobrindo — às vezes não tenho certeza do porquê.', d: { motiv: 2, ident: 1 } },
+    ]
+  },
+  {
+    dim: 'motiv', label: 'Motivação',
+    text: 'Quando chega aquele dia em que você não está com vontade nenhuma de treinar, o que acontece?',
+    context: '',
+    opts: [
+      { text: 'Treino mesmo assim — o processo importa independente do humor.', d: { motiv: 4, reg: 3 } },
+      { text: 'Negocio comigo: faço uma versão reduzida, mas faço algo.', d: { motiv: 3, reg: 3 } },
+      { text: 'Depende muito do dia — às vezes vou, às vezes desisto.', d: { motiv: 2 } },
+      { text: 'Cancelo e sinto culpa depois, ou tento compensar em excesso.', d: { motiv: 1, perf: 1 } },
+    ]
+  },
+  {
+    dim: 'reg', label: 'Autorregulação',
+    text: 'Durante períodos de alta pressão (competição se aproximando, resultado ruim, cobrança externa), como você descreveria seu estado emocional?',
+    context: '',
+    opts: [
+      { text: 'Consigo manter relativa estabilidade — a pressão existe mas não me domina.', d: { reg: 4 } },
+      { text: 'Fico ansioso(a), mas canalizo isso para focar mais.', d: { reg: 3 } },
+      { text: 'A ansiedade começa a atrapalhar o desempenho e as relações.', d: { reg: 1 } },
+      { text: 'Apago emocionalmente — entro em modo automático e distante.', d: { reg: 1, ident: 2 } },
+    ]
+  },
+  {
+    dim: 'reg', label: 'Autorregulação',
+    text: 'Você tem alguma prática deliberada para gerenciar seu estado mental antes de treinos ou competições importantes?',
+    context: 'Respiração, rotina pré-performance, visualização, mindfulness — qualquer prática intencional conta.',
+    opts: [
+      { text: 'Sim, tenho uma rotina estruturada e funciona bem.', d: { reg: 4 } },
+      { text: 'Faço algumas coisas, mas de forma informal e inconsistente.', d: { reg: 2 } },
+      { text: 'Não tenho nada deliberado — confio que vai sair naturalmente.', d: { reg: 1 } },
+      { text: 'Já tentei, mas não consigo manter regularidade nisso.', d: { reg: 2 } },
+    ]
+  },
+  {
+    dim: 'medo', label: 'Relação com o Fracasso',
+    text: 'Quando você pensa em falhar num objetivo importante, qual pensamento vem mais forte?',
+    context: '',
+    opts: [
+      { text: '"Vai ser humilhante — todo mundo vai ver."', d: { medo: 0 } },
+      { text: '"Vou me decepcionar muito, mas consigo recomeçar."', d: { medo: 3 } },
+      { text: '"Fracassar significa que não sou bom(boa) o suficiente."', d: { medo: 0, ident: 1 } },
+      { text: '"Seria difícil, mas faz parte — aprendo e sigo."', d: { medo: 4 } },
+    ]
+  },
+  {
+    dim: 'medo', label: 'Relação com o Fracasso',
+    text: 'O medo de falhar já te fez evitar uma competição, meta ou exposição que você realmente queria perseguir?',
+    context: '',
+    opts: [
+      { text: 'Sim, mais de uma vez deixei passar coisas por isso.', d: { medo: 0 } },
+      { text: 'Uma ou duas vezes, me arrependi depois.', d: { medo: 2 } },
+      { text: 'Raramente — tenho a ansiedade mas não deixo ela decidir.', d: { medo: 3 } },
+      { text: 'Não consigo lembrar de uma vez que isso aconteceu.', d: { medo: 4 } },
+    ]
+  },
+  {
+    dim: 'ident', label: 'Identidade Atlética',
+    text: 'Se você tivesse que parar de praticar seu esporte por 3 meses por lesão ou circunstância, como acha que reagiria emocionalmente?',
+    context: '',
+    opts: [
+      { text: 'Seria devastador — não saberia quem sou sem o esporte.', d: { ident: 0 } },
+      { text: 'Muito difícil, mas conseguiria me reorganizar.', d: { ident: 2 } },
+      { text: 'Frustrante, mas tenho outras áreas da vida que me sustentam.', d: { ident: 4 } },
+      { text: 'Não sei — nunca parei para pensar nisso.', d: { ident: 1 } },
+    ]
+  },
+  {
+    dim: 'ident', label: 'Identidade Atlética',
+    text: 'Fora do contexto esportivo, como você descreveria quem você é?',
+    context: '',
+    opts: [
+      { text: 'Difícil responder sem mencionar o esporte — ele é central em tudo.', d: { ident: 1 } },
+      { text: 'Tenho clareza: sou várias coisas, o esporte é uma delas.', d: { ident: 4 } },
+      { text: 'Sei que tenho outras facetas, mas o esporte ocupa 80% de quem sou.', d: { ident: 2 } },
+      { text: 'Ainda estou construindo essa identidade fora do esporte.', d: { ident: 2 } },
+    ]
+  },
+  {
+    dim: 'sup', label: 'Suporte',
+    text: 'Quando você está passando por um momento difícil no esporte (má fase, lesão, dúvida), o que costuma fazer?',
+    context: '',
+    opts: [
+      { text: 'Falo com alguém de confiança — treinador, amigo, psicólogo.', d: { sup: 4 } },
+      { text: 'Processo internamente e só falo se perguntarem diretamente.', d: { sup: 2 } },
+      { text: 'Prefiro resolver sozinho(a) — pedir ajuda parece fraqueza.', d: { sup: 0 } },
+      { text: 'Me afasto de tudo até passar — evito contato.', d: { sup: 1, reg: 1 } },
+    ]
+  },
+  {
+    dim: 'sup', label: 'Suporte',
+    text: 'Você tem hoje alguém com quem conversa especificamente sobre os desafios mentais do esporte?',
+    context: '',
+    opts: [
+      { text: 'Sim, tenho acompanhamento psicológico ou converso regularmente com alguém qualificado.', d: { sup: 4 } },
+      { text: 'Tenho amigos/família que entendem o esporte e me apoiam.', d: { sup: 3 } },
+      { text: 'Tenho suporte geral, mas ninguém que entenda especificamente essa dimensão.', d: { sup: 2 } },
+      { text: 'Não — lido com isso sozinho(a).', d: { sup: 0 } },
+    ]
+  },
+  {
+    dim: 'perf', label: 'Perfeccionismo',
+    text: 'Como você reage quando seu desempenho ficou abaixo do padrão, mas circunstâncias externas contribuíram para isso?',
+    context: '',
+    opts: [
+      { text: 'Não importa o que aconteceu fora — a responsabilidade é minha.', d: { perf: 1, medo: 1 } },
+      { text: 'Reconheço os fatores externos, mas ainda me cobro internamente.', d: { perf: 2 } },
+      { text: 'Consigo separar o que estava no meu controle do que não estava.', d: { perf: 4, reg: 3 } },
+      { text: 'Uso os fatores externos para me proteger da autocrítica.', d: { perf: 2, medo: 2 } },
+    ]
+  },
+  {
+    dim: 'motiv', label: 'Motivação',
+    text: 'Com que frequência você sente que seu objetivo esportivo realmente vale o custo que está pagando?',
+    context: '',
+    opts: [
+      { text: 'Quase sempre — a dificuldade faz parte e eu aceito isso.', d: { motiv: 4 } },
+      { text: 'Na maioria do tempo, com alguns momentos de dúvida.', d: { motiv: 3 } },
+      { text: 'Às vezes questiono se vale tudo isso.', d: { motiv: 2 } },
+      { text: 'Frequentemente me pergunto por que estou fazendo isso.', d: { motiv: 0 } },
+    ]
+  },
+  {
+    dim: 'reg', label: 'Autorregulação',
+    text: 'Nos últimos 30 dias, o esporte interferiu positiva ou negativamente em outras áreas da sua vida?',
+    context: '',
+    opts: [
+      { text: 'Positivamente na maioria — o esporte organiza minha vida.', d: { reg: 4, motiv: 3 } },
+      { text: 'Equilibrado — tem custos e benefícios, mas suportável.', d: { reg: 3 } },
+      { text: 'Tem pesado algumas áreas, principalmente relações pessoais.', d: { reg: 2 } },
+      { text: 'Está causando desgaste real — sinto que estou sacrificando demais.', d: { reg: 0, sup: 1 } },
+    ]
+  },
+];
+
+// ════════════════════════════════════════════
+//  ESTADO
+// ════════════════════════════════════════════
+let profile = { name: '', sport: '', level: '', goal: '' };
+let scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
+let counts = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
+let answers = {};
+let current = 0;
+let lastResultData = null; // guarda dados para PDF
+
+const $ = id => document.getElementById(id);
+const prog = $('progressFill');
+
+function goTo(sid) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(sid).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const g = chip.dataset.group;
+    document.querySelectorAll(`.chip[data-group="${g}"]`).forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    profile[g === 'sport' ? 'sport' : g === 'level' ? 'level' : 'goal'] = chip.dataset.value;
+  });
+});
+
+function startQuestions() {
+  const err = $('setup-error');
+  if (!profile.sport || !profile.level || !profile.goal) { err.style.display = 'block'; return; }
+  err.style.display = 'none';
+  profile.name = $('athleteName').value.trim() || 'Atleta';
+  current = 0;
+  scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
+  counts = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
+  answers = {};
+  goTo('s-question');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  $('qDim').textContent = q.label;
+  $('qNum').textContent = `Pergunta ${current + 1} de ${QUESTIONS.length}`;
+  $('qText').textContent = q.text;
+  const ctx = $('qContext');
+  if (q.context) { ctx.textContent = q.context; ctx.style.display = 'block'; }
+  else { ctx.style.display = 'none'; }
+  const optsDiv = $('qOptions');
+  optsDiv.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.textContent = opt.text;
+    btn.onclick = () => selectAnswer(i);
+    optsDiv.appendChild(btn);
+  });
+  $('btnBack').style.visibility = current === 0 ? 'hidden' : 'visible';
+  prog.style.width = (current / QUESTIONS.length * 100) + '%';
+}
+
+function selectAnswer(optIdx) {
+  const q = QUESTIONS[current];
+  const opt = q.opts[optIdx];
+  if (answers[current] !== undefined) {
+    Object.entries(QUESTIONS[current].opts[answers[current]].d).forEach(([d, p]) => { scores[d] -= p; });
+  } else { counts[q.dim]++; }
+  answers[current] = optIdx;
+  Object.entries(opt.d).forEach(([d, p]) => { scores[d] += p; });
+  current++;
+  if (current >= QUESTIONS.length) generateResult();
+  else renderQuestion();
+}
+
+function goBack() {
+  if (current === 0) { goTo('s-setup'); return; }
+  if (answers[current - 1] !== undefined) {
+    Object.entries(QUESTIONS[current - 1].opts[answers[current - 1]].d).forEach(([d, p]) => { scores[d] -= p; });
+    delete answers[current - 1];
+    counts[QUESTIONS[current - 1].dim] = Math.max(0, counts[QUESTIONS[current - 1].dim] - 1);
+  }
+  current--;
+  renderQuestion();
+}
+
+// ════════════════════════════════════════════
+//  SCORING
+// ════════════════════════════════════════════
+const DIM_MAX = { perf: 16, motiv: 16, reg: 16, medo: 8, ident: 12, sup: 8 };
+
+function pct(dim) { return Math.round((scores[dim] / DIM_MAX[dim]) * 100); }
+function lvl(p) { return p >= 70 ? 'high' : p >= 40 ? 'mid' : 'low'; }
+function lvlLabel(l) { return l === 'high' ? 'Desenvolvido' : l === 'mid' ? 'Em desenvolvimento' : 'Área de atenção'; }
+
+const sportLabels = { fisiculturismo: 'Fisiculturismo', futebol: 'Futebol', corrida: 'Corrida / Atletismo', lutas: 'Lutas / MMA', natacao: 'Natação', outro: 'Esporte' };
+const levelLabels = { iniciante: 'iniciante/amador', intermediario: 'nível intermediário', alto: 'alto rendimento' };
+const goalLabels = { competir: 'competir e vencer', consistencia: 'manter consistência', superar: 'superar seus próprios limites', 'bem-estar': 'manter saúde e bem-estar' };
+
+// ════════════════════════════════════════════
+//  GERAÇÃO VIA API
+// ════════════════════════════════════════════
+async function generateResult() {
+  goTo('s-loading');
+  prog.style.width = '100%';
+  const msgs = [
+    ['Analisando padrões psicológicos…', 'Cruzando dimensões'],
+    ['Identificando perfil de risco…', 'Mapeando forças e vulnerabilidades'],
+    ['Construindo seu relatório…', 'Quase pronto'],
+  ];
+  let li = 0;
+  const iv = setInterval(() => {
+    li = (li + 1) % msgs.length;
+    $('loadingText').textContent = msgs[li][0];
+    $('loadingSub').textContent = msgs[li][1];
+  }, 1800);
+
+  const dimScores = {};
+  Object.keys(scores).forEach(d => { dimScores[d] = { score: scores[d], pct: pct(d), level: lvl(pct(d)) }; });
+
+  const prompt = `Você é Nicolas Artigas, psicólogo do esporte (CRP 08/45704). Você aplicou um mapeamento de risco psicológico estruturado e precisa gerar o relatório de perfil do atleta.
+
+CONTEXTO: Este é um mapeamento de risco psicológico no rendimento e na vida do atleta — não um diagnóstico clínico. O relatório deve ter linguagem profissional, acolhedora e baseada em psicologia do esporte, sem fazer afirmações deterministas ou promessas.
+
+DADOS DO ATLETA:
+- Nome: ${profile.name}
+- Modalidade: ${sportLabels[profile.sport] || profile.sport}
+- Nível: ${levelLabels[profile.level]}
+- Objetivo principal: ${goalLabels[profile.goal]}
+
+PONTUAÇÕES POR DIMENSÃO (0–100%, maior = mais funcional):
+- Perfeccionismo Funcional: ${dimScores.perf.pct}% (${dimScores.perf.level})
+- Motivação e Propósito: ${dimScores.motiv.pct}% (${dimScores.motiv.level})
+- Autorregulação Emocional: ${dimScores.reg.pct}% (${dimScores.reg.level})
+- Relação com o Fracasso: ${dimScores.medo.pct}% (${dimScores.medo.level})
+- Identidade Atlética: ${dimScores.ident.pct}% (${dimScores.ident.level})
+- Suporte e Conexão: ${dimScores.sup.pct}% (${dimScores.sup.level})
+
+RESPONDA APENAS com JSON válido (sem markdown, sem backticks):
+
+{
+  "archetype": "ARQUÉTIPO EM MAIÚSCULAS (3-5 palavras)",
+  "profileName": "Nome do perfil psicológico com impacto (ex: O Executor Silencioso, A Atleta das Margens)",
+  "essence": "Uma frase de 1-2 linhas que captura a essência — deve fazer o atleta pensar 'isso sou eu'.",
+  "narrative": "Três parágrafos separados por \\n\\n. Tom: profissional, acolhedor, baseado nos dados. Use o nome do atleta 2x. Referencie a modalidade e o objetivo. Descreva padrões cognitivos e emocionais emergentes das dimensões — nunca invente traços não sustentados pelos dados. Não use linguagem de diagnóstico.",
+  "forces": [
+    { "icon": "💪", "title": "Força identificada", "text": "1-2 frases concretas baseadas nas dimensões com pontuação alta." },
+    { "icon": "🎯", "title": "Força identificada", "text": "1-2 frases." }
+  ],
+  "vulnerabilities": [
+    { "icon": "⚡", "title": "Área de atenção", "text": "1-2 frases — tom acolhedor, nunca punitivo. Baseado nas dimensões com pontuação baixa." },
+    { "icon": "🔄", "title": "Área de atenção", "text": "1-2 frases." }
+  ],
+  "futureRisk": "Parágrafo direto e honesto: o que tende a acontecer no rendimento e na qualidade de vida se esses padrões não forem trabalhados. Sem alarmismo. Específico para este perfil e modalidade.",
+  "developments": [
+    { "title": "Direção de desenvolvimento 1", "text": "2-3 frases práticas — o que trabalhar e por quê, baseado nos dados." },
+    { "title": "Direção de desenvolvimento 2", "text": "2-3 frases." },
+    { "title": "Direção de desenvolvimento 3", "text": "2-3 frases." }
+  ],
+  "ctaContext": "1-2 frases personalizadas para este perfil que criam ponte natural para conversar com Nicolas — sem prometer resultados, sem pressão. Ex: 'Atletas com este padrão costumam se beneficiar de um trabalho focado em...'"
+}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1800, messages: [{ role: 'user', content: prompt }] })
+    });
+    clearInterval(iv);
+    if (!res.ok) throw new Error('api');
+    const data = await res.json();
+    const raw = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    lastResultData = { parsed, dimScores };
+    renderResult(parsed, dimScores);
+  } catch (e) {
+    clearInterval(iv);
+    lastResultData = { parsed: null, dimScores };
+    renderFallbackResult(dimScores);
+  }
+}
+
+// ════════════════════════════════════════════
+//  RENDER RESULT
+// ════════════════════════════════════════════
+const DIM_INSIGHTS = {
+  perf: { high: 'Você usa padrões elevados como combustível, sem se paralisar pelo erro.', mid: 'Seus padrões são altos, mas o custo emocional do erro ainda pesa.', low: 'A autocrítica intensa pode estar limitando seu desempenho e bem-estar.' },
+  motiv: { high: 'Sua motivação tem raiz interna — difícil de ser abalada por fatores externos.', mid: 'Sua motivação oscila entre propósito genuíno e validação externa.', low: 'A clareza de propósito pode ser um ponto central a desenvolver.' },
+  reg: { high: 'Você consegue manter o funcionamento mesmo sob pressão intensa.', mid: 'Sua regulação funciona em condições normais, mas tem limites sob alta pressão.', low: 'As emoções podem estar interferindo ativamente no seu desempenho e bem-estar.' },
+  medo: { high: 'O fracasso não paralisa você — você usa essa possibilidade para se preparar melhor.', mid: 'O medo de falhar está presente, mas não determina suas escolhas com frequência.', low: 'O medo de fracassar pode estar restringindo decisões e exposições importantes.' },
+  ident: { high: 'Você tem uma identidade atlética forte e equilibrada com outras dimensões da vida.', mid: 'O esporte é central na sua identidade, com algum equilíbrio com outras áreas.', low: 'Alta fusão identidade-esporte — ameaças ao desempenho podem virar ameaças a quem você é.' },
+  sup: { high: 'Você tem e usa ativamente uma rede de apoio — isso é diferencial de rendimento.', mid: 'Você tem suporte disponível, mas pode não estar usando plenamente.', low: 'Você está gerenciando os desafios do esporte majoritariamente sozinho(a).' },
+};
+
+function buildDimsHtml(dimScores) {
+  return Object.entries(DIMS).map(([key, dim]) => {
+    const d = dimScores[key];
+    const lv = d.level;
+    return `
+      <div class="dim-row">
+        <div class="dim-row-top">
+          <span class="dim-name">${dim.label}</span>
+          <span class="dim-score-label ${lv}">${lvlLabel(lv)}</span>
+        </div>
+        <div class="dim-track">
+          <div class="dim-fill ${lv}" style="width:0%" data-target="${d.pct}"></div>
+        </div>
+        <div class="dim-insight">${DIM_INSIGHTS[key][lv]}</div>
+      </div>`;
+  }).join('');
+}
+
+function buildWaLink(profileName) {
+  const txt = profileName
+    ? `Oi Nicolas! Fiz o mapeamento de risco psicológico e meu perfil foi "${profileName}". Vou te enviar o PDF com meu resultado. Gostaria de entender melhor e ver como você pode me ajudar.`
+    : `Oi Nicolas! Fiz o mapeamento de risco psicológico e gostaria de entender melhor meu perfil. Vou te enviar o PDF com meu resultado.`;
+  return `https://wa.me/5544988433895?text=${encodeURIComponent(txt)}`;
+}
+
+function renderResult(p, dimScores) {
+  const waLink = buildWaLink(p.profileName);
+  const dimsHtml = buildDimsHtml(dimScores);
+  const forcesHtml = p.forces.map(f => `<div class="fv-card force"><div class="fv-icon">${f.icon}</div><div class="fv-title">${f.title}</div><div class="fv-text">${f.text}</div></div>`).join('');
+  const vulnsHtml = p.vulnerabilities.map(v => `<div class="fv-card vuln"><div class="fv-icon">${v.icon}</div><div class="fv-title">${v.title}</div><div class="fv-text">${v.text}</div></div>`).join('');
+  const devsHtml = p.developments.map((d, i) => `<div class="dev-item"><span class="dev-num">${i+1}</span><div><div class="dev-title">${d.title}</div><div class="dev-text">${d.text}</div></div></div>`).join('');
+  const narrativeHtml = p.narrative.split('\n\n').map(par => `<p>${par}</p>`).join('');
+
+  $('resultContent').innerHTML = `
+    <div class="result-notice">
+      <span class="rn-icon">🔍</span>
+      <span class="rn-text"><strong>Este é um mapeamento de risco psicológico no rendimento e na vida do atleta</strong> — não um diagnóstico clínico ou avaliação psicológica formal. Os resultados abaixo identificam padrões que afetam seu desempenho e qualidade de vida no esporte, e servem como ponto de partida para aprofundamento.</span>
+    </div>
+
+    <div class="profile-header">
+      <div class="profile-archetype">${p.archetype}</div>
+      <div class="profile-name">${p.profileName}</div>
+      <div class="profile-essence">${p.essence}</div>
+    </div>
+
+    <div class="result-section">
+      <div class="section-label">Leitura do perfil</div>
+      <div class="narrative-block">${narrativeHtml}</div>
+    </div>
+
+    <div class="result-section">
+      <div class="section-label">Dimensões psicológicas mapeadas</div>
+      <div class="dims-grid">${dimsHtml}</div>
+    </div>
+
+    <div class="result-section">
+      <div class="section-label">Forças identificadas</div>
+      <div class="fv-grid">${forcesHtml}</div>
+    </div>
+
+    <div class="result-section">
+      <div class="section-label">Áreas de atenção</div>
+      <div class="fv-grid">${vulnsHtml}</div>
+    </div>
+
+    <div class="result-section">
+      <div class="section-label">Risco futuro sem intervenção</div>
+      <div class="risk-block">
+        <div class="risk-title">⚠ Projeção de padrão</div>
+        <div class="risk-text">${p.futureRisk}</div>
+      </div>
+    </div>
+
+    <div class="result-section">
+      <div class="section-label">Direções de desenvolvimento</div>
+      <div class="dev-list">${devsHtml}</div>
+    </div>
+
+    <div class="cta-block">
+      <div class="cta-lead">O mapeamento é o ponto de partida.</div>
+      <div class="cta-sub">${p.ctaContext}<br><br>Se este perfil fez sentido para você, o próximo passo é uma conversa — sem compromisso, sem pressão.</div>
+      <a class="btn-primary" href="${waLink}" target="_blank">Falar com Nicolas pelo WhatsApp →</a>
+    </div>
+
+    <div class="pdf-cta-block">
+      <div class="pdf-cta-label">📄 Salve e compartilhe seu resultado</div>
+      <div class="pdf-cta-title">Baixe o PDF do seu mapeamento</div>
+      <div class="pdf-cta-desc">Tenha o relatório completo salvo e possa enviá-lo diretamente ao Nicolas pelo WhatsApp para iniciar uma conversa mais aprofundada sobre o seu perfil.</div>
+      <div class="pdf-steps">
+        <div class="pdf-step"><span class="pdf-step-num">1</span><span>Clique em "Baixar PDF" e salve o arquivo no seu celular ou computador</span></div>
+        <div class="pdf-step"><span class="pdf-step-num">2</span><span>Clique em "Enviar pelo WhatsApp" e anexe o PDF na conversa com Nicolas</span></div>
+        <div class="pdf-step"><span class="pdf-step-num">3</span><span>Receba uma análise personalizada do seu perfil diretamente com ele</span></div>
+      </div>
+      <button class="btn-ghost" onclick="downloadPDF()" id="btnDownload">⤓ Baixar PDF do mapeamento</button>
+      <a class="btn-secondary" href="${waLink}" target="_blank" style="margin-top:8px;">💬 Enviar pelo WhatsApp (com o PDF em mãos)</a>
+    </div>
+
+    <button class="btn-secondary" onclick="restartQuiz()" style="margin-top:4px;">Refazer mapeamento</button>
+    <p class="disclaimer-text">Mapeamento de risco psicológico no rendimento esportivo. Não constitui diagnóstico clínico, avaliação psicológica formal ou prescrição de tratamento. Em caso de sofrimento psicológico significativo, busque acompanhamento profissional. Nicolas Artigas — Psicólogo do Esporte · CRP 08/45704</p>
+  `;
+
+  goTo('s-result');
+  setTimeout(() => {
+    document.querySelectorAll('.dim-fill[data-target]').forEach(el => { el.style.width = el.dataset.target + '%'; });
+  }, 120);
+}
+
+function renderFallbackResult(dimScores) {
+  const waLink = buildWaLink(null);
+  const dimsHtml = buildDimsHtml(dimScores);
+  $('resultContent').innerHTML = `
+    <div class="result-notice">
+      <span class="rn-icon">🔍</span>
+      <span class="rn-text"><strong>Este é um mapeamento de risco psicológico no rendimento e na vida do atleta</strong> — não um diagnóstico clínico. Os resultados identificam padrões que afetam seu desempenho e qualidade de vida no esporte.</span>
+    </div>
+    <div class="profile-header">
+      <div class="profile-archetype">MAPEAMENTO PSICOLÓGICO</div>
+      <div class="profile-name">Perfil Concluído</div>
+      <div class="profile-essence">Suas dimensões psicológicas foram mapeadas. Veja abaixo onde estão seus riscos e forças.</div>
+    </div>
+    <div class="result-section">
+      <div class="section-label">Dimensões psicológicas mapeadas</div>
+      <div class="dims-grid">${dimsHtml}</div>
+    </div>
+    <div class="cta-block">
+      <div class="cta-lead">Quer entender o que esse perfil significa?</div>
+      <div class="cta-sub">Fala comigo pelo WhatsApp — analiso seu resultado e explico o que cada dimensão revela sobre como sua mente funciona no esporte.</div>
+      <a class="btn-primary" href="${waLink}" target="_blank">Falar com Nicolas →</a>
+    </div>
+    <div class="pdf-cta-block">
+      <div class="pdf-cta-label">📄 Salve e compartilhe seu resultado</div>
+      <div class="pdf-cta-title">Baixe o PDF do seu mapeamento</div>
+      <div class="pdf-cta-desc">Salve o relatório e envie ao Nicolas pelo WhatsApp para uma análise personalizada.</div>
+      <div class="pdf-steps">
+        <div class="pdf-step"><span class="pdf-step-num">1</span><span>Clique em "Baixar PDF" e salve o arquivo</span></div>
+        <div class="pdf-step"><span class="pdf-step-num">2</span><span>Abra o WhatsApp, anexe o PDF e inicie a conversa com Nicolas</span></div>
+      </div>
+      <button class="btn-ghost" onclick="downloadPDF()" id="btnDownload">⤓ Baixar PDF do mapeamento</button>
+      <a class="btn-secondary" href="${waLink}" target="_blank" style="margin-top:8px;">💬 Enviar pelo WhatsApp</a>
+    </div>
+    <button class="btn-secondary" onclick="restartQuiz()" style="margin-top:4px;">Refazer mapeamento</button>
+    <p class="disclaimer-text">Mapeamento de risco psicológico no rendimento esportivo. Não constitui diagnóstico clínico. Nicolas Artigas — Psicólogo do Esporte · CRP 08/45704</p>
+  `;
+  goTo('s-result');
+  setTimeout(() => {
+    document.querySelectorAll('.dim-fill[data-target]').forEach(el => { el.style.width = el.dataset.target + '%'; });
+  }, 120);
+}
+
+// ════════════════════════════════════════════
+//  PDF GENERATION
+// ════════════════════════════════════════════
+function downloadPDF() {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert('Gerando PDF... aguarde um momento e tente novamente.'); return;
+  }
+  const btn = $('btnDownload');
+  if (btn) { btn.textContent = '⏳ Gerando PDF…'; btn.disabled = true; }
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+    const W = doc.internal.pageSize.getWidth();
+    const H = doc.internal.pageSize.getHeight();
+    const MARGIN = 50;
+    const CW = W - MARGIN * 2;
+    let y = MARGIN;
+
+    // Colors
+    const C_DARK = [15, 20, 17];
+    const C_TEAL = [32, 178, 162];
+    const C_GRAY = [110, 120, 115];
+    const C_LGRAY = [230, 235, 232];
+    const C_GREEN = [34, 197, 94];
+    const C_AMBER = [251, 191, 36];
+    const C_ROSE = [248, 113, 113];
+    const C_TEXT2 = [80, 90, 85];
+
+    const ensureSpace = (needed) => {
+      if (y + needed > H - MARGIN) { doc.addPage(); y = MARGIN; }
+    };
+
+    const setFont = (style, size, color) => {
+      doc.setFont('helvetica', style);
+      doc.setFontSize(size);
+      doc.setTextColor(...(color || C_DARK));
+    };
+
+    const writeText = (text, x, opts, lineH) => {
+      const lines = doc.splitTextToSize(text, opts.maxW || CW);
+      ensureSpace(lines.length * (lineH || 13) + 4);
+      doc.text(lines, x, y, opts);
+      y += lines.length * (lineH || 13);
+      return lines.length;
+    };
+
+    const divider = (color) => {
+      doc.setDrawColor(...(color || C_LGRAY));
+      doc.setLineWidth(0.5);
+      doc.line(MARGIN, y, W - MARGIN, y);
+      y += 14;
+    };
+
+    const sectionTitle = (label) => {
+      ensureSpace(28);
+      setFont('bold', 8, C_TEAL);
+      doc.text(label.toUpperCase(), MARGIN, y);
+      y += 5;
+      divider(C_TEAL);
+    };
+
+    // ── HEADER
+    // Teal accent bar at top
+    doc.setFillColor(...C_TEAL);
+    doc.rect(0, 0, W, 5, 'F');
+
+    y = MARGIN + 10;
+    setFont('bold', 10, C_TEAL);
+    doc.text('MAPEAMENTO DE RISCO PSICOLÓGICO NO RENDIMENTO ESPORTIVO', MARGIN, y);
+    y += 14;
+
+    setFont('normal', 8, C_GRAY);
+    const dateStr = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+    doc.text(`Gerado em ${dateStr}  ·  Nicolas Artigas · Psicólogo do Esporte · CRP 08/45704`, MARGIN, y);
+    y += 6;
+    divider();
+
+    // ── NOTICE BOX
+    ensureSpace(48);
+    doc.setFillColor(240, 250, 248);
+    doc.setDrawColor(180, 220, 215);
+    doc.roundedRect(MARGIN, y, CW, 38, 3, 3, 'FD');
+    setFont('bold', 8, C_TEAL);
+    doc.text('NOTA IMPORTANTE', MARGIN + 10, y + 12);
+    setFont('normal', 8, C_TEXT2);
+    const noticeText = 'Este é um mapeamento de risco psicológico no rendimento e na vida do atleta — não um diagnóstico clínico ou avaliação psicológica formal. Os resultados identificam padrões que afetam desempenho e qualidade de vida no esporte, e servem como ponto de partida para aprofundamento com acompanhamento profissional.';
+    const noticeLines = doc.splitTextToSize(noticeText, CW - 20);
+    doc.text(noticeLines, MARGIN + 10, y + 23);
+    y += Math.max(38, noticeLines.length * 11 + 16) + 14;
+
+    // ── ATHLETE DATA
+    const p = lastResultData && lastResultData.parsed;
+    const dimScores = lastResultData && lastResultData.dimScores;
+
+    ensureSpace(70);
+    setFont('bold', 9, C_DARK);
+    doc.text('ATLETA', MARGIN, y);
+    setFont('normal', 9, C_GRAY);
+    doc.text(`${profile.name}  ·  ${sportLabels[profile.sport] || profile.sport}  ·  ${levelLabels[profile.level]}  ·  Objetivo: ${goalLabels[profile.goal]}`, MARGIN + 50, y);
+    y += 18;
+
+    // ── PROFILE BLOCK (if API result)
+    if (p) {
+      ensureSpace(80);
+      // Header box
+      doc.setFillColor(20, 28, 24);
+      doc.roundedRect(MARGIN, y, CW, 72, 4, 4, 'F');
+      doc.setFillColor(...C_TEAL);
+      doc.roundedRect(MARGIN, y, CW, 3, 2, 2, 'F');
+
+      setFont('bold', 8, [45, 212, 191]);
+      doc.text(p.archetype, MARGIN + 14, y + 16);
+      setFont('bold', 16, [232, 237, 233]);
+      doc.text(p.profileName, MARGIN + 14, y + 33);
+      setFont('italic', 9, [140, 155, 148]);
+      const essLines = doc.splitTextToSize(p.essence, CW - 28);
+      doc.text(essLines, MARGIN + 14, y + 46);
+      y += 82;
+    }
+
+    // ── DIMENSIONS
+    sectionTitle('Dimensões Psicológicas Mapeadas');
+    if (dimScores) {
+      const levelColor = (l) => l === 'high' ? C_GREEN : l === 'mid' ? C_AMBER : C_ROSE;
+      const levelText = (l) => l === 'high' ? 'DESENVOLVIDO' : l === 'mid' ? 'EM DESENVOLVIMENTO' : 'ÁREA DE ATENÇÃO';
+      Object.entries(DIMS).forEach(([key, dim]) => {
+        ensureSpace(36);
+        const d = dimScores[key];
+        const lc = levelColor(d.level);
+        setFont('bold', 9, C_DARK);
+        doc.text(dim.label, MARGIN, y);
+        setFont('bold', 8, lc);
+        doc.text(levelText(d.level), W - MARGIN, y, { align: 'right' });
+        y += 8;
+        // Track
+        doc.setFillColor(...C_LGRAY);
+        doc.roundedRect(MARGIN, y, CW, 6, 3, 3, 'F');
+        const fillW = Math.max((CW * d.pct / 100), 4);
+        doc.setFillColor(...lc);
+        doc.roundedRect(MARGIN, y, fillW, 6, 3, 3, 'F');
+        y += 10;
+        // Insight
+        setFont('normal', 8, C_GRAY);
+        const insight = DIM_INSIGHTS[key][d.level];
+        const iLines = doc.splitTextToSize(insight, CW);
+        doc.text(iLines, MARGIN, y);
+        y += iLines.length * 11 + 8;
+      });
+    }
+
+    // ── NARRATIVE
+    if (p && p.narrative) {
+      sectionTitle('Leitura do Perfil');
+      const paras = p.narrative.split('\n\n');
+      paras.forEach(par => {
+        setFont('normal', 10, C_TEXT2);
+        const lines = doc.splitTextToSize(par, CW);
+        ensureSpace(lines.length * 14 + 8);
+        doc.text(lines, MARGIN, y);
+        y += lines.length * 14 + 8;
+      });
+    }
+
+    // ── FORCES
+    if (p && p.forces) {
+      sectionTitle('Forças Identificadas');
+      p.forces.forEach(f => {
+        ensureSpace(36);
+        setFont('bold', 9, [34, 150, 80]);
+        doc.text(`${f.icon}  ${f.title}`, MARGIN, y);
+        y += 12;
+        setFont('normal', 9, C_TEXT2);
+        const lines = doc.splitTextToSize(f.text, CW - 10);
+        ensureSpace(lines.length * 12 + 6);
+        doc.text(lines, MARGIN + 10, y);
+        y += lines.length * 12 + 8;
+      });
+    }
+
+    // ── VULNERABILITIES
+    if (p && p.vulnerabilities) {
+      sectionTitle('Áreas de Atenção');
+      p.vulnerabilities.forEach(v => {
+        ensureSpace(36);
+        setFont('bold', 9, [200, 80, 80]);
+        doc.text(`${v.icon}  ${v.title}`, MARGIN, y);
+        y += 12;
+        setFont('normal', 9, C_TEXT2);
+        const lines = doc.splitTextToSize(v.text, CW - 10);
+        ensureSpace(lines.length * 12 + 6);
+        doc.text(lines, MARGIN + 10, y);
+        y += lines.length * 12 + 8;
+      });
+    }
+
+    // ── FUTURE RISK
+    if (p && p.futureRisk) {
+      sectionTitle('Risco Futuro Sem Intervenção');
+      ensureSpace(50);
+      doc.setFillColor(254, 250, 240);
+      doc.setDrawColor(220, 180, 50);
+      const riskLines = doc.splitTextToSize(p.futureRisk, CW - 24);
+      const boxH = riskLines.length * 13 + 22;
+      doc.roundedRect(MARGIN, y, CW, boxH, 3, 3, 'FD');
+      setFont('bold', 8, [160, 120, 20]);
+      doc.text('⚠  PROJEÇÃO DE PADRÃO', MARGIN + 12, y + 13);
+      setFont('normal', 9, C_TEXT2);
+      doc.text(riskLines, MARGIN + 12, y + 25);
+      y += boxH + 12;
+    }
+
+    // ── DEVELOPMENTS
+    if (p && p.developments) {
+      sectionTitle('Direções de Desenvolvimento');
+      p.developments.forEach((d, i) => {
+        ensureSpace(44);
+        setFont('bold', 9, C_TEAL);
+        doc.text(`${i + 1}.  ${d.title}`, MARGIN, y);
+        y += 13;
+        setFont('normal', 9, C_TEXT2);
+        const lines = doc.splitTextToSize(d.text, CW - 14);
+        ensureSpace(lines.length * 12 + 6);
+        doc.text(lines, MARGIN + 14, y);
+        y += lines.length * 12 + 8;
+      });
+    }
+
+    // ── CTA BLOCK
+    ensureSpace(90);
+    doc.setFillColor(18, 22, 20);
+    doc.roundedRect(MARGIN, y, CW, 78, 4, 4, 'F');
+    doc.setFillColor(...C_TEAL);
+    doc.roundedRect(MARGIN, y, CW, 3, 2, 2, 'F');
+    setFont('bold', 13, [232, 237, 233]);
+    doc.text('O próximo passo é uma conversa.', MARGIN + 14, y + 20);
+    setFont('normal', 9, [140, 155, 148]);
+    const ctaTxt = p ? p.ctaContext : 'Fala comigo pelo WhatsApp para uma análise aprofundada do seu perfil.';
+    const ctaLines = doc.splitTextToSize(ctaTxt + '\n\nwhatsapp.com/5544988433895', CW - 28);
+    doc.text(ctaLines, MARGIN + 14, y + 35);
+    setFont('bold', 9, C_TEAL);
+    doc.text('wa.me/5544988433895  ·  @nicolaspsico', MARGIN + 14, y + 66);
+    y += 90;
+
+    // ── FOOTER
+    ensureSpace(40);
+    y += 10;
+    divider();
+    setFont('normal', 7.5, C_GRAY);
+    const footer = 'Este documento é uma ferramenta de mapeamento de risco psicológico no rendimento esportivo e não constitui diagnóstico clínico, avaliação psicológica formal ou prescrição de tratamento. Em caso de sofrimento psicológico significativo, busque acompanhamento profissional especializado. Nicolas Artigas — Psicólogo do Esporte · CRP 08/45704';
+    const footerLines = doc.splitTextToSize(footer, CW);
+    doc.text(footerLines, MARGIN, y);
+
+    // Page numbers
+    const totalPages = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFillColor(...C_TEAL);
+      doc.rect(0, H - 3, W, 3, 'F');
+      setFont('normal', 7.5, C_GRAY);
+      doc.text(`Mapeamento de Risco Psicológico · ${profile.name} · ${dateStr}`, MARGIN, H - 10);
+      doc.text(`${i} / ${totalPages}`, W - MARGIN, H - 10, { align: 'right' });
+    }
+
+    doc.save(`mapeamento-psicologico-${profile.name.toLowerCase().replace(/\s+/g, '-')}.pdf`);
+  } catch (err) {
+    console.error(err);
+    alert('Erro ao gerar PDF. Tente novamente.');
+  }
+
+  if (btn) { btn.textContent = '⤓ Baixar PDF do mapeamento'; btn.disabled = false; }
+}
+
+// ════════════════════════════════════════════
+//  RESTART
+// ════════════════════════════════════════════
+function restartQuiz() {
+  profile = { name: '', sport: '', level: '', goal: '' };
+  scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
+  counts = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
+  answers = {};
+  current = 0;
+  lastResultData = null;
+  prog.style.width = '0%';
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  $('athleteName').value = '';
+  goTo('s-intro');
+}
+</script>
+</body>
+</html>
