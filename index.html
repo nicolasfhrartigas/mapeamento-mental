@@ -489,11 +489,45 @@
       display: none;
     }
 
-    @media (max-width: 520px) {
-      .card-inner { padding: 28px 22px; }
+    /* ── WHATSAPP LOCK ── */
+    .wa-btn.locked {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: grayscale(0.5);
+    }
+    .wa-hint {
+      display: none;
+      font-size: 11.5px;
+      color: var(--amber);
+      text-align: center;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+    .wa-hint.show { display: block; animation: rise .3s ease; }
+    .wa-hint.unlocked { color: var(--green); }
+
+    /* ── RESPONSIVO ── */
+    @media (max-width: 640px) {
+      body { padding: 20px 12px 48px; }
+      .card-inner { padding: 28px 20px; min-height: 0; }
       .intro-headline { font-size: 28px; }
+      .setup-title { font-size: 22px; }
       .q-text { font-size: 19px; }
+      .profile-name { font-size: 24px; }
       .fv-grid { grid-template-columns: 1fr; }
+      .setup-grid.three { grid-template-columns: 1fr; }
+      .setup-name-input { font-size: 16px; } /* evita zoom automático do iOS ao focar */
+      .intro-stats { gap: 8px; }
+      .stat { padding: 12px 8px; }
+      .stat-num { font-size: 22px; }
+      .profile-header, .cta-block { padding: 22px 18px; }
+      .pdf-cta-block { padding: 18px 16px; }
+    }
+    @media (max-width: 380px) {
+      .setup-grid { grid-template-columns: 1fr; }
+      .intro-headline { font-size: 25px; }
+      .card-inner { padding: 24px 16px; }
+      .topbar .brand { font-size: 11px; }
     }
   </style>
 </head>
@@ -805,6 +839,28 @@ let counts = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
 let answers = {};
 let current = 0;
 let lastResultData = null; // guarda dados para PDF
+let pdfDownloaded = false; // WhatsApp só libera após baixar o PDF
+
+function waClick(ev) {
+  if (!pdfDownloaded) {
+    ev.preventDefault();
+    document.querySelectorAll('.wa-hint').forEach(h => h.classList.add('show'));
+    return false;
+  }
+  return true;
+}
+
+function unlockWhatsApp() {
+  pdfDownloaded = true;
+  document.querySelectorAll('.wa-btn').forEach(a => {
+    a.classList.remove('locked');
+    if (a.dataset.wa) a.href = a.dataset.wa;
+  });
+  document.querySelectorAll('.wa-hint').forEach(h => {
+    h.textContent = '✓ PDF baixado — contato pelo WhatsApp liberado.';
+    h.classList.add('show', 'unlocked');
+  });
+}
 
 const $ = id => document.getElementById(id);
 const prog = $('progressFill');
@@ -1068,23 +1124,23 @@ function renderResult(p, dimScores) {
       <div class="dev-list">${devsHtml}</div>
     </div>
 
-    <div class="cta-block">
-      <div class="cta-lead">O mapeamento é o ponto de partida.</div>
-      <div class="cta-sub">${p.ctaContext}<br><br>Se este perfil fez sentido para você, o próximo passo é uma conversa — sem compromisso, sem pressão.</div>
-      <a class="btn-primary" href="${waLink}" target="_blank">Falar com Nicolas pelo WhatsApp →</a>
-    </div>
-
     <div class="pdf-cta-block">
       <div class="pdf-cta-label">📄 Salve e compartilhe seu resultado</div>
       <div class="pdf-cta-title">Baixe o PDF do seu mapeamento</div>
       <div class="pdf-cta-desc">Tenha o relatório completo salvo e possa enviá-lo diretamente ao Nicolas pelo WhatsApp para iniciar uma conversa mais aprofundada sobre o seu perfil.</div>
       <div class="pdf-steps">
         <div class="pdf-step"><span class="pdf-step-num">1</span><span>Clique em "Baixar PDF" e salve o arquivo no seu celular ou computador</span></div>
-        <div class="pdf-step"><span class="pdf-step-num">2</span><span>Clique em "Enviar pelo WhatsApp" e anexe o PDF na conversa com Nicolas</span></div>
+        <div class="pdf-step"><span class="pdf-step-num">2</span><span>O botão do WhatsApp será liberado — anexe o PDF na conversa com Nicolas</span></div>
         <div class="pdf-step"><span class="pdf-step-num">3</span><span>Receba uma análise personalizada do seu perfil diretamente com ele</span></div>
       </div>
       <button class="btn-ghost" onclick="downloadPDF()" id="btnDownload">⤓ Baixar PDF do mapeamento</button>
-      <a class="btn-secondary" href="${waLink}" target="_blank" style="margin-top:8px;">💬 Enviar pelo WhatsApp (com o PDF em mãos)</a>
+    </div>
+
+    <div class="cta-block">
+      <div class="cta-lead">O mapeamento é o ponto de partida.</div>
+      <div class="cta-sub">${p.ctaContext}<br><br>Se este perfil fez sentido para você, o próximo passo é uma conversa — sem compromisso, sem pressão.</div>
+      <a class="btn-primary wa-btn locked" href="#" data-wa="${waLink}" target="_blank" rel="noopener" onclick="return waClick(event)">💬 Falar com Nicolas pelo WhatsApp →</a>
+      <div class="wa-hint">🔒 Baixe o PDF do seu mapeamento acima para liberar o contato pelo WhatsApp.</div>
     </div>
 
     <button class="btn-secondary" onclick="restartQuiz()" style="margin-top:4px;">Refazer mapeamento</button>
@@ -1114,21 +1170,21 @@ function renderFallbackResult(dimScores) {
       <div class="section-label">Dimensões psicológicas mapeadas</div>
       <div class="dims-grid">${dimsHtml}</div>
     </div>
-    <div class="cta-block">
-      <div class="cta-lead">Quer entender o que esse perfil significa?</div>
-      <div class="cta-sub">Fala comigo pelo WhatsApp — analiso seu resultado e explico o que cada dimensão revela sobre como sua mente funciona no esporte.</div>
-      <a class="btn-primary" href="${waLink}" target="_blank">Falar com Nicolas →</a>
-    </div>
     <div class="pdf-cta-block">
       <div class="pdf-cta-label">📄 Salve e compartilhe seu resultado</div>
       <div class="pdf-cta-title">Baixe o PDF do seu mapeamento</div>
       <div class="pdf-cta-desc">Salve o relatório e envie ao Nicolas pelo WhatsApp para uma análise personalizada.</div>
       <div class="pdf-steps">
         <div class="pdf-step"><span class="pdf-step-num">1</span><span>Clique em "Baixar PDF" e salve o arquivo</span></div>
-        <div class="pdf-step"><span class="pdf-step-num">2</span><span>Abra o WhatsApp, anexe o PDF e inicie a conversa com Nicolas</span></div>
+        <div class="pdf-step"><span class="pdf-step-num">2</span><span>O botão do WhatsApp será liberado — anexe o PDF e inicie a conversa com Nicolas</span></div>
       </div>
       <button class="btn-ghost" onclick="downloadPDF()" id="btnDownload">⤓ Baixar PDF do mapeamento</button>
-      <a class="btn-secondary" href="${waLink}" target="_blank" style="margin-top:8px;">💬 Enviar pelo WhatsApp</a>
+    </div>
+    <div class="cta-block">
+      <div class="cta-lead">Quer entender o que esse perfil significa?</div>
+      <div class="cta-sub">Fala comigo pelo WhatsApp — analiso seu resultado e explico o que cada dimensão revela sobre como sua mente funciona no esporte.</div>
+      <a class="btn-primary wa-btn locked" href="#" data-wa="${waLink}" target="_blank" rel="noopener" onclick="return waClick(event)">💬 Falar com Nicolas →</a>
+      <div class="wa-hint">🔒 Baixe o PDF do seu mapeamento acima para liberar o contato pelo WhatsApp.</div>
     </div>
     <button class="btn-secondary" onclick="restartQuiz()" style="margin-top:4px;">Refazer mapeamento</button>
     <p class="disclaimer-text">Mapeamento de risco psicológico no rendimento esportivo. Não constitui diagnóstico clínico. Nicolas Artigas — Psicólogo do Esporte · CRP 08/45704</p>
@@ -1404,6 +1460,7 @@ function downloadPDF() {
     }
 
     doc.save(`mapeamento-psicologico-${profile.name.toLowerCase().replace(/\s+/g, '-')}.pdf`);
+    unlockWhatsApp();
   } catch (err) {
     console.error(err);
     alert('Erro ao gerar PDF. Tente novamente.');
@@ -1422,6 +1479,7 @@ function restartQuiz() {
   answers = {};
   current = 0;
   lastResultData = null;
+  pdfDownloaded = false;
   prog.style.width = '0%';
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
   $('athleteName').value = '';
