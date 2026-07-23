@@ -1007,45 +1007,6 @@
           </div>
         </div>
 
-
-        <!-- INSTAGRAM CAPTURE -->
-        <div class="screen" id="s-instagram">
-          <div class="stage-tag"><span class="dot"></span>Última etapa</div>
-          <h2 class="setup-title" style="margin-bottom:12px">Seu tipo mental está pronto.</h2>
-          <p class="setup-sub" style="margin-bottom:20px">Deixa seu @ do Instagram e eu te mando no direct uma
-            observação sobre o seu resultado, lida e escrita por mim, não por um sistema. É por lá que você me
-            encontra quando quiser aprofundar.</p>
-
-          <div class="setup-field">
-            <label>Seu @ do Instagram</label>
-            <div style="position:relative">
-              <span
-                style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--orange);font-size:15px;font-weight:600">@</span>
-              <input class="setup-name-input" type="text" id="instagramHandle" placeholder="seuusuario" maxlength="60"
-                style="padding-left:30px" />
-            </div>
-          </div>
-
-          <div class="setup-field">
-            <label>O que mais pesa na sua cabeça no esporte hoje? <span
-                style="text-transform:none;letter-spacing:0;font-weight:400">(opcional · 1 frase)</span></label>
-            <textarea class="setup-name-input" id="openAnswer" rows="2" maxlength="240"
-              style="resize:none;line-height:1.5;font-family:var(--sans)"
-              placeholder="Ex.: perder o controle com a comida no fim de semana / travar em jogo grande / medo de não dar certo…"></textarea>
-          </div>
-
-          <div class="error-block" id="ig-error">Digite seu @ ou toque em “prefiro não informar” para pular.</div>
-
-          <button class="btn-primary" onclick="submitInstagram()" style="margin-bottom:10px">Ver meu resultado
-            →</button>
-          <button class="btn-secondary" onclick="skipInstagram()"
-            style="margin-top:0;border-color:transparent;color:var(--text3)">Prefiro não informar. Ver resultado assim
-            mesmo</button>
-
-          <p class="disclaimer-text" style="margin-top:16px">Uso seu @ só para isso: sem spam, sem lista de transmissão,
-            sem repassar a ninguém. O que você escrever acima entra no seu PDF e me ajuda a te responder melhor.</p>
-        </div>
-
         <!-- RESULT -->
         <div class="screen" id="s-result">
           <div id="resultContent"></div>
@@ -1548,8 +1509,6 @@
     let answers = {};
     let current = 0;
     let resolvedProfile = null;
-    let capturedInstagram = '';
-    let openAnswerText = '';
     let ACTIVE = [];
 
     const $ = id => document.getElementById(id);
@@ -1564,8 +1523,7 @@
 
     // ── Captura de leads (opcional, recomendado) ─────────────────────────────
     // Cole aqui a URL do Web App do Google Apps Script (Implantar → App da Web →
-    // Executar como: você · Acesso: qualquer pessoa). Vazio = captura desativada:
-    // o @ só chega até você se o atleta clicar no botão do WhatsApp.
+    // Executar como: você · Acesso: qualquer pessoa). Vazio = captura desativada.
     const CAPTURE_ENDPOINT = '';
 
     function logLead() {
@@ -1573,22 +1531,13 @@
       try {
         const payload = {
           ts: new Date().toISOString(), origem: TRAFFIC_SRC,
-          nome: profile.name, instagram: capturedInstagram || '',
+          nome: profile.name,
           esporte: profile.sport, nivel: profile.level, objetivo: profile.goal,
-          tipo: resolvedProfile.name, nota: openAnswerText || '',
+          tipo: resolvedProfile.name,
           scores: Object.fromEntries(Object.keys(DIM_MAX).map(d => [d, pct(d)]))
         };
         fetch(CAPTURE_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload), keepalive: true }).catch(() => { });
       } catch (e) { }
-    }
-
-    function cleanHandle(raw) {
-      return (raw || '').trim()
-        .replace(/^https?:\/\/(www\.)?instagram\.com\//i, '')
-        .replace(/[\/?#].*$/, '')
-        .replace(/^@+/, '')
-        .replace(/\s+/g, '')
-        .slice(0, 60);
     }
 
     // Mensagem de WhatsApp específica por tipo mental (CTA por perfil)
@@ -1619,9 +1568,6 @@
         else profile.goal = chip.dataset.value;
       });
     });
-
-    const igIn = $('instagramHandle');
-    if (igIn) igIn.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); submitInstagram(); } });
 
     function startQuestions() {
       const err = $('setup-error');
@@ -1663,7 +1609,7 @@
       answers[current] = idx;
       Object.entries(q.opts[idx].d).forEach(([d, p]) => { scores[d] += p; });
       current++;
-      if (current >= ACTIVE.length) goTo('s-instagram');
+      if (current >= ACTIVE.length) showResult();
       else renderQuestion();
     }
 
@@ -1706,24 +1652,6 @@
       sup: { high: 'Rede de suporte ativa: você tem e usa apoio qualificado. Isso é um diferencial real de rendimento a longo prazo.', mid: 'Suporte disponível mas subutilizado: você tem apoio ao redor, mas pode não estar usando plenamente.', low: 'Baixo suporte externo: você está gerenciando os desafios do esporte majoritariamente sozinho(a).' },
     };
 
-
-    function submitInstagram() {
-      const val = cleanHandle($('instagramHandle').value);
-      const eb = $('ig-error');
-      if (!val) { if (eb) eb.style.display = 'block'; $('instagramHandle').focus(); return; }
-      if (eb) eb.style.display = 'none';
-      capturedInstagram = val;
-      openAnswerText = ($('openAnswer') ? $('openAnswer').value.trim().slice(0, 240) : '');
-      showResult();
-    }
-
-    function skipInstagram() {
-      const eb = $('ig-error'); if (eb) eb.style.display = 'none';
-      capturedInstagram = '';
-      openAnswerText = ($('openAnswer') ? $('openAnswer').value.trim().slice(0, 240) : '');
-      showResult();
-    }
-
     function showResult() {
       prog.style.width = '100%';
       const prof = selectProfile();
@@ -1733,7 +1661,7 @@
       const dimScores = {};
       Object.keys(DIM_MAX).forEach(d => { dimScores[d] = { pct: pct(d), level: lvl(pct(d)) }; });
 
-      const waSig = ` | ${profile.name}${capturedInstagram ? ` · @${capturedInstagram}` : ''}`;
+      const waSig = ` | ${profile.name}`;
       const waText = `Oi Nicolas! Fiz o mapeamento e meu tipo mental deu "${prof.name}". ${WA_MSGS[prof.name] || 'Quero entender melhor o resultado e como funciona o acompanhamento.'}${waSig}`;
       const waLink = `https://wa.me/5544988433895?text=${encodeURIComponent(waText)}`;
 
@@ -1878,14 +1806,6 @@
         // Athlete
         ensureSp(30); sf('bold', 9, C_DARK); doc.text('ATLETA', M, y);
         sf('normal', 9, C_GRAY); doc.text(`${profile.name}  ·  ${sportLabels[profile.sport] || profile.sport}  ·  ${levelLabels[profile.level]}  ·  ${goalLabels[profile.goal]}`, M + 50, y); y += 20;
-
-        // Na sua palavra (campo aberto — material de triagem)
-        if (openAnswerText) {
-          ensureSp(30); sf('bold', 9, C_DARK); doc.text('NA SUA PALAVRA', M, y);
-          sf('italic', 9, C_GRAY);
-          const owLines = doc.splitTextToSize(`“${openAnswerText}”`, CW - 100);
-          doc.text(owLines, M + 100, y); y += Math.max(14, owLines.length * 12) + 8;
-        }
 
         // Profile block
         if (prof) {
@@ -2035,15 +1955,10 @@
       profile = { name: '', sport: '', level: '', goal: '' };
       scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       answers = {}; current = 0; resolvedProfile = null;
-      openAnswerText = ''; ACTIVE = [];
-      const oa = $('openAnswer'); if (oa) oa.value = '';
-      const eb = $('ig-error'); if (eb) eb.style.display = 'none';
+      ACTIVE = [];
       prog.style.width = '0%';
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
       $('athleteName').value = '';
-      capturedInstagram = '';
-      const igInput = document.getElementById('instagramHandle');
-      if (igInput) igInput.value = '';
       goTo('s-intro');
     }
   </script>
