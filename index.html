@@ -11,25 +11,43 @@
   <meta property="og:description"
     content="15 perguntas diretas. Algumas vão incomodar, é proposital. Descubra o padrão mental que está definindo seus resultados no esporte.">
   <meta property="og:type" content="website">
-  <meta name="theme-color" content="#0b0d08">
+  <meta name="theme-color" content="#0C0E0A">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
 
     :root {
-      --bg: #0b0d08;
-      --surface: #12150c;
-      --surface2: #171b0f;
-      --surface3: #1d2212;
-      --border: #262c19;
-      --border2: #313823;
-      --green: #b7d478;
-      --amber: #e3a63a;
-      --rose: #f0512d;
-      --teal: #8fae4e;
-      --text: #edf0e4;
-      --text2: #a9b096;
-      --text3: #6b7358;
+      /* Base escura */
+      --bg: #0C0E0A;
+      --surface: #14180F;
+      --surface2: #1B2114;
+      --surface3: #242C1B;
+      /* Bordas aquecidas: trazem o laranja sem preencher toda a interface. */
+      --border: #573322;
+      --border2: #7A4328;
+
+      /* Identidade */
+      --green: #657542;
+      /* cor principal */
+      --green-light: #A8B991;
+      /* derivação para indicadores sobre fundo escuro */
+      --teal: #8EA465;
+      /* variação clara do verde, reservada a indicadores */
+      --orange: #DC5F28;
+      /* cor de contraponto */
+      --orange-light: #F08550;
+
+      /* Estados */
+      --amber: #DC5F28;
+      /* atenção */
+      --rose: #F08550;
+      /* alerta/baixo desempenho */
+
+      /* Tipografia */
+      --text: #FFFFFF;
+      --text2: #CDD4C2;
+      --text3: #8E9981;
+
       --display: 'Oswald', 'Arial Narrow', sans-serif;
       --sans: 'DM Sans', system-ui, sans-serif;
     }
@@ -72,11 +90,11 @@
       font-weight: 600;
       letter-spacing: .12em;
       text-transform: uppercase;
-      color: var(--text3)
+      color: var(--text)
     }
 
     .brand em {
-      color: var(--teal);
+      color: var(--text);
       font-style: normal
     }
 
@@ -91,7 +109,7 @@
 
     .progress-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--teal), var(--green));
+      background: linear-gradient(90deg, var(--green), var(--orange));
       width: 0%;
       transition: width .4s cubic-bezier(.4, 0, .2, 1)
     }
@@ -138,7 +156,7 @@
       font-weight: 600;
       letter-spacing: .16em;
       text-transform: uppercase;
-      color: var(--teal);
+      color: var(--text2);
       margin-bottom: 20px
     }
 
@@ -162,15 +180,15 @@
       width: 5px;
       height: 5px;
       border-radius: 50%;
-      background: var(--teal)
+      background: var(--orange)
     }
 
     .notice-badge {
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      background: rgba(143, 174, 78, .06);
-      border: 1px solid rgba(143, 174, 78, .2);
+      background: rgba(220, 95, 40, .06);
+      border: 1px solid rgba(220, 95, 40, .32);
       border-radius: 8px;
       padding: 14px 16px;
       margin-bottom: 22px
@@ -190,7 +208,7 @@
     }
 
     .nb-text strong {
-      color: var(--teal);
+      color: var(--text);
       font-weight: 600
     }
 
@@ -206,7 +224,7 @@
 
     .intro-headline em {
       font-style: normal;
-      color: var(--teal)
+      color: var(--text)
     }
 
     .intro-body {
@@ -305,13 +323,13 @@
     }
 
     .chip:hover {
-      border-color: var(--teal);
+      border-color: var(--orange);
       color: var(--text)
     }
 
     .chip.selected {
-      border-color: var(--teal);
-      background: rgba(143, 174, 78, .07);
+      border-color: var(--orange);
+      background: rgba(220, 95, 40, .10);
       color: var(--text)
     }
 
@@ -329,7 +347,7 @@
     }
 
     .setup-name-input:focus {
-      border-color: var(--teal)
+      border-color: var(--orange)
     }
 
     .setup-name-input::placeholder {
@@ -341,7 +359,7 @@
       font-weight: 600;
       letter-spacing: .14em;
       text-transform: uppercase;
-      color: var(--teal);
+      color: var(--text2);
       margin-bottom: 6px
     }
 
@@ -390,9 +408,9 @@
     }
 
     .opt:hover {
-      border-color: var(--teal);
+      border-color: var(--orange);
       color: var(--text);
-      background: rgba(143, 174, 78, .05)
+      background: rgba(220, 95, 40, .07)
     }
 
     .opt:active {
@@ -437,7 +455,7 @@
       left: 0;
       width: 100%;
       height: 3px;
-      background: linear-gradient(90deg, var(--teal), var(--green))
+      background: linear-gradient(90deg, var(--green), var(--orange))
     }
 
     .profile-type {
@@ -445,7 +463,7 @@
       font-weight: 600;
       letter-spacing: .18em;
       text-transform: uppercase;
-      color: var(--teal);
+      color: var(--text2);
       margin-bottom: 6px
     }
 
@@ -461,7 +479,7 @@
 
     .profile-subtitle {
       font-size: 13px;
-      color: var(--teal);
+      color: var(--text2);
       font-weight: 500;
       margin-bottom: 14px;
       letter-spacing: .01em
@@ -478,8 +496,8 @@
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      background: rgba(143, 174, 78, .05);
-      border: 1px solid rgba(143, 174, 78, .15);
+      background: rgba(220, 95, 40, .06);
+      border: 1px solid rgba(220, 95, 40, .28);
       border-radius: 8px;
       padding: 14px 16px;
       margin-bottom: 22px
@@ -616,11 +634,11 @@
     }
 
     .fv-card.force {
-      border-color: rgba(74, 222, 128, .25)
+      border-color: rgba(101, 117, 66, .62)
     }
 
     .fv-card.vuln {
-      border-color: rgba(248, 113, 113, .2)
+      border-color: rgba(220, 95, 40, .45)
     }
 
     .fv-title {
@@ -630,7 +648,7 @@
     }
 
     .fv-card.force .fv-title {
-      color: var(--green)
+      color: var(--green-light)
     }
 
     .fv-card.vuln .fv-title {
@@ -644,8 +662,8 @@
     }
 
     .risk-block {
-      background: rgba(240, 81, 45, .06);
-      border: 1px solid rgba(240, 81, 45, .28);
+      background: rgba(220, 95, 40, .06);
+      border: 1px solid rgba(220, 95, 40, .42);
       border-radius: 8px;
       padding: 20px
     }
@@ -684,7 +702,7 @@
     .dev-num {
       font-family: var(--display);
       font-size: 22px;
-      color: var(--teal);
+      color: var(--orange);
       line-height: 1;
       min-width: 24px
     }
@@ -739,7 +757,7 @@
       font-weight: 600;
       letter-spacing: .14em;
       text-transform: uppercase;
-      color: var(--teal);
+      color: var(--text2);
       margin-bottom: 8px
     }
 
@@ -774,8 +792,8 @@
     }
 
     .pdf-step-num {
-      background: rgba(143, 174, 78, .12);
-      color: var(--teal);
+      background: rgba(220, 95, 40, .14);
+      color: var(--text);
       font-size: 10px;
       font-weight: 700;
       border-radius: 50%;
@@ -790,8 +808,8 @@
 
     .btn-primary {
       display: block;
-      background: var(--teal);
-      color: #0b0d08;
+      background: var(--orange);
+      color: #FFFFFF;
       font-family: var(--sans);
       font-size: 13.5px;
       font-weight: 700;
@@ -849,8 +867,8 @@
     }
 
     .btn-ghost:hover {
-      border-color: var(--teal);
-      color: var(--teal)
+      border-color: var(--orange);
+      color: var(--text)
     }
 
     .disclaimer-text {
@@ -862,8 +880,8 @@
     }
 
     .error-block {
-      background: rgba(248, 113, 113, .07);
-      border: 1px solid rgba(248, 113, 113, .25);
+      background: rgba(220, 95, 40, .07);
+      border: 1px solid rgba(220, 95, 40, .42);
       border-radius: 8px;
       padding: 16px;
       margin-bottom: 16px;
@@ -925,7 +943,7 @@
           <div class="intro-stats">
             <div class="stat"><span class="stat-num">15</span><span class="stat-label">Perguntas</span></div>
             <div class="stat"><span class="stat-num">8</span><span class="stat-label">Tipos</span></div>
-            <div class="stat"><span class="stat-num">5 min</span><span class="stat-label">Duração</span></div>
+            <div class="stat"><span class="stat-num">5 minutos</span><span class="stat-label">Duração</span></div>
           </div>
           <button class="btn-primary" onclick="goTo('s-setup')">Começar o mapeamento →</button>
         </div>
@@ -1002,7 +1020,7 @@
             <label>Seu @ do Instagram</label>
             <div style="position:relative">
               <span
-                style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--teal);font-size:15px;font-weight:600">@</span>
+                style="position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--orange);font-size:15px;font-weight:600">@</span>
               <input class="setup-name-input" type="text" id="instagramHandle" placeholder="seuusuario" maxlength="60"
                 style="padding-left:30px" />
             </div>
