@@ -1801,9 +1801,9 @@
     // ══════════════════════════════════════════
     let profile = { name: '', sport: '', sportLabel: '', level: '', goal: '' };
     let scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-    let fixedScores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
     let evidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
     let fixedEvidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
+    let attentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
     let answers = {};
     let current = 0;
     let resolvedProfile = null;
@@ -1910,9 +1910,9 @@
       ACTIVE = FIXED_QUESTIONS.concat(CONTEXTUAL_QUESTIONS[profile.sport]);
       current = 0;
       scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-      fixedScores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       evidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       fixedEvidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
+      attentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       answers = {};
       goTo('s-question'); renderQuestion();
     }
@@ -1938,8 +1938,8 @@
       Object.entries(opt.d).forEach(([d, p]) => {
         scores[d] += p * direction;
         evidenceMax[d] += 2 * direction;
+        if (p === 0) attentionEvidence[d] += direction;
         if (q.fixed) {
-          fixedScores[d] += p * direction;
           fixedEvidenceMax[d] += 2 * direction;
         }
       });
@@ -1969,29 +1969,43 @@
     //  ALGORITMO DE PERFIL
     // ══════════════════════════════════════════
     const FACTOR_ORDER = ['perf', 'motiv', 'reg', 'medo', 'ident', 'sup'];
-    function factorSummary(d) {
-      const known = evidenceMax[d] > 0;
-      return { known, percent: known ? scores[d] / evidenceMax[d] : null };
+    function summarizeFactor(points, maximum, attention, d) {
+      const known = maximum[d] > 0;
+      return { known, attention: known && attention[d] > 0, percent: known ? points[d] / maximum[d] : null };
     }
 
-    function fixedFactorSummary(d) {
-      const known = fixedEvidenceMax[d] > 0;
-      return { known, percent: known ? fixedScores[d] / fixedEvidenceMax[d] : null };
+    function factorSummary(d) {
+      return summarizeFactor(scores, evidenceMax, attentionEvidence, d);
     }
 
     function selectProfile() {
+      const fixedKnownCount = FACTOR_ORDER.filter(d => fixedEvidenceMax[d] > 0).length;
       const known = FACTOR_ORDER
-        .filter(d => fixedEvidenceMax[d] > 0)
-        .map(d => ({ d, percent: fixedFactorSummary(d).percent }))
+        .filter(d => evidenceMax[d] > 0)
+        .map(d => ({ d, percent: factorSummary(d).percent }))
         .sort((a, b) => a.percent - b.percent || FACTOR_ORDER.indexOf(a.d) - FACTOR_ORDER.indexOf(b.d));
-      if (known.length === 6 && known.every(item => item.percent >= .5)) return PROFILES.equilibrado;
-      if (known.length >= 2) {
+      if (fixedKnownCount >= 2 && known.length === 6 && known.every(item => item.percent >= .5)) return PROFILES.equilibrado;
+      if (fixedKnownCount >= 2 && known.length >= 2) {
         const pair = known.slice(0, 2).map(item => item.d);
         const exact = Object.values(PROFILES).find(item => item.factors.length === 2 && item.factors.every(factor => pair.includes(factor)));
         if (exact) return exact;
+        const focus = known[0].d;
+        const candidates = Object.values(PROFILES)
+          .filter(item => item.factors.length === 2 && item.factors.includes(focus))
+          .sort((a, b) => {
+            const aOther = a.factors.find(factor => factor !== focus);
+            const bOther = b.factors.find(factor => factor !== focus);
+            const aScore = factorSummary(aOther);
+            const bScore = factorSummary(bOther);
+            const aPercent = aScore.known ? aScore.percent : Infinity;
+            const bPercent = bScore.known ? bScore.percent : Infinity;
+            return aPercent - bPercent || FACTOR_ORDER.indexOf(aOther) - FACTOR_ORDER.indexOf(bOther);
+          });
+        if (candidates.length) return candidates[0];
       }
-      if (known.length) {
-        return { ...(Object.values(PROFILES).find(item => item.factors.length === 2 && item.factors.includes(known[0].d)) || PROFILES.equilibrado), partial: true };
+      const fixedKnown = FACTOR_ORDER.filter(d => fixedEvidenceMax[d] > 0);
+      if (fixedKnown.length === 1) {
+        return { ...(Object.values(PROFILES).find(item => item.factors.length === 2 && item.factors.includes(fixedKnown[0])) || PROFILES.equilibrado), partial: true };
       }
       return { ...PROFILES['reg+sup'], partial: true };
     }
@@ -2022,10 +2036,12 @@
 
       const dimsHtml = FACTOR_ORDER.map(key => {
         const d = dimScores[key];
+        const label = d.attention ? 'Tema para observar' : d.known ? 'Evidência direta' : 'Evidência insuficiente';
+        const labelClass = d.attention ? 'mid' : d.known ? 'high' : 'low';
         return `<div class="dim-row">
       <div class="dim-row-top">
         <span class="dim-name">${DIMS[key]}</span>
-        <span class="dim-score-label ${d.known ? 'mid' : 'low'}">${d.known ? 'Evidência direta' : 'Evidência insuficiente'}</span>
+        <span class="dim-score-label ${labelClass}">${label}</span>
       </div>
       <div class="dim-insight">${DIM_INSIGHTS[key][d.known ? 'known' : 'unknown']}</div>
     </div>`;
@@ -2147,12 +2163,14 @@
         sf('normal', 8, C_GRAY); doc.text(`Gerado em ${dateStr}  ·  Nicolas Artigas · Psicólogo do Esporte · CRP 08/45704`, M, y); y += 6; div();
 
         // Notice
-        ensureSp(48);
-        doc.setFillColor(244, 247, 236); doc.setDrawColor(196, 208, 168); doc.roundedRect(M, y, CW, 38, 3, 3, 'FD');
+        const noticeText = 'Este resultado organiza tendências que apareceram nas suas respostas de hoje. Ele é educativo, não é diagnóstico nem avaliação psicológica formal, e não define quem você é. Se alguma situação estiver causando sofrimento importante ou prejudicando sua vida, procure apoio profissional. Em risco imediato, procure um serviço local de urgência.';
+        const nLines = doc.splitTextToSize(noticeText, CW - 20);
+        const noticeHeight = Math.max(38, nLines.length * 11 + 16);
+        ensureSp(noticeHeight + 14);
+        doc.setFillColor(244, 247, 236); doc.setDrawColor(196, 208, 168); doc.roundedRect(M, y, CW, noticeHeight, 3, 3, 'FD');
         sf('bold', 8, C_TEAL); doc.text('NOTA IMPORTANTE', M + 10, y + 12);
         sf('normal', 8, C_T2);
-        const nLines = doc.splitTextToSize('Este resultado organiza tendências que apareceram nas suas respostas de hoje. Ele é educativo, não é diagnóstico nem avaliação psicológica formal, e não define quem você é.', CW - 20);
-        doc.text(nLines, M + 10, y + 23); y += Math.max(38, nLines.length * 11 + 16) + 14;
+        doc.text(nLines, M + 10, y + 23); y += noticeHeight + 14;
 
         // Athlete
         ensureSp(30); sf('bold', 9, C_DARK); doc.text('ATLETA', M, y);
@@ -2181,7 +2199,9 @@
           const summary = factorSummary(key);
           ensureSp(38);
           sf('bold', 9, C_DARK); doc.text(DIMS[key], M, y);
-          sf('bold', 8, summary.known ? C_GREEN : C_GRAY); doc.text(summary.known ? 'EVIDÊNCIA DIRETA' : 'EVIDÊNCIA INSUFICIENTE', W - M, y, { align: 'right' }); y += 12;
+          const label = summary.attention ? 'TEMA PARA OBSERVAR' : summary.known ? 'EVIDÊNCIA DIRETA' : 'EVIDÊNCIA INSUFICIENTE';
+          const color = summary.attention ? C_AMBER : summary.known ? C_GREEN : C_GRAY;
+          sf('bold', 8, color); doc.text(label, W - M, y, { align: 'right' }); y += 12;
           sf('normal', 8, C_GRAY);
           const iLines = doc.splitTextToSize(DIM_INSIGHTS[key][summary.known ? 'known' : 'unknown'], CW); ensureSp(iLines.length * 11 + 8); doc.text(iLines, M, y); y += iLines.length * 11 + 8;
         });
@@ -2271,7 +2291,7 @@
         // Footer
         ensureSp(40); y += 10; div();
         sf('normal', 7.5, C_GRAY);
-        const ftLines = doc.splitTextToSize('Este documento é uma ferramenta educativa de autoconhecimento sobre fatores mentais no esporte e não constitui diagnóstico clínico, avaliação psicológica formal ou prescrição de tratamento. Os padrões descritos refletem o momento da aplicação e não são rótulo fixo nem traço permanente. Em caso de sofrimento psicológico significativo, busque acompanhamento profissional especializado. Desenvolvido por Nicolas Artigas, Psicólogo do Esporte (CRP 08/45704), com fins educativos e de orientação.', CW);
+        const ftLines = doc.splitTextToSize('Este documento é uma ferramenta educativa de autoconhecimento sobre fatores mentais no esporte e não constitui diagnóstico clínico, avaliação psicológica formal ou prescrição de tratamento. Os padrões descritos refletem o momento da aplicação e não são rótulo fixo nem traço permanente. Se alguma situação estiver causando sofrimento importante ou prejudicando sua vida, procure apoio profissional. Em risco imediato, procure um serviço local de urgência. Desenvolvido por Nicolas Artigas, Psicólogo do Esporte (CRP 08/45704), com fins educativos e de orientação.', CW);
         doc.text(ftLines, M, y);
 
         // Page numbers
@@ -2313,9 +2333,9 @@
     function restartQuiz() {
       profile = { name: '', sport: '', sportLabel: '', level: '', goal: '' };
       scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-      fixedScores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       evidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       fixedEvidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
+      attentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       answers = {}; current = 0; resolvedProfile = null;
       ACTIVE = [];
       prog.style.width = '0%';
