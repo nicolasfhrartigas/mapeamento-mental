@@ -1508,6 +1508,9 @@
         .sort((a, b) => a.percent - b.percent || FACTOR_ORDER.indexOf(a.d) - FACTOR_ORDER.indexOf(b.d));
       const pairProfiles = Object.values(PROFILES).filter(item => item.factors.length === 2);
       const partialProfile = (base, reason) => ({ ...base, partial: true, partialReason: reason });
+      const fixedKnown = FACTOR_ORDER.filter(d => fixedEvidenceMax[d] > 0);
+      const fallbackFactor = known.find(item => fixedEvidenceMax[item.d] > 0)?.d;
+      const catalogFallback = pairProfiles.find(item => item.factors.includes(fallbackFactor)) || pairProfiles[0];
       if (fixedKnownCount >= 2 && known.length === 6 && known.every(item => item.percent >= .5)) return PROFILES.equilibrado;
       if (fixedKnownCount >= 2 && known.length >= 2) {
         const pair = known.slice(0, 2).map(item => item.d);
@@ -1521,11 +1524,10 @@
           });
         if (candidates.length) return candidates[0];
       }
-      const fixedKnown = FACTOR_ORDER.filter(d => fixedEvidenceMax[d] > 0);
       if (fixedKnown.length === 1) {
-        return partialProfile(pairProfiles.find(item => item.factors.includes(fixedKnown[0])) || pairProfiles[0], 'Há pouca evidência direta nas perguntas fixas, então o retrato é parcial.');
+        return partialProfile(catalogFallback, 'Há pouca evidência direta nas perguntas fixas, então o retrato é parcial.');
       }
-      return partialProfile(pairProfiles[0], 'Há pouca evidência direta nas perguntas fixas, então o retrato é parcial.');
+      return partialProfile(catalogFallback, 'As respostas fixas não sustentam um dos pares editoriais completos, então o retrato é parcial.');
     }
 
     function partialMessage(prof) {

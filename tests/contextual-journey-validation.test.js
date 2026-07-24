@@ -97,6 +97,7 @@ test('the evidence model handles full evidence, indeterminacy, ambiguity, edits,
   assert.equal(q11Only.partial, true, 'Q11 cannot choose a profile on its own');
   assert.ok(catalogNames.includes(q11Only.name), 'the fallback remains one of the eight catalog profiles');
   assert.equal(catalogNames.length, 8);
+  assert.equal(partial.q11OnlyProfile('tenis', 1).name, q11Only.name, 'Q11 alone does not select among catalog profiles');
 
   const contextualCanTipProfile = createRuntime();
   contextualCanTipProfile.start('futebol');

@@ -6,7 +6,7 @@ Type: task
 
 **Blocked by:** 03 — Estender a pergunta 11 às modalidades diretas; 04 — Atender categorias alternativas com pergunta 11.
 
-**Status:** resolved
+**Status:** claimed
 
 - [x] As onze rotas de modalidade/categoria são verificadas: cada uma contém as dez perguntas fixas literais, uma única Q11 correta e nenhum resquício do questionário anterior.
 - [x] Casos sintéticos cobrem evidência completa, fatores indeterminados, resposta contextual ambígua, alteração de resposta e a regra que impede Q11 de decidir o perfil.
