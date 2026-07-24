@@ -16,8 +16,6 @@ Usar os cinco rótulos padrão. Ver `docs/agents/triage-labels.md`.
 
 Repositório de contexto único; glossário em `CONTEXT.md` e decisões em `docs/adr/`. Ver `docs/agents/domain.md`.
 
-## Convenções que já foram violadas antes — não regredir
-
 ## Validação visual e mobile
 
 Há um harness local de Playwright em `scripts/ui-harness.js`. Ele sobe e encerra um servidor HTTP próprio para o `index.html`, sem depender de servidor já aberto.
@@ -27,6 +25,8 @@ Há um harness local de Playwright em `scripts/ui-harness.js`. Ele sobe e encerr
 - Jornada com screenshots auditáveis: `npm run screenshots`.
 - O relatório e as imagens ficam em `artifacts/ui/` e são ignorados pelo Git. Antes de declarar validação mobile concluída, execute `npm run screenshots`, inspecione os PNGs mobile e cite `artifacts/ui/report.json` e os screenshots relevantes no handoff.
 - O harness já verifica os viewports mobile (390 × 844, touch) e desktop (1440 × 900), dropdown de “Outros esportes”, as 11 perguntas, voltar/troca de resposta, perfis oficiais, sobreposição dos controles e o guard de hover. Mantenha essas validações atualizadas quando alterar a jornada ou controles interativos.
+
+## Convenções que já foram violadas antes — não regredir
 
 ### 1. Todo `:hover` de elemento interativo vai dentro de `@media (hover: hover) and (pointer: fine)`
 

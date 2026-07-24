@@ -132,6 +132,7 @@ test('the output stays educational, names eleven questions, and preserves the to
   assert.match(source, /Pergunta \$\{current \+ 1\} de \$\{ACTIVE\.length\}/);
   assert.match(source, /Ponto de atenção da sua modalidade/);
   assert.match(source, /const contextualHtml = contextual/, 'the contextual reading is displayed on the result screen');
+  assert.match(source, /contextual\.flagInvitation/, 'the contextual flag invitation is displayed on the result screen and PDF');
   assert.match(source, /mapeamento educativo de autoconhecimento com 11 perguntas/, 'share and WhatsApp messages keep the educational framing');
   assert.doesNotMatch(source, /Risco Futuro Sem Intervenção|PROJEÇÃO DE PADRÃO|futureRisk/);
   assert.doesNotMatch(source, /p\d+\/100|PONTO FORTE\/EM CONSTRUÇÃO\/PONTO DE ATENÇÃO/);

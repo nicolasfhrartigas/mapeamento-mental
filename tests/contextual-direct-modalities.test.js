@@ -111,6 +111,13 @@ test('a new selection creates its own journey and contextual PDF reading', () =>
     assert.match(reading.text, new RegExp(expected.sportName.replace(/[/.]/g, '\\$&')),
       `${sport}: PDF text names the selected modality`);
     assert.equal(reading.safeguard, '', `${sport}: no unrelated safeguard`);
+
+    const compensation = runtime.contextualFor(sport, 1);
+    assert.match(compensation.flagInvitation, /resultado|compensação/i,
+      `${sport}: the compensation flag has a visible contextual invitation`);
+    const distancing = runtime.contextualFor(sport, 2);
+    assert.match(distancing.flagInvitation, /informação/i,
+      `${sport}: the information-distancing flag has a visible contextual invitation`);
   }
 
   assert.equal(Object.keys(CONTEXTUAL_PDF_TEXT).length, 4);

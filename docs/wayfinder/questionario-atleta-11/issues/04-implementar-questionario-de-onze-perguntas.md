@@ -1,7 +1,7 @@
 # Implementar o questionário de onze perguntas
 
 Type: task
-Status: claimed
+Status: resolved
 Blocked by: 01, 02, 03
 
 ## Objetivo

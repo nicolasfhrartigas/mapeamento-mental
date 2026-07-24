@@ -110,6 +110,10 @@ test('alternative selection starts an isolated eleven-question journey and names
       assert.match(reading.text, new RegExp(expectedBlock), `${sport}: PDF block for option ${answerIndex + 1}`);
       assert.equal(reading.flag, answerIndex === 1 ? 'resultado/compensação' : answerIndex === 2 ? 'afastamento da informação' : undefined,
         `${sport}: PDF flag for option ${answerIndex + 1}`);
+      if (answerIndex === 1) assert.match(reading.flagInvitation, /resultado|compensação/i,
+        `${sport}: compensation flag includes its contextual invitation`);
+      if (answerIndex === 2) assert.match(reading.flagInvitation, /informação/i,
+        `${sport}: information-distancing flag includes its contextual invitation`);
       assert.equal(reading.safeguard, '', `${sport}: no bodybuilding-only safeguard`);
     }
   }

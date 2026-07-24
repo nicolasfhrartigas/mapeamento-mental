@@ -131,7 +131,7 @@ async function completeDirectJourney(page, run) {
   });
   await continueButton.click();
 
-  const answers = [2, 1, 0, 2, 1, 1, 2, 2, 2, 2, 0];
+  const answers = [2, 1, 0, 2, 1, 1, 2, 2, 2, 2, 1];
   for (let question = 0; question < answers.length; question += 1) {
     const number = page.locator('#qNum');
     await check(run, `shows Pergunta ${question + 1} de 11`, async () => {
@@ -163,6 +163,12 @@ async function completeDirectJourney(page, run) {
     assert.equal(await page.getByText('Leitura situada', { exact: false }).count(), 0);
   });
   await screenshot(page, run, 'resultado');
+  const contextualInvitation = page.getByText('Convite de observação:', { exact: false });
+  await check(run, 'result screen displays the contextual flag invitation', async () => {
+    await assertVisibleEnabled(contextualInvitation, 'contextual flag invitation');
+    await assertInViewportAndUncovered(contextualInvitation, 'contextual flag invitation');
+  });
+  await screenshot(page, run, 'resultado-contextual');
 }
 
 async function verifyOtherSports(page, run) {

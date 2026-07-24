@@ -1292,6 +1292,11 @@
       alignment: 'No seu contexto de {modalidade}, você descreveu usar uma observação objetiva, um critério combinado ou uma comunicação curta para retomar a tarefa. Pode valer deixar esse sinal explícito antes de competir: o que cada pessoa observa, quando ele é usado e qual é a próxima ação possível. Isso mantém o foco na tarefa, não em provar algo pelo resultado.',
     };
 
+    const CONTEXTUAL_FLAG_INVITATIONS = {
+      'resultado/compensação': 'Convite de observação: antes de tentar compensar o resultado, nomeie um critério simples da tarefa que possa orientar a próxima decisão.',
+      'afastamento da informação': 'Convite de observação: ao retomar a situação, escolha uma informação simples para verificar se a pausa ajudou ou apenas adiou o ajuste.',
+    };
+
     const FIXED_FLAG_PROMPTS = {
       'validação externa': 'Em quais situações reconhecimento ou comparação externa passam a guiar sua escolha?',
       'travamento sob pressão': 'O que ajuda a voltar a um sinal simples da tarefa quando o momento pesa?',
@@ -1320,7 +1325,13 @@
       const safeguard = profile.sport === 'fisiculturismo' && (answer.flag === 'resultado/compensação' || answer.flag === 'afastamento da informação')
         ? 'Se avaliações de corpo, comida, peso ou treino estiverem causando sofrimento, culpa persistente ou pressão para ignorar cuidados, converse com um profissional de saúde qualificado e com sua equipe; este questionário não orienta mudanças de dieta, treino ou retorno.'
         : '';
-      return { hook: question.hook, text, flag: answer.flag, safeguard };
+      return {
+        hook: question.hook,
+        text,
+        flag: answer.flag,
+        flagInvitation: answer.flag ? CONTEXTUAL_FLAG_INVITATIONS[answer.flag] : '',
+        safeguard,
+      };
     }
 
     // ══════════════════════════════════════════
@@ -1573,7 +1584,7 @@
       <div class="section-label">Ponto de atenção da sua modalidade</div>
       <div class="risk-block">
         <div class="risk-title">${contextual.hook}</div>
-        <div class="risk-text">${[contextual.text, 'Esta resposta descreve a situação escolhida hoje, não uma qualidade fixa.', contextual.safeguard].filter(Boolean).map(text => `<p>${text}</p>`).join('')}</div>
+        <div class="risk-text">${[contextual.text, contextual.flagInvitation, 'Esta resposta descreve a situação escolhida hoje, não uma qualidade fixa.', contextual.safeguard].filter(Boolean).map(text => `<p>${text}</p>`).join('')}</div>
       </div>
     </div>` : '';
 
@@ -1736,7 +1747,7 @@
         const contextual = contextualReading();
         if (contextual) {
           sec('Ponto de atenção da sua modalidade');
-          [contextual.hook, contextual.text, 'Esta resposta descreve a situação escolhida hoje, não uma qualidade fixa.', contextual.safeguard].filter(Boolean).forEach(text => {
+          [contextual.hook, contextual.text, contextual.flagInvitation, 'Esta resposta descreve a situação escolhida hoje, não uma qualidade fixa.', contextual.safeguard].filter(Boolean).forEach(text => {
             sf('normal', 9, C_T2);
             const lines = doc.splitTextToSize(text, CW); ensureSp(lines.length * 12 + 7); doc.text(lines, M, y); y += lines.length * 12 + 7;
           });
