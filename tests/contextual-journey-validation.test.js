@@ -54,7 +54,7 @@ function createRuntime() {
       },
       summary: factor => factorSummary(factor),
       contextual: () => contextualReading(),
-      data: () => ({ FIXED_QUESTIONS, CONTEXTUAL_QUESTIONS, CONTEXTUAL_PDF_TEXT }),
+      data: () => ({ FIXED_QUESTIONS, CONTEXTUAL_QUESTIONS, CONTEXTUAL_PDF_TEXT, PROFILES }),
     };`, context);
   return context.api;
 }
@@ -91,15 +91,19 @@ test('the evidence model handles full evidence, indeterminacy, ambiguity, edits,
   assert.ok(['process', 'alignment'].includes(complete.contextual().text.includes('referência de processo') ? 'process' : 'alignment'));
 
   const partial = createRuntime();
+  const { PROFILES } = partial.data();
+  const catalogNames = Object.values(PROFILES).map(profile => profile.name);
   const q11Only = partial.q11OnlyProfile('tenis', 0);
   assert.equal(q11Only.partial, true, 'Q11 cannot choose a profile on its own');
+  assert.ok(catalogNames.includes(q11Only.name), 'the fallback remains one of the eight catalog profiles');
+  assert.equal(catalogNames.length, 8);
 
-  const contextualCannotTipProfile = createRuntime();
-  contextualCannotTipProfile.start('futebol');
-  [3, 1, 3, 0, 2, 1, 1, 3, 0, 2].forEach(answer => contextualCannotTipProfile.answer(answer));
-  const profileBeforeQ11 = contextualCannotTipProfile.profile().name;
-  contextualCannotTipProfile.answer(1); // Q11: a theme for regulation to observe
-  assert.equal(contextualCannotTipProfile.profile().name, profileBeforeQ11, 'Q11 cannot change a profile chosen from fixed questions');
+  const contextualCanTipProfile = createRuntime();
+  contextualCanTipProfile.start('futebol');
+  [3, 1, 3, 0, 2, 1, 1, 3, 0, 2].forEach(answer => contextualCanTipProfile.answer(answer));
+  assert.equal(contextualCanTipProfile.profile().name, 'O Perfeccionista em Chamas');
+  contextualCanTipProfile.answer(1); // Q11: a theme for regulation to observe
+  assert.equal(contextualCanTipProfile.profile().name, 'O Atleta de Dois Tempos', 'Q11 can influence a profile supported by fixed evidence');
 
   const ambiguous = createRuntime();
   ambiguous.start('corrida');

@@ -12,7 +12,7 @@ Type: task
 - [x] Casos sintéticos cobrem evidência completa, fatores indeterminados, resposta contextual ambígua, alteração de resposta e a regra que impede Q11 de decidir o perfil.
 - [x] As telas e PDFs são revisados contra os limites educativos: sem diagnóstico, previsão, causalidade, promessa de desempenho, escore exibido ou linguagem de triagem.
 - [x] Metadados e mensagens auxiliares refletem onze perguntas e a ferramenta educativa de autoconhecimento.
-- [x] Em viewport mobile, os controles continuam tocáveis e nenhum `:hover` interativo fica fora do único guard de ponteiro fino.
+- [ ] Em viewport mobile, os controles continuam tocáveis e nenhum `:hover` interativo fica fora do único guard de ponteiro fino.
 
 ## Answer
 
@@ -26,12 +26,13 @@ Também foram removidos os dados legados, não utilizados, que ainda continham l
 de projeção de risco. A cobertura passa a impedir o retorno de projeção futura, de
 escore exposto e de qualquer `:hover` fora do único guard de ponteiro fino.
 
-A seleção de perfil usa exclusivamente a evidência das dez perguntas fixas; a Q11
-continua enriquecendo os fatores e sua leitura aparece agora tanto na tela de resultado
-quanto no PDF. As mensagens de WhatsApp e compartilhamento também passaram a declarar
+A seleção de perfil exige evidência das perguntas fixas e permite que a Q11 influencie
+a ordenação final sem escolher um perfil sozinha. Sua leitura aparece tanto na tela de
+resultado quanto no PDF. As mensagens de WhatsApp e compartilhamento também declaram
 o mapeamento educativo de autoconhecimento com 11 perguntas.
 
 Verificações executadas: `node --test` (9 testes), sintaxe do JavaScript, `git diff
 --check` e `grep -n "@media\|:hover" index.html`. O navegador controlável não estava
-disponível nesta sessão para repetir a inspeção visual em 390 × 844 px; os controles de
-toque foram verificados estruturalmente e a alteração não modificou CSS ou handlers.
+disponível nesta sessão para repetir a inspeção visual em 390 × 844 px. O guard de
+ponteiro foi verificado estruturalmente, mas isso não substitui o teste mobile; por isso
+o critério permanece pendente.

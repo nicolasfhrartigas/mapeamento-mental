@@ -1188,17 +1188,6 @@
       },
     };
 
-    const PARTIAL_PROFILE = {
-      factors: [], type: 'LEITURA EDUCATIVA · EVIDÊNCIA PARCIAL', name: 'Leitura situada', subtitle: 'Quando as respostas não formam um dos pares editoriais do catálogo',
-      essence: 'Um resumo educativo de respostas que pedem observação, sem atribuir um perfil do catálogo sem evidência suficiente.',
-      narrative: ['Este resultado é uma forma educativa de organizar as respostas de hoje; ele não descreve uma identidade fixa.', 'As respostas trouxeram temas que não formam um dos pares editoriais do catálogo. Em vez de forçar um perfil, este retrato preserva o que foi respondido e convida a observar as situações concretas.'],
-      forces: [{ title: 'Olhar para a situação', text: 'Uma resposta situada pode ser um ponto de partida para notar o que ajuda ou pesa em cada contexto.' }],
-      vulns: [{ title: 'Evitar conclusões amplas', text: 'Pode valer retomar as respostas sem transformá-las em uma definição sobre você.' }],
-      observations: ['Qual situação respondida merece uma observação mais concreta?', 'Que referência de processo pode ajudar na próxima ação?'],
-      developments: [{ title: 'Registrar uma situação', text: 'Anote uma situação recente, o que você observou e qual pequena ação era possível naquele momento.' }],
-      cta: 'Se fizer sentido, leve uma situação concreta para conversar com alguém de confiança ou com um profissional.'
-    };
-
     const FIXED_QUESTIONS = [
       { label: 'Pergunta fixa', text: 'Você erra uma execução simples no treino, algo que normalmente acerta sem pensar. O que acontece na sua cabeça logo depois?', opts: [
         { text: 'O resto do treino fica contaminado. Você continua, mas a cabeça volta naquele erro.', d: { perf: 0, reg: 0 } },
@@ -1514,28 +1503,29 @@
     function selectProfile() {
       const fixedKnownCount = FACTOR_ORDER.filter(d => fixedEvidenceMax[d] > 0).length;
       const known = FACTOR_ORDER
-        .filter(d => fixedEvidenceMax[d] > 0)
-        .map(d => ({ d, percent: summarizeFactor(fixedScores, fixedEvidenceMax, fixedAttentionEvidence, d).percent }))
+        .filter(d => evidenceMax[d] > 0)
+        .map(d => ({ d, percent: summarizeFactor(scores, evidenceMax, attentionEvidence, d).percent }))
         .sort((a, b) => a.percent - b.percent || FACTOR_ORDER.indexOf(a.d) - FACTOR_ORDER.indexOf(b.d));
+      const pairProfiles = Object.values(PROFILES).filter(item => item.factors.length === 2);
+      const partialProfile = (base, reason) => ({ ...base, partial: true, partialReason: reason });
       if (fixedKnownCount >= 2 && known.length === 6 && known.every(item => item.percent >= .5)) return PROFILES.equilibrado;
       if (fixedKnownCount >= 2 && known.length >= 2) {
         const pair = known.slice(0, 2).map(item => item.d);
-        const exact = Object.values(PROFILES).find(item => item.factors.length === 2 && item.factors.every(factor => pair.includes(factor)));
+        const exact = pairProfiles.find(item => item.factors.every(factor => pair.includes(factor)));
         if (exact) return exact;
-        const candidates = Object.values(PROFILES)
-          .filter(item => item.factors.length === 2 && item.factors.every(factor => fixedEvidenceMax[factor] > 0))
+        const candidates = pairProfiles
+          .filter(item => item.factors.every(factor => evidenceMax[factor] > 0))
           .sort((a, b) => {
-            const score = item => item.factors.reduce((sum, factor) => sum + summarizeFactor(fixedScores, fixedEvidenceMax, fixedAttentionEvidence, factor).percent, 0);
+            const score = item => item.factors.reduce((sum, factor) => sum + summarizeFactor(scores, evidenceMax, attentionEvidence, factor).percent, 0);
             return score(a) - score(b) || FACTOR_ORDER.indexOf(a.factors[0]) - FACTOR_ORDER.indexOf(b.factors[0]);
           });
         if (candidates.length) return candidates[0];
-        return { ...PARTIAL_PROFILE, partial: true, partialReason: 'As respostas não formam um dos pares editoriais do catálogo, então este retrato é parcial.' };
       }
       const fixedKnown = FACTOR_ORDER.filter(d => fixedEvidenceMax[d] > 0);
       if (fixedKnown.length === 1) {
-        return { ...(Object.values(PROFILES).find(item => item.factors.length === 2 && item.factors.includes(fixedKnown[0])) || PARTIAL_PROFILE), partial: true, partialReason: 'Há pouca evidência direta nas perguntas fixas, então o retrato é parcial.' };
+        return partialProfile(pairProfiles.find(item => item.factors.includes(fixedKnown[0])) || pairProfiles[0], 'Há pouca evidência direta nas perguntas fixas, então o retrato é parcial.');
       }
-      return { ...PARTIAL_PROFILE, partial: true, partialReason: 'Há pouca evidência direta nas perguntas fixas, então o retrato é parcial.' };
+      return partialProfile(pairProfiles[0], 'Há pouca evidência direta nas perguntas fixas, então o retrato é parcial.');
     }
 
     function partialMessage(prof) {

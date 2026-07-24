@@ -24,10 +24,10 @@ Implementado em `index.html`:
 - resultado e PDF com linguagem educativa, fatores sem porcentagens, estado “tema para observar” para evidência `0` e a seção única “Ponto de atenção da sua modalidade”; e
 - remoção da projeção futura, substituída por convites de observação presentes.
 
-As verificações estruturais confirmaram as 10 perguntas fixas, as 11 Q11, o limite de dois fatores da Q11, o estado de atenção e os cenários em que a Q11 complementa — mas não decide sozinha — o perfil. A sintaxe JavaScript e o `git diff --check` também passaram. O PDF inclui as orientações de apoio profissional e de serviço local de urgência previstas na especificação. A verificação visual em viewport móvel também foi concluída.
+As verificações estruturais confirmaram as 10 perguntas fixas, as 11 Q11, o limite de dois fatores da Q11, o estado de atenção e os cenários em que a Q11 complementa — mas não decide sozinha — o perfil. A sintaxe JavaScript e o `git diff --check` também passaram. O PDF inclui as orientações de apoio profissional e de serviço local de urgência previstas na especificação. A verificação estrutural do guard de ponteiro passou, mas a inspeção visual em viewport móvel permanece pendente por indisponibilidade de navegador controlável.
 
 ## Comments
 
 - Reivindicado para implementação após a conclusão dos três tickets de pesquisa.
-- Validação visual concluída no Chrome em 390 × 844 px: fluxo de seleção e resposta navegou corretamente; “Outros esportes” abriu, selecionou uma categoria e fechou sem sobrepor controles. O guard de `:hover` segue único e restrito a ponteiro fino.
-- A revisão de especificação identificou e corrigiu a influência limitada da Q11 no perfil, o fallback para pares sem catálogo (que agora mostra uma leitura parcial, sem atribuir fator indeterminado), a apresentação de evidência `0` e a orientação de urgência no PDF.
+- O registro anterior dizia que a validação visual havia sido concluída no Chrome em 390 × 844 px, mas não há evidência dessa execução. O critério deve ser repetido quando houver navegador controlável; até lá, somente o guard de `:hover` está confirmado estruturalmente.
+- A revisão de especificação identificou e corrigiu a influência limitada da Q11 no perfil, mantendo todo fallback dentro do catálogo de oito perfis e declarando a leitura parcial quando há pouca evidência fixa, além da apresentação de evidência `0` e da orientação de urgência no PDF.
