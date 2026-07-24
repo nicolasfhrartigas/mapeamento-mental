@@ -800,7 +800,7 @@
           <div class="eyebrow">A performance começa antes do treino</div>
           <h1 class="intro-headline">Qual é o seu<br><em>tipo mental</em> como atleta?</h1>
           <p class="intro-body">
-            Todo atleta conhece o próprio corpo em detalhe: carga, pace, medidas, tempo de prova. Quase nenhum conhece o
+            Todo atleta conhece o próprio corpo em detalhe: carga, pace, medidas, tempo de prova. Quase nenhum tem
             formas de observar o que acontece nas situações que o esporte traz.<br><br>
             Este mapeamento organiza tendências que apareceram nas suas respostas de hoje. São dez perguntas fixas e uma
             pergunta contextual para sua modalidade. <strong>Não existem respostas certas:</strong> responda pela situação
@@ -1352,7 +1352,7 @@
       <div class="dim-track" role="progressbar" aria-label="${DIMS[key]}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percentage}">
         <div class="dim-fill" style="width:0%" data-target="${percentage}"></div>
       </div>
-      <div class="dim-insight">${DIM_INSIGHTS[key].known}</div>
+      <div class="dim-insight">${DIM_INSIGHTS[key][dimScores[key].known ? 'known' : 'unknown']}</div>
     </div>`;
       }).join('');
 
