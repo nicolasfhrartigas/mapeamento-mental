@@ -2,6 +2,20 @@
 
 Landing page single-file (`index.html`) do teste "tipo mental do atleta". Sem build step, sem framework — HTML/CSS/JS puro, hospedado como página estática (GitHub Pages). Todo o app vive em `index.html`; `questionario_atletas_ptbr.txt` é conteúdo de referência das perguntas, não é lido em runtime.
 
+## Agent skills
+
+### Issue tracker
+
+Issues, PRDs e mapas de decisão vivem em tickets Markdown sob `docs/wayfinder/`. Ver `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Usar os cinco rótulos padrão. Ver `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Repositório de contexto único; glossário em `CONTEXT.md` e decisões em `docs/adr/`. Ver `docs/agents/domain.md`.
+
 ## Convenções que já foram violadas antes — não regredir
 
 ### 1. Todo `:hover` de elemento interativo vai dentro de `@media (hover: hover) and (pointer: fine)`

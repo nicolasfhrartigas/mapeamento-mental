@@ -21,10 +21,12 @@ Chegar a uma especificação implementável para substituir o questionário por 
 
 - [Definir a matriz de pontuação das dez perguntas fixas](./issues/01-matriz-das-dez-perguntas-fixas.md) — matriz por evidência direta, fatores indeterminados quando não há dado e regra de perfil que preserva o catálogo sem tratar ambiguidade como déficit.
 - [Definir as perguntas contextuais e a seção personalizada do PDF](./issues/02-perguntas-contextuais-e-secao-pdf.md) — uma Q11 por modalidade/categoria, com decisão de tarefa observável, evidência limitada a dois fatores e trecho educativo contextual no PDF.
+- [Revisar o feedback e o PDF sem extrapolar a base teórica](./issues/03-revisar-feedback-e-pdf-com-base-teorica.md) — feedback situado e não diagnóstico, fatores indeterminados quando a evidência não basta, observações presentes em vez de projeções e seção contextual obrigatória no PDF.
+- [Implementar o questionário de onze perguntas](./issues/04-implementar-questionario-de-onze-perguntas.md) — aplicação em `index.html` das perguntas, matriz de evidência, resultado educativo e seção contextual do PDF.
 
 ## Not yet specified
 
-Nenhuma neblina conhecida: o ticket 03 aberto cobre a revisão final necessária para entregar a especificação implementável.
+Nenhuma: a especificação implementável está completa.
 
 ## Out of scope
 
