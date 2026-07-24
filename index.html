@@ -1661,6 +1661,17 @@
       },
     };
 
+    const PARTIAL_PROFILE = {
+      factors: [], type: 'LEITURA EDUCATIVA · EVIDÊNCIA PARCIAL', name: 'Leitura situada', subtitle: 'Quando as respostas não formam um dos pares editoriais do catálogo',
+      essence: 'Um resumo educativo de respostas que pedem observação, sem atribuir um perfil do catálogo sem evidência suficiente.',
+      narrative: ['Este resultado é uma forma educativa de organizar as respostas de hoje; ele não descreve uma identidade fixa.', 'As respostas trouxeram temas que não formam um dos pares editoriais do catálogo. Em vez de forçar um perfil, este retrato preserva o que foi respondido e convida a observar as situações concretas.'],
+      forces: [{ title: 'Olhar para a situação', text: 'Uma resposta situada pode ser um ponto de partida para notar o que ajuda ou pesa em cada contexto.' }],
+      vulns: [{ title: 'Evitar conclusões amplas', text: 'Pode valer retomar as respostas sem transformá-las em uma definição sobre você.' }],
+      observations: ['Qual situação respondida merece uma observação mais concreta?', 'Que referência de processo pode ajudar na próxima ação?'],
+      developments: [{ title: 'Registrar uma situação', text: 'Anote uma situação recente, o que você observou e qual pequena ação era possível naquele momento.' }],
+      cta: 'Se fizer sentido, leve uma situação concreta para conversar com alguém de confiança ou com um profissional.'
+    };
+
     const FIXED_QUESTIONS = [
       { label: 'Pergunta fixa', text: 'Você erra uma execução simples no treino, algo que normalmente acerta sem pensar. O que acontece na sua cabeça logo depois?', opts: [
         { text: 'O resto do treino fica contaminado. Você continua, mas a cabeça volta naquele erro.', d: { perf: 0, reg: 0 } },
@@ -1989,25 +2000,24 @@
         const pair = known.slice(0, 2).map(item => item.d);
         const exact = Object.values(PROFILES).find(item => item.factors.length === 2 && item.factors.every(factor => pair.includes(factor)));
         if (exact) return exact;
-        const focus = known[0].d;
         const candidates = Object.values(PROFILES)
-          .filter(item => item.factors.length === 2 && item.factors.includes(focus))
+          .filter(item => item.factors.length === 2 && item.factors.every(factor => factorSummary(factor).known))
           .sort((a, b) => {
-            const aOther = a.factors.find(factor => factor !== focus);
-            const bOther = b.factors.find(factor => factor !== focus);
-            const aScore = factorSummary(aOther);
-            const bScore = factorSummary(bOther);
-            const aPercent = aScore.known ? aScore.percent : Infinity;
-            const bPercent = bScore.known ? bScore.percent : Infinity;
-            return aPercent - bPercent || FACTOR_ORDER.indexOf(aOther) - FACTOR_ORDER.indexOf(bOther);
+            const score = item => item.factors.reduce((sum, factor) => sum + factorSummary(factor).percent, 0);
+            return score(a) - score(b) || FACTOR_ORDER.indexOf(a.factors[0]) - FACTOR_ORDER.indexOf(b.factors[0]);
           });
         if (candidates.length) return candidates[0];
+        return { ...PARTIAL_PROFILE, partial: true, partialReason: 'As respostas não formam um dos pares editoriais do catálogo, então este retrato é parcial.' };
       }
       const fixedKnown = FACTOR_ORDER.filter(d => fixedEvidenceMax[d] > 0);
       if (fixedKnown.length === 1) {
-        return { ...(Object.values(PROFILES).find(item => item.factors.length === 2 && item.factors.includes(fixedKnown[0])) || PROFILES.equilibrado), partial: true };
+        return { ...(Object.values(PROFILES).find(item => item.factors.length === 2 && item.factors.includes(fixedKnown[0])) || PARTIAL_PROFILE), partial: true, partialReason: 'Há pouca evidência direta nas perguntas fixas, então o retrato é parcial.' };
       }
-      return { ...PROFILES['reg+sup'], partial: true };
+      return { ...PARTIAL_PROFILE, partial: true, partialReason: 'Há pouca evidência direta nas perguntas fixas, então o retrato é parcial.' };
+    }
+
+    function partialMessage(prof) {
+      return prof.partial ? ` ${prof.partialReason}` : '';
     }
 
     const LEGACY_DIM_INSIGHTS = {
@@ -2055,7 +2065,7 @@
       $('resultContent').innerHTML = `
     <div class="result-notice">
       <span class="rn-icon">💡</span>
-      <span class="rn-text"><strong>Sobre este resultado:</strong> este resultado organiza tendências que apareceram nas suas respostas de hoje. Ele é educativo, não é diagnóstico nem avaliação psicológica formal, e não define quem você é.${prof.partial ? ' Neste caso, há pouca evidência direta nas perguntas fixas, então o retrato é parcial.' : ''}</span>
+      <span class="rn-text"><strong>Sobre este resultado:</strong> este resultado organiza tendências que apareceram nas suas respostas de hoje. Ele é educativo, não é diagnóstico nem avaliação psicológica formal, e não define quem você é.${partialMessage(prof)}</span>
     </div>
 
     <div class="profile-header">
@@ -2188,7 +2198,7 @@
           y += 82;
           if (prof.partial) {
             sf('normal', 8, C_GRAY);
-            const partialLines = doc.splitTextToSize('Há pouca evidência direta nas perguntas fixas; este retrato é parcial.', CW);
+            const partialLines = doc.splitTextToSize(prof.partialReason, CW);
             ensureSp(partialLines.length * 11 + 8); doc.text(partialLines, M, y); y += partialLines.length * 11 + 8;
           }
         }

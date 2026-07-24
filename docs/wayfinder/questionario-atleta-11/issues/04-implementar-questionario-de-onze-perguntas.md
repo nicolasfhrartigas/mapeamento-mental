@@ -30,4 +30,4 @@ As verificações estruturais confirmaram as 10 perguntas fixas, as 11 Q11, o li
 
 - Reivindicado para implementação após a conclusão dos três tickets de pesquisa.
 - A validação visual em viewport móvel foi tentada, mas o navegador integrado não está disponível nesta sessão; a verificação estática do guard de `:hover` e os testes estruturais seguem obrigatórios nesta entrega.
-- A revisão de especificação identificou e corrigiu a influência limitada da Q11 no perfil, o fallback para pares sem catálogo, a apresentação de evidência `0` e a orientação de urgência no PDF.
+- A revisão de especificação identificou e corrigiu a influência limitada da Q11 no perfil, o fallback para pares sem catálogo (que agora mostra uma leitura parcial, sem atribuir fator indeterminado), a apresentação de evidência `0` e a orientação de urgência no PDF.
