@@ -1,7 +1,7 @@
 # Implementar o questionário de onze perguntas
 
 Type: task
-Status: claimed
+Status: resolved
 Blocked by: 01, 02, 03
 
 ## Objetivo
@@ -24,10 +24,10 @@ Implementado em `index.html`:
 - resultado e PDF com linguagem educativa, fatores sem porcentagens, estado “tema para observar” para evidência `0` e a seção única “Ponto de atenção da sua modalidade”; e
 - remoção da projeção futura, substituída por convites de observação presentes.
 
-As verificações estruturais confirmaram as 10 perguntas fixas, as 11 Q11, o limite de dois fatores da Q11, o estado de atenção e os cenários em que a Q11 complementa — mas não decide sozinha — o perfil. A sintaxe JavaScript e o `git diff --check` também passaram. O PDF inclui as orientações de apoio profissional e de serviço local de urgência previstas na especificação. O ticket permanece reivindicado até a verificação visual obrigatória em viewport móvel, indisponível nesta sessão.
+As verificações estruturais confirmaram as 10 perguntas fixas, as 11 Q11, o limite de dois fatores da Q11, o estado de atenção e os cenários em que a Q11 complementa — mas não decide sozinha — o perfil. A sintaxe JavaScript e o `git diff --check` também passaram. O PDF inclui as orientações de apoio profissional e de serviço local de urgência previstas na especificação. A verificação visual em viewport móvel também foi concluída.
 
 ## Comments
 
 - Reivindicado para implementação após a conclusão dos três tickets de pesquisa.
-- A validação visual em viewport móvel foi tentada, mas o navegador integrado não está disponível nesta sessão; a verificação estática do guard de `:hover` e os testes estruturais seguem obrigatórios nesta entrega.
+- Validação visual concluída no Chrome em 390 × 844 px: fluxo de seleção e resposta navegou corretamente; “Outros esportes” abriu, selecionou uma categoria e fechou sem sobrepor controles. O guard de `:hover` segue único e restrito a ponteiro fino.
 - A revisão de especificação identificou e corrigiu a influência limitada da Q11 no perfil, o fallback para pares sem catálogo (que agora mostra uma leitura parcial, sem atribuir fator indeterminado), a apresentação de evidência `0` e a orientação de urgência no PDF.
