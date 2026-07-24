@@ -133,7 +133,7 @@ async function completeDirectJourney(page, run) {
 
   const answers = [2, 1, 0, 2, 1, 1, 2, 2, 2, 2, 1];
   for (let question = 0; question < answers.length; question += 1) {
-    const number = page.locator('#qNum');
+    const number = page.locator('#qDim');
     await check(run, `shows Pergunta ${question + 1} de 11`, async () => {
       await assert.equal(await number.textContent(), `Pergunta ${question + 1} de 11`);
     });
@@ -163,12 +163,20 @@ async function completeDirectJourney(page, run) {
     assert.equal(await page.getByText('Leitura situada', { exact: false }).count(), 0);
   });
   await screenshot(page, run, 'resultado');
-  const contextualInvitation = page.getByText('Convite de observação:', { exact: false });
-  await check(run, 'result screen displays the contextual flag invitation', async () => {
-    await assertVisibleEnabled(contextualInvitation, 'contextual flag invitation');
-    await assertInViewportAndUncovered(contextualInvitation, 'contextual flag invitation');
+  await check(run, 'result screen omits removed contextual and reflection sections', async () => {
+    for (const heading of ['Ponto de atenção da sua modalidade', 'O que joga a seu favor', 'O que merece atenção', 'O que pode valer observar agora', 'Por onde começar', 'Sobre este resultado:']) {
+      await assert.equal(await page.getByText(heading, { exact: true }).count(), 0, `removed heading is visible: ${heading}`);
+    }
+    for (const flag of ['Evidência direta', 'Tema para observar', 'Evidência insuficiente']) {
+      await assert.equal(await page.getByText(flag, { exact: true }).count(), 0, `removed factor flag is visible: ${flag}`);
+    }
+    const factorBars = page.locator('.dim-track');
+    await assert.equal(await factorBars.count(), 6, 'each factor must display a percentage bar');
+    for (let index = 0; index < await factorBars.count(); index += 1) {
+      await assertVisibleEnabled(factorBars.nth(index), `factor bar ${index + 1}`);
+    }
+    await assert.equal(await page.getByRole('button', { name: /Compartilhar meu resultado/ }).count(), 0, 'removed share button is visible');
   });
-  await screenshot(page, run, 'resultado-contextual');
 }
 
 async function verifyOtherSports(page, run) {
@@ -232,6 +240,30 @@ async function assertHoverGuard(run) {
   });
 }
 
+async function assertPDFResultLayout(run) {
+  await check(run, 'PDF result layout follows the requested order and omits removed copy', async () => {
+    const source = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+    const pdf = source.slice(source.indexOf('function downloadPDF()'), source.indexOf('function restartQuiz()'));
+    assert.equal(pdf.includes('NOTA IMPORTANTE'), false, 'PDF must not render the important-note box');
+    assert.equal(pdf.includes("sec('Leitura do Perfil')"), false, 'PDF must not render the profile-reading section');
+    assert.equal(pdf.includes('Esta resposta descreve a situação escolhida'), false, 'PDF must not render the removed contextual closing sentence');
+    assert.equal(pdf.includes('EVIDÊNCIA DIRETA'), false, 'PDF must not render the direct-evidence label');
+    assert.equal(pdf.includes('TEMA PARA OBSERVAR'), false, 'PDF must not render the attention-theme label');
+    assert.ok(pdf.includes('factorBar(summary.percent)'), 'PDF factors must use proportional progress bars');
+
+    const profile = pdf.indexOf('// Perfil mental: primeiro elemento do relatório.');
+    const choices = pdf.indexOf("sec('Suas escolhas')");
+    const contextual = pdf.indexOf("sec('Ponto de atenção da sua modalidade')");
+    const factors = pdf.indexOf("sec('Fatores mentais acompanhados')");
+    assert.ok(profile > -1 && choices > profile && contextual > choices && factors > contextual,
+      'PDF order must be profile, athlete choices, contextual attention, then mental factors');
+    assert.ok(pdf.includes('C_ORANGE.map'), 'PDF factor bars must use the orange-to-green gradient');
+    assert.ok(pdf.includes('const C_GREEN = [168, 185, 145]'), 'PDF factor-bar green must use the lighter endpoint');
+    assert.ok(pdf.includes('const pdfSportLabel'), 'PDF must use a dedicated sport label');
+    assert.ok(pdf.includes('Extended_Pictographic'), 'PDF sport label must remove emoji characters');
+  });
+}
+
 async function main() {
   fs.rmSync(artifactsDir, { recursive: true, force: true });
   fs.mkdirSync(artifactsDir, { recursive: true });
@@ -247,6 +279,7 @@ async function main() {
       const context = await browser.newContext({ viewport: device.viewport, isMobile: device.isMobile, hasTouch: device.hasTouch });
       const page = await context.newPage();
       await page.goto(baseURL, { waitUntil: 'domcontentloaded' });
+      await assertPDFResultLayout(run);
       await check(run, 'initial start control is visible, enabled, in viewport, and uncovered', async () => {
         const start = page.getByRole('button', { name: 'Começar o mapeamento →' });
         await assertVisibleEnabled(start, 'start button');

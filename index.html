@@ -404,14 +404,7 @@
       letter-spacing: .14em;
       text-transform: uppercase;
       color: var(--text2);
-      margin-bottom: 6px
-    }
-
-    .q-num {
-      font-size: 10px;
-      color: var(--text3);
       margin-bottom: 18px;
-      font-weight: 500
     }
 
     .q-text {
@@ -526,34 +519,6 @@
       font-style: italic
     }
 
-    .result-notice {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      background: rgba(220, 95, 40, .06);
-      border: 1px solid rgba(220, 95, 40, .28);
-      border-radius: 8px;
-      padding: 14px 16px;
-      margin-bottom: 22px
-    }
-
-    .rn-icon {
-      font-size: 14px;
-      margin-top: 2px;
-      flex-shrink: 0
-    }
-
-    .rn-text {
-      font-size: 12px;
-      color: var(--text3);
-      line-height: 1.55
-    }
-
-    .rn-text strong {
-      color: var(--text2);
-      font-weight: 500
-    }
-
     .result-section {
       margin-bottom: 22px
     }
@@ -632,6 +597,7 @@
     .dim-fill {
       height: 100%;
       border-radius: 6px;
+      background: linear-gradient(90deg, var(--orange), var(--green));
       transition: width 1.2s cubic-bezier(.4, 0, .2, 1)
     }
 
@@ -1070,7 +1036,6 @@
         <!-- QUESTIONS -->
         <div class="screen" id="s-question">
           <div class="q-dim" id="qDim"></div>
-          <div class="q-num" id="qNum"></div>
           <div class="q-text" id="qText"></div>
           <div class="q-context" id="qContext" style="display:none"></div>
           <div class="options" id="qOptions"></div>
@@ -1450,8 +1415,7 @@
 
     function renderQuestion() {
       const q = ACTIVE[current];
-      $('qDim').textContent = q.label;
-      $('qNum').textContent = `Pergunta ${current + 1} de ${ACTIVE.length}`;
+      $('qDim').textContent = `Pergunta ${current + 1} de ${ACTIVE.length}`;
       $('qText').textContent = q.text;
       const ctx = $('qContext');
       if (q.context) { ctx.textContent = q.context; ctx.style.display = 'block'; }
@@ -1541,11 +1505,6 @@
       return partialProfile(catalogFallback, 'As respostas fixas não sustentam um dos pares editoriais completos, então o retrato é parcial.');
     }
 
-    function partialMessage(prof) {
-      return prof.partial ? ` ${prof.partialReason}` : '';
-    }
-
-
     function showResult() {
       prog.style.width = '100%';
       const prof = selectProfile();
@@ -1553,47 +1512,24 @@
       logLead();
 
       const dimScores = Object.fromEntries(FACTOR_ORDER.map(d => [d, factorSummary(d)]));
-
       const waSig = ` | ${profile.name}`;
       const waText = `Oi Nicolas! Concluí o mapeamento educativo de autoconhecimento com 11 perguntas. Minha leitura de hoje foi "${prof.name}". Quero entender melhor o resultado e como funciona o acompanhamento.${waSig}`;
       const waLink = `https://wa.me/5544988433895?text=${encodeURIComponent(waText)}`;
 
-      // Substitui {nome} na narrativa
-      const narrativeHtml = prof.narrative.map(p => `<p>${p.replace(/\{nome\}/g, profile.name)}</p>`).join('');
-
       const dimsHtml = FACTOR_ORDER.map(key => {
-        const d = dimScores[key];
-        const label = d.attention ? 'Tema para observar' : d.known ? 'Evidência direta' : 'Evidência insuficiente';
-        const labelClass = d.attention ? 'mid' : d.known ? 'high' : 'low';
+        const percentage = Math.round((dimScores[key].percent || 0) * 100);
         return `<div class="dim-row">
       <div class="dim-row-top">
         <span class="dim-name">${DIMS[key]}</span>
-        <span class="dim-score-label ${labelClass}">${label}</span>
       </div>
-      <div class="dim-insight">${DIM_INSIGHTS[key][d.known ? 'known' : 'unknown']}</div>
+      <div class="dim-track" role="progressbar" aria-label="${DIMS[key]}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percentage}">
+        <div class="dim-fill" style="width:0%" data-target="${percentage}"></div>
+      </div>
+      <div class="dim-insight">${DIM_INSIGHTS[key].known}</div>
     </div>`;
       }).join('');
 
-      const forcesHtml = prof.forces.map(f => `<div class="fv-card force"><div class="fv-title">${f.title}</div><div class="fv-text">${f.text}</div></div>`).join('');
-      const vulnsHtml = prof.vulns.map(v => `<div class="fv-card vuln"><div class="fv-title">${v.title}</div><div class="fv-text">${v.text}</div></div>`).join('');
-      const devsHtml = prof.developments.map((d, i) => `<div class="dev-item"><span class="dev-num">${i + 1}</span><div><div class="dev-title">${d.title}</div><div class="dev-text">${d.text}</div></div></div>`).join('');
-      const observationHtml = currentObservations(prof).map(item => `<div class="dev-item"><span class="dev-num">•</span><div class="dev-text">${item}</div></div>`).join('');
-      const contextual = contextualReading();
-      const contextualHtml = contextual ? `
-    <div class="result-section">
-      <div class="section-label">Ponto de atenção da sua modalidade</div>
-      <div class="risk-block">
-        <div class="risk-title">${contextual.hook}</div>
-        <div class="risk-text">${[contextual.text, contextual.flagInvitation, 'Esta resposta descreve a situação escolhida hoje, não uma qualidade fixa.', contextual.safeguard].filter(Boolean).map(text => `<p>${text}</p>`).join('')}</div>
-      </div>
-    </div>` : '';
-
       $('resultContent').innerHTML = `
-    <div class="result-notice">
-      <span class="rn-icon">💡</span>
-      <span class="rn-text"><strong>Sobre este resultado:</strong> este resultado organiza tendências que apareceram nas suas respostas de hoje. Ele é educativo, não é diagnóstico nem avaliação psicológica formal, e não define quem você é.${partialMessage(prof)}</span>
-    </div>
-
     <div class="profile-header">
       <div class="profile-type">${prof.type}</div>
       <div class="profile-name">${prof.name}</div>
@@ -1602,37 +1538,8 @@
     </div>
 
     <div class="result-section">
-      <div class="section-label">Como sua mente está operando hoje</div>
-      <div class="narrative-block">${narrativeHtml}</div>
-    </div>
-
-    <div class="result-section">
       <div class="section-label">Seus fatores mentais no esporte</div>
       <div class="dims-grid">${dimsHtml}</div>
-    </div>
-    ${contextualHtml}
-
-    <div class="result-section">
-      <div class="section-label">O que joga a seu favor</div>
-      <div class="fv-grid">${forcesHtml}</div>
-    </div>
-
-    <div class="result-section">
-      <div class="section-label">O que merece atenção</div>
-      <div class="fv-grid">${vulnsHtml}</div>
-    </div>
-
-    <div class="result-section">
-      <div class="section-label">O que pode valer observar agora</div>
-      <div class="risk-block">
-        <div class="risk-title">Perguntas para retomar</div>
-        <div class="risk-text">${observationHtml}</div>
-      </div>
-    </div>
-
-    <div class="result-section">
-      <div class="section-label">Por onde começar</div>
-      <div class="dev-list">${devsHtml}</div>
     </div>
 
     <div class="cta-block">
@@ -1640,9 +1547,6 @@
       <div class="cta-sub">${prof.cta}<br><br>Uma conversa de 15 minutos pode deixar muito mais claro o que fazer com esse perfil. Sem compromisso.</div>
       <a class="btn-primary" href="${waLink}" target="_blank">Falar com Nicolas pelo WhatsApp →</a>
     </div>
-
-
-    <button class="btn-ghost" onclick="shareResult(resolvedProfile.name)" style="margin-bottom:12px">📲 Compartilhar meu resultado</button>
 
     <div class="pdf-cta-block">
       <div class="pdf-cta-label">📄 Salve e compartilhe seu resultado</div>
@@ -1662,6 +1566,9 @@
   `;
 
       goTo('s-result');
+      setTimeout(() => {
+        document.querySelectorAll('.dim-fill[data-target]').forEach(el => { el.style.width = `${el.dataset.target}%`; });
+      }, 120);
     }
 
     // ════════════════════════════════════════════
@@ -1681,17 +1588,40 @@
         let y = M;
 
         const C_TEAL = [110, 140, 58]; const C_DARK = [15, 18, 10]; const C_GRAY = [110, 118, 100];
-        const C_LGRAY = [231, 235, 222]; const C_GREEN = [106, 138, 60]; const C_AMBER = [214, 150, 40];
-        const C_ROSE = [224, 74, 40]; const C_T2 = [80, 88, 70]; const C_TEXT = [237, 240, 228];
+        const C_LGRAY = [231, 235, 222]; const C_ORANGE = [220, 95, 40]; const C_GREEN = [168, 185, 145];
+        const C_T2 = [80, 88, 70]; const C_TEXT = [237, 240, 228];
 
         const ensureSp = (n) => { if (y + n > H - M) { doc.addPage(); y = M; } };
         const sf = (style, size, color) => { doc.setFont('helvetica', style); doc.setFontSize(size); doc.setTextColor(...(color || C_DARK)); };
         const wt = (text, x, opts, lh) => { const lines = doc.splitTextToSize(text, opts.maxW || CW); ensureSp(lines.length * (lh || 13) + 4); doc.text(lines, x, y, opts); y += lines.length * (lh || 13); return lines; };
         const div = (color) => { doc.setDrawColor(...(color || C_LGRAY)); doc.setLineWidth(.5); doc.line(M, y, W - M, y); y += 14; };
         const sec = (label) => { ensureSp(28); sf('bold', 8, C_TEAL); doc.text(label.toUpperCase(), M, y); y += 5; div(C_TEAL); };
+        const factorBar = (percent) => {
+          const height = 6;
+          const width = Math.max(0, Math.min(1, percent || 0)) * CW;
+          doc.setFillColor(...C_LGRAY); doc.roundedRect(M, y, CW, height, 3, 3, 'F');
+          if (width > 0) {
+            doc.setFillColor(...C_ORANGE); doc.roundedRect(M, y, width, height, 3, 3, 'F');
+            const steps = Math.max(1, Math.ceil(width / 12));
+            for (let step = 0; step < steps; step++) {
+              const ratio = step / Math.max(steps - 1, 1);
+              const color = C_ORANGE.map((channel, index) => Math.round(channel + (C_GREEN[index] - channel) * ratio));
+              doc.setFillColor(...color);
+              doc.rect(M + (width * step / steps), y, (width / steps) + .5, height, 'F');
+            }
+            if (width > height) {
+              doc.setFillColor(...C_GREEN); doc.roundedRect(M + width - height, y, height, height, 3, 3, 'F');
+            }
+          }
+          y += 14;
+        };
 
         const prof = resolvedProfile;
         const dateStr = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+        const pdfSportLabel = (profile.sportLabel || profile.sport || '')
+          .replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu, '')
+          .replace(/\s{2,}/g, ' ')
+          .trim();
 
         // Header bar
         doc.setFillColor(...C_TEAL); doc.rect(0, 0, W, 5, 'F');
@@ -1699,21 +1629,7 @@
         sf('bold', 10, C_TEAL); doc.text('MAPA MENTAL DO ATLETA  ·  RELATÓRIO EDUCATIVO', M, y); y += 14;
         sf('normal', 8, C_GRAY); doc.text(`Gerado em ${dateStr}  ·  Nicolas Artigas · Psicólogo do Esporte · CRP 08/45704`, M, y); y += 6; div();
 
-        // Notice
-        const noticeText = 'Este resultado organiza tendências que apareceram nas suas respostas de hoje. Ele é educativo, não é diagnóstico nem avaliação psicológica formal, e não define quem você é. Se alguma situação estiver causando sofrimento importante ou prejudicando sua vida, procure apoio profissional. Em risco imediato, procure um serviço local de urgência.';
-        const nLines = doc.splitTextToSize(noticeText, CW - 20);
-        const noticeHeight = Math.max(38, nLines.length * 11 + 16);
-        ensureSp(noticeHeight + 14);
-        doc.setFillColor(244, 247, 236); doc.setDrawColor(196, 208, 168); doc.roundedRect(M, y, CW, noticeHeight, 3, 3, 'FD');
-        sf('bold', 8, C_TEAL); doc.text('NOTA IMPORTANTE', M + 10, y + 12);
-        sf('normal', 8, C_T2);
-        doc.text(nLines, M + 10, y + 23); y += noticeHeight + 14;
-
-        // Athlete
-        ensureSp(30); sf('bold', 9, C_DARK); doc.text('ATLETA', M, y);
-        sf('normal', 9, C_GRAY); doc.text(`${profile.name}  ·  ${profile.sportLabel || profile.sport}  ·  ${levelLabels[profile.level]}  ·  ${goalLabels[profile.goal]}`, M + 50, y); y += 20;
-
-        // Profile block
+        // Perfil mental: primeiro elemento do relatório.
         if (prof) {
           ensureSp(82);
           doc.setFillColor(16, 19, 10); doc.roundedRect(M, y, CW, 72, 4, 4, 'F');
@@ -1730,38 +1646,47 @@
           }
         }
 
-        // Fatores: evidência direta, não escore psicológico exibido.
-        sec('Fatores mentais acompanhados');
-        FACTOR_ORDER.forEach(key => {
-          const summary = factorSummary(key);
-          ensureSp(38);
-          sf('bold', 9, C_DARK); doc.text(DIMS[key], M, y);
-          const label = summary.attention ? 'TEMA PARA OBSERVAR' : summary.known ? 'EVIDÊNCIA DIRETA' : 'EVIDÊNCIA INSUFICIENTE';
-          const color = summary.attention ? C_AMBER : summary.known ? C_GREEN : C_GRAY;
-          sf('bold', 8, color); doc.text(label, W - M, y, { align: 'right' }); y += 12;
-          sf('normal', 8, C_GRAY);
-          const iLines = doc.splitTextToSize(DIM_INSIGHTS[key][summary.known ? 'known' : 'unknown'], CW); ensureSp(iLines.length * 11 + 8); doc.text(iLines, M, y); y += iLines.length * 11 + 8;
-        });
+        // Atleta e escolhas: cada escolha fica em uma linha para evitar estouro visual.
+        ensureSp(52);
+        sf('bold', 8, C_TEAL); doc.text('ATLETA', M, y); y += 18;
+        sf('bold', 18, C_DARK); doc.text(profile.name || 'Atleta', M, y); y += 22;
 
-        // Pergunta contextual: sempre uma única seção, entre fatores e perfil.
+        sec('Suas escolhas');
+        [
+          ['Modalidade', pdfSportLabel],
+          ['Nível', levelLabels[profile.level]],
+          ['Objetivo', goalLabels[profile.goal]],
+        ].forEach(([label, value]) => {
+          const valueLines = doc.splitTextToSize(value || '—', CW - 78);
+          const rowHeight = Math.max(valueLines.length * 12, 14);
+          ensureSp(rowHeight + 6);
+          sf('bold', 8, C_GRAY); doc.text(`${label}:`, M, y);
+          sf('normal', 9, C_DARK);
+          doc.text(valueLines, M + 78, y); y += rowHeight;
+        });
+        y += 10;
+
+        // Pergunta contextual: vem depois do perfil e antes dos fatores.
         const contextual = contextualReading();
         if (contextual) {
           sec('Ponto de atenção da sua modalidade');
-          [contextual.hook, contextual.text, contextual.flagInvitation, 'Esta resposta descreve a situação escolhida hoje, não uma qualidade fixa.', contextual.safeguard].filter(Boolean).forEach(text => {
+          [contextual.hook, contextual.text, contextual.flagInvitation, contextual.safeguard].filter(Boolean).forEach(text => {
             sf('normal', 9, C_T2);
             const lines = doc.splitTextToSize(text, CW); ensureSp(lines.length * 12 + 7); doc.text(lines, M, y); y += lines.length * 12 + 7;
           });
         }
 
-        // Narrative
-        if (prof) {
-          sec('Leitura do Perfil');
-          prof.narrative.forEach(par => {
-            const text = par.replace(/\{nome\}/g, profile.name);
-            sf('normal', 10, C_T2);
-            const lines = doc.splitTextToSize(text, CW); ensureSp(lines.length * 14 + 8); doc.text(lines, M, y); y += lines.length * 14 + 8;
-          });
-        }
+        // Fatores: a barra traduz a mesma proporção exibida na tela de resultado.
+        sec('Fatores mentais acompanhados');
+        FACTOR_ORDER.forEach(key => {
+          const summary = factorSummary(key);
+          ensureSp(48);
+          sf('bold', 9, C_DARK); doc.text(DIMS[key], M, y);
+          y += 10;
+          factorBar(summary.percent);
+          sf('normal', 8, C_GRAY);
+          const iLines = doc.splitTextToSize(DIM_INSIGHTS[key][summary.known ? 'known' : 'unknown'], CW); ensureSp(iLines.length * 11 + 8); doc.text(iLines, M, y); y += iLines.length * 11 + 8;
+        });
 
         // Forces
         if (prof) {
@@ -1845,26 +1770,6 @@
       } catch (e) { console.error(e); alert('Erro ao gerar PDF. Tente novamente.'); }
 
       if (btn) { btn.textContent = '⤓ Baixar PDF do mapeamento'; btn.disabled = false; }
-    }
-
-
-    function shareResult(profileName) {
-      const text = `Concluí um mapeamento educativo de autoconhecimento com 11 perguntas sobre respostas atuais no esporte. Minha leitura de hoje foi "${profileName}". Você faria também? Link na bio do @nicolasartigas.psico`;
-      if (navigator.share) {
-        navigator.share({ title: 'Meu tipo mental como atleta', text: text })
-          .catch(() => { fallbackShare(text); });
-      } else {
-        fallbackShare(text);
-      }
-    }
-
-    function fallbackShare(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = document.querySelector('[onclick*="shareResult"]');
-        if (btn) { btn.textContent = '✓ Texto copiado. Cole nos stories!'; setTimeout(() => { btn.textContent = '📲 Compartilhar meu resultado'; }, 3000); }
-      }).catch(() => {
-        prompt('Copie e cole nos stories:', text);
-      });
     }
 
     function restartQuiz() {
