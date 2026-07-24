@@ -563,6 +563,15 @@
       transition: width 1.2s cubic-bezier(.4, 0, .2, 1)
     }
 
+    .dim-unknown-state {
+      font-size: 11px;
+      color: var(--text3);
+      background: var(--surface2);
+      border: 1px dashed var(--border2);
+      border-radius: 4px;
+      padding: 4px 8px
+    }
+
     .dim-insight {
       font-size: 12px;
       color: var(--text3);
@@ -828,7 +837,7 @@
           <div class="setup-field">
             <label>Seu nome</label>
             <input class="setup-name-input" type="text" id="athleteName" placeholder="Como prefere ser chamado(a)?"
-              maxlength="40" />
+              maxlength="40" required />
           </div>
           <div class="setup-field">
             <label>Modalidade principal</label>
@@ -872,7 +881,7 @@
               <button class="chip" data-group="goal" data-value="bem-estar">Cuidar do processo</button>
             </div>
           </div>
-          <div class="error-block" id="setup-error">Selecione sua modalidade, nível e objetivo para continuar.</div>
+          <div class="error-block" id="setup-error">Escreva seu nome e selecione sua modalidade, nível e objetivo para continuar.</div>
           <div class="nav-row">
             <button class="nav-btn" onclick="goTo('s-intro')">← voltar</button>
             <button class="btn-primary" style="width:auto;padding:12px 28px" onclick="startQuestions()">Continuar
@@ -1152,8 +1161,30 @@
     const $ = id => document.getElementById(id);
     const prog = $('progressFill');
 
-    const levelLabels = { iniciante: 'iniciante/amador', intermediario: 'nível intermediário', alto: 'alto rendimento' };
-    const goalLabels = { competir: 'competir e vencer', consistencia: 'manter consistência', superar: 'superar meus limites', 'bem-estar': 'cuidar do processo' };
+    const levelLabels = { iniciante: 'Iniciante / Amador', intermediario: 'Intermediário', alto: 'Alto Rendimento' };
+    const goalLabels = { competir: 'Competir e vencer', consistencia: 'Manter consistência', superar: 'Superar meus limites', 'bem-estar': 'Cuidar do processo' };
+
+    // A pontuação 0 ainda é uma resposta registrada e recebe uma marca mínima.
+    // Ausência de evidência é exibida como texto, nunca como uma barra cinza curta.
+    const MIN_VISIBLE_FACTOR_PERCENTAGE = 4;
+    function displayFactorPercentage(summary) {
+      if (!summary.known) return 0;
+      return Math.max(MIN_VISIBLE_FACTOR_PERCENTAGE, Math.round(summary.percent * 100));
+    }
+
+    function capitalizeFirstLetter(value) {
+      const text = String(value || '').trim();
+      return text ? text[0].toLocaleUpperCase('pt-BR') + text.slice(1) : '';
+    }
+
+    function removeEmoji(value) {
+      return String(value || '')
+        .replace(/\p{Regional_Indicator}{1,2}/gu, '')
+        .replace(/\p{Extended_Pictographic}(?:\p{Emoji_Modifier}|\uFE0F|\u200D|\p{Extended_Pictographic})*/gu, '')
+        .replace(/[\uFE0E\uFE0F\u200D\u20E3]/g, '')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+    }
 
     // ── Origem do acesso (medição de canal: link com ?src=bio|palestra|cartao|coach) ──
     const TRAFFIC_SRC = (() => { try { return (new URLSearchParams(location.search).get('src') || '').slice(0, 40) } catch (e) { return '' } })();
@@ -1233,9 +1264,15 @@
 
     function startQuestions() {
       const err = $('setup-error');
-      if (!profile.sport || !profile.level || !profile.goal) { err.style.display = 'block'; return; }
+      const nameField = $('athleteName');
+      const name = nameField.value.trim();
+      if (!name || !profile.sport || !profile.level || !profile.goal) {
+        err.style.display = 'block';
+        if (!name) nameField.focus();
+        return;
+      }
       err.style.display = 'none';
-      profile.name = $('athleteName').value.trim() || 'Atleta';
+      profile.name = name;
       ACTIVE = FIXED_QUESTIONS.concat(CONTEXTUAL_QUESTIONS[profile.sport]);
       current = 0;
       scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
@@ -1344,14 +1381,20 @@
       const waLink = `https://wa.me/5544988433895?text=${encodeURIComponent(waText)}`;
 
       const dimsHtml = FACTOR_ORDER.map(key => {
-        const percentage = Math.round((dimScores[key].percent || 0) * 100);
+        const scorePercentage = Math.round((dimScores[key].percent || 0) * 100);
+        const visiblePercentage = displayFactorPercentage(dimScores[key]);
+        const ariaText = dimScores[key].known
+          ? `${scorePercentage}% das evidências acompanhadas`
+          : 'Sem evidência direta nesta dimensão';
         return `<div class="dim-row">
       <div class="dim-row-top">
         <span class="dim-name">${DIMS[key]}</span>
       </div>
-      <div class="dim-track" role="progressbar" aria-label="${DIMS[key]}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percentage}">
-        <div class="dim-fill" style="width:0%" data-target="${percentage}"></div>
-      </div>
+      ${dimScores[key].known
+        ? `<div class="dim-track" role="progressbar" aria-label="${DIMS[key]}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${scorePercentage}" aria-valuetext="${ariaText}">
+        <div class="dim-fill" style="width:0%" data-target="${visiblePercentage}"></div>
+      </div>`
+        : `<div class="dim-unknown-state" role="status">Sem evidência direta nesta dimensão</div>`}
       <div class="dim-insight">${DIM_INSIGHTS[key][dimScores[key].known ? 'known' : 'unknown']}</div>
     </div>`;
       }).join('');
@@ -1422,32 +1465,35 @@
         const sf = (style, size, color) => { doc.setFont('helvetica', style); doc.setFontSize(size); doc.setTextColor(...(color || C_DARK)); };
         const div = (color) => { doc.setDrawColor(...(color || C_LGRAY)); doc.setLineWidth(.5); doc.line(M, y, W - M, y); y += 14; };
         const sec = (label) => { ensureSp(28); sf('bold', 8, C_TEAL); doc.text(label.toUpperCase(), M, y); y += 5; div(C_TEAL); };
-        const factorBar = (percent) => {
+        const factorBar = (summary) => {
           const height = 6;
-          const width = Math.max(0, Math.min(1, percent || 0)) * CW;
+          const percent = displayFactorPercentage(summary) / 100;
+          const width = Math.max(0, Math.min(1, percent)) * CW;
           doc.setFillColor(...C_LGRAY); doc.roundedRect(M, y, CW, height, 3, 3, 'F');
           if (width > 0) {
-            doc.setFillColor(...C_ORANGE); doc.roundedRect(M, y, width, height, 3, 3, 'F');
-            const steps = Math.max(1, Math.ceil(width / 12));
+            const startColor = C_ORANGE;
+            const endColor = C_GREEN;
+            doc.setFillColor(...startColor); doc.roundedRect(M, y, width, height, 3, 3, 'F');
+            // jsPDF não oferece degradê nativo: desenhamos faixas finas. Um mínimo
+            // alto mantém a transição visível até na barra mínima de 4%.
+            const steps = Math.max(16, Math.ceil(width / 2));
             for (let step = 0; step < steps; step++) {
               const ratio = step / Math.max(steps - 1, 1);
-              const color = C_ORANGE.map((channel, index) => Math.round(channel + (C_GREEN[index] - channel) * ratio));
+              const color = startColor.map((channel, index) => Math.round(channel + (endColor[index] - channel) * ratio));
               doc.setFillColor(...color);
               doc.rect(M + (width * step / steps), y, (width / steps) + .5, height, 'F');
             }
             if (width > height) {
-              doc.setFillColor(...C_GREEN); doc.roundedRect(M + width - height, y, height, height, 3, 3, 'F');
+              doc.setFillColor(...endColor); doc.roundedRect(M + width - height, y, height, height, 3, 3, 'F');
             }
           }
           y += 14;
         };
 
         const prof = resolvedProfile;
+        const pdfAthleteName = capitalizeFirstLetter(profile.name) || 'Atleta';
         const dateStr = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-        const pdfSportLabel = (profile.sportLabel || profile.sport || '')
-          .replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu, '')
-          .replace(/\s{2,}/g, ' ')
-          .trim();
+        const pdfSportLabel = removeEmoji(profile.sportLabel || profile.sport || '');
 
         // Header bar
         doc.setFillColor(...C_TEAL); doc.rect(0, 0, W, 5, 'F');
@@ -1475,7 +1521,7 @@
         // Atleta e escolhas: cada escolha fica em uma linha para evitar estouro visual.
         ensureSp(52);
         sf('bold', 8, C_TEAL); doc.text('ATLETA', M, y); y += 18;
-        sf('bold', 18, C_DARK); doc.text(profile.name || 'Atleta', M, y); y += 22;
+        sf('bold', 18, C_DARK); doc.text(pdfAthleteName, M, y); y += 22;
 
         sec('Suas escolhas');
         [
@@ -1496,10 +1542,15 @@
         const contextual = contextualReading();
         if (contextual) {
           sec('Ponto de atenção da sua modalidade');
-          [contextual.hook, contextual.text, contextual.flagInvitation, contextual.safeguard].filter(Boolean).forEach(text => {
-            sf('normal', 9, C_T2);
-            const lines = doc.splitTextToSize(text, CW); ensureSp(lines.length * 12 + 7); doc.text(lines, M, y); y += lines.length * 12 + 7;
-          });
+          y += 6;
+          const contextualText = [contextual.hook, contextual.text, contextual.flagInvitation, contextual.safeguard]
+            .filter(Boolean)
+            .join(' ');
+          sf('normal', 9, C_T2);
+          const lines = doc.splitTextToSize(contextualText, CW);
+          ensureSp(lines.length * 12 + 7);
+          doc.text(lines, M, y);
+          y += lines.length * 12 + 7;
         }
 
         // Fatores: a barra traduz a mesma proporção exibida na tela de resultado.
@@ -1509,7 +1560,12 @@
           ensureSp(48);
           sf('bold', 9, C_DARK); doc.text(DIMS[key], M, y);
           y += 10;
-          factorBar(summary.percent);
+          if (summary.known) factorBar(summary);
+          else {
+            sf('italic', 8, C_GRAY);
+            doc.text('Sem evidência direta nesta dimensão.', M, y);
+            y += 14;
+          }
           sf('normal', 8, C_GRAY);
           const iLines = doc.splitTextToSize(DIM_INSIGHTS[key][summary.known ? 'known' : 'unknown'], CW); ensureSp(iLines.length * 11 + 8); doc.text(iLines, M, y); y += iLines.length * 11 + 8;
         });
@@ -1535,19 +1591,12 @@
         // Observações presentes, sem projeção de futuro.
         if (prof) {
           sec('O que pode valer observar agora');
-          const rLines = currentObservations(prof).flatMap((item, index) => doc.splitTextToSize(`${index + 1}. ${item}`, CW - 24));
-          const bH = rLines.length * 13 + 22; ensureSp(bH + 12); doc.setFillColor(252, 243, 238); doc.setDrawColor(226, 116, 74);
-          doc.roundedRect(M, y, CW, bH, 3, 3, 'FD');
-          sf('bold', 8, [176, 66, 28]); doc.text('PERGUNTAS PARA RETOMAR', M + 12, y + 13);
-          sf('normal', 9, C_T2); doc.text(rLines, M + 12, y + 25); y += bH + 12;
-        }
-
-        // Developments
-        if (prof) {
-          sec('Direções de Desenvolvimento');
-          prof.developments.forEach((d, i) => {
-            ensureSp(44); sf('bold', 9, C_TEAL); doc.text(`${i + 1}.  ${d.title}`, M, y); y += 13;
-            sf('normal', 9, C_T2); const lines = doc.splitTextToSize(d.text, CW - 14); ensureSp(lines.length * 12 + 6); doc.text(lines, M + 14, y); y += lines.length * 12 + 8;
+          currentObservations(prof).forEach((item, index) => {
+            sf('normal', 9, C_T2);
+            const lines = doc.splitTextToSize(`${index + 1}. ${item}`, CW);
+            ensureSp(lines.length * 12 + 7);
+            doc.text(lines, M, y);
+            y += lines.length * 12 + 7;
           });
         }
 
@@ -1587,7 +1636,7 @@
         for (let i = 1; i <= tp; i++) {
           doc.setPage(i); doc.setFillColor(...C_TEAL); doc.rect(0, H - 3, W, 3, 'F');
           sf('normal', 7.5, C_GRAY);
-          doc.text(`Mapa Mental do Atleta · ${profile.name} · ${dateStr}`, M, H - 10);
+          doc.text(`Mapa Mental do Atleta · ${pdfAthleteName} · ${dateStr}`, M, H - 10);
           doc.text(`${i} / ${tp}`, W - M, H - 10, { align: 'right' });
         }
 
