@@ -1875,6 +1875,7 @@
           profile.sport = chip.dataset.value;
           profile.sportLabel = chip.textContent.trim();
           closeSportOther();
+          sportOtherResults.querySelectorAll('.sport-other-result').forEach(c => c.classList.remove('selected'));
           sportOtherToggle.classList.remove('selected');
           sportOtherToggle.textContent = '🔍 Outros esportes';
         }
