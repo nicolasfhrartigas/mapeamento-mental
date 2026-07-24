@@ -349,69 +349,33 @@
       color: var(--text3)
     }
 
-    .sport-search-wrap {
+    .sport-other-wrap {
       position: relative
     }
 
-    .sport-search-wrap input {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 11px 36px 11px 14px;
-      font-size: 13px;
-      color: var(--text2);
-      font-family: var(--sans);
-      line-height: 1.3;
-      width: 100%;
-      outline: none;
-      transition: border-color .15s
+    .sport-other-wrap .chip {
+      width: 100%
     }
 
-    .sport-search-wrap input::placeholder {
-      color: var(--text3)
-    }
-
-    .sport-search-wrap input:focus {
-      border-color: var(--orange);
-      color: var(--text)
-    }
-
-    .sport-search-arrow {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      width: 36px;
-      background: transparent;
-      border: none;
-      color: var(--text3);
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .sport-search-results {
+    .sport-other-results {
       display: none;
       position: absolute;
       top: calc(100% + 4px);
       left: 0;
       right: 0;
-      max-height: 220px;
-      overflow-y: auto;
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 8px;
       z-index: 20;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, .25)
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+      overflow: hidden
     }
 
-    .sport-search-results.open {
+    .sport-other-results.open {
       display: block
     }
 
-    .sport-result {
+    .sport-other-result {
       display: block;
       width: 100%;
       text-align: left;
@@ -425,19 +389,13 @@
       font-family: var(--sans);
     }
 
-    .sport-result:last-child {
+    .sport-other-result:last-child {
       border-bottom: none
     }
 
-    .sport-result.active {
+    .sport-other-result.selected {
       background: rgba(220, 95, 40, .10);
       color: var(--text)
-    }
-
-    .sport-search-empty {
-      padding: 10px 14px;
-      font-size: 12.5px;
-      color: var(--text3)
     }
 
     .q-dim {
@@ -967,11 +925,7 @@
         color: var(--text)
       }
 
-      .sport-search-arrow:hover {
-        color: var(--text)
-      }
-
-      .sport-result:hover {
+      .sport-other-result:hover {
         background: rgba(220, 95, 40, .10);
         color: var(--text)
       }
@@ -1070,10 +1024,22 @@
               <button class="chip" data-group="sport" data-value="fisiculturismo">🏋️ Fisiculturismo</button>
               <button class="chip" data-group="sport" data-value="futebol">⚽ Futebol</button>
               <button class="chip" data-group="sport" data-value="corrida">🏃 Corrida / Atletismo</button>
-              <div class="sport-search-wrap">
-                <input type="text" id="sportSearchInput" placeholder="🔍 Busque seu esporte..." autocomplete="off" />
-                <button type="button" id="sportSearchArrow" class="sport-search-arrow" aria-label="Ver todos os esportes">▾</button>
-                <div id="sportSearchResults" class="sport-search-results"></div>
+              <button class="chip" data-group="sport" data-value="volei">🏐 Vôlei</button>
+              <button class="chip" data-group="sport" data-value="tenis">🎾 Tênis</button>
+              <div class="sport-other-wrap">
+                <button type="button" class="chip" id="sportOtherToggle">🔍 Outros esportes</button>
+                <div id="sportOtherResults" class="sport-other-results">
+                  <button type="button" class="sport-other-result" data-value="coletivos">⛹🏼‍♀️ Esportes
+                    Coletivos</button>
+                  <button type="button" class="sport-other-result" data-value="resistencia">🏊🏼‍♀️ Esporte de
+                    Resistência</button>
+                  <button type="button" class="sport-other-result" data-value="luta">👨🏻‍🫯‍👨🏼 Esportes de
+                    Luta</button>
+                  <button type="button" class="sport-other-result" data-value="raquetes">🏸 Esportes de Raquete</button>
+                  <button type="button" class="sport-other-result" data-value="habilidades_mira">🎯 Esportes de
+                    Habilidades e Mira</button>
+                  <button type="button" class="sport-other-result" data-value="e_sports"> 🕹️ E-sports</button>
+                </div>
               </div>
             </div>
           </div>
@@ -1612,7 +1578,7 @@
     // ══════════════════════════════════════════
     //  ESTADO GLOBAL
     // ══════════════════════════════════════════
-    let profile = { name: '', sport: '', level: '', goal: '' };
+    let profile = { name: '', sport: '', sportLabel: '', level: '', goal: '' };
     let scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
     let answers = {};
     let current = 0;
@@ -1622,61 +1588,6 @@
     const $ = id => document.getElementById(id);
     const prog = $('progressFill');
 
-    const SPORTS_LIST = [
-      { value: 'futsal', emoji: '🥅', label: 'Futsal' },
-      { value: 'volei_praia', emoji: '🏖️', label: 'Vôlei de Praia' },
-      { value: 'volei', emoji: '🏐', label: 'Vôlei' },
-      { value: 'basquete', emoji: '🏀', label: 'Basquete' },
-      { value: 'handebol', emoji: '🤾', label: 'Handebol' },
-      { value: 'natacao', emoji: '🏊', label: 'Natação' },
-      { value: 'polo_aquatico', emoji: '🤽', label: 'Polo Aquático' },
-      { value: 'nado_sincronizado', emoji: '🧜‍♀️', label: 'Nado Sincronizado' },
-      { value: 'judo', emoji: '🥋', label: 'Judô' },
-      { value: 'jiu_jitsu', emoji: '🥋', label: 'Jiu-Jitsu' },
-      { value: 'muay_thai', emoji: '🥋', label: 'Muay Thai' },
-      { value: 'taekwondo', emoji: '🥋', label: 'Taekwondo' },
-      { value: 'karate', emoji: '🥋', label: 'Karatê' },
-      { value: 'boxe', emoji: '🥊', label: 'Boxe' },
-      { value: 'kickboxing', emoji: '🥊', label: 'Kickboxing' },
-      { value: 'mma', emoji: '🤼', label: 'Luta Livre / MMA' },
-      { value: 'capoeira', emoji: '🪘', label: 'Capoeira' },
-      { value: 'ciclismo', emoji: '🚴', label: 'Ciclismo' },
-      { value: 'mountain_bike', emoji: '🚵', label: 'Mountain Bike' },
-      { value: 'triatlo', emoji: '🏊🚴🏃', label: 'Triatlo' },
-      { value: 'crossfit', emoji: '🏋️‍♀️', label: 'CrossFit' },
-      { value: 'levantamento_peso', emoji: '🏋️‍♂️', label: 'Levantamento de Peso' },
-      { value: 'tenis', emoji: '🎾', label: 'Tênis' },
-      { value: 'tenis_mesa', emoji: '🏓', label: 'Tênis de Mesa' },
-      { value: 'beach_tennis', emoji: '🏖️', label: 'Beach Tennis' },
-      { value: 'badminton', emoji: '🏸', label: 'Badminton' },
-      { value: 'frescobol', emoji: '🏖️', label: 'Frescobol' },
-      { value: 'futevolei', emoji: '🏖️', label: 'Futevôlei' },
-      { value: 'surfe', emoji: '🏄', label: 'Surfe' },
-      { value: 'skate', emoji: '🛹', label: 'Skate' },
-      { value: 'escalada', emoji: '🧗', label: 'Escalada' },
-      { value: 'ginastica_artistica', emoji: '🤸‍♀️', label: 'Ginástica Artística' },
-      { value: 'ginastica_ritmica', emoji: '🎀', label: 'Ginástica Rítmica' },
-      { value: 'remo', emoji: '🚣', label: 'Remo' },
-      { value: 'canoagem', emoji: '🛶', label: 'Canoagem' },
-      { value: 'vela', emoji: '⛵', label: 'Vela' },
-      { value: 'windsurf', emoji: '🏄‍♂️', label: 'Windsurf' },
-      { value: 'kitesurf', emoji: '🪁', label: 'Kitesurf' },
-      { value: 'stand_up_paddle', emoji: '🛟', label: 'Stand Up Paddle' },
-      { value: 'hipismo', emoji: '🏇', label: 'Hipismo' },
-      { value: 'golfe', emoji: '⛳', label: 'Golfe' },
-      { value: 'automobilismo', emoji: '🏎️', label: 'Automobilismo' },
-      { value: 'motociclismo', emoji: '🏍️', label: 'Motociclismo' },
-      { value: 'kart', emoji: '🏎️', label: 'Kart' },
-      { value: 'xadrez', emoji: '♟️', label: 'Xadrez' },
-      { value: 'esgrima', emoji: '🤺', label: 'Esgrima' },
-      { value: 'sinuca', emoji: '🎱', label: 'Sinuca / Bilhar' },
-      { value: 'peteca', emoji: '🪶', label: 'Peteca' },
-      { value: 'patins', emoji: '🛼', label: 'Patins / Patinação' },
-      { value: 'e_sports', emoji: '🎮', label: 'E-sports / Games Competitivos' },
-    ];
-
-    const sportLabels = { fisiculturismo: 'Fisiculturismo', futebol: 'Futebol', corrida: 'Corrida / Atletismo' };
-    SPORTS_LIST.forEach(s => { sportLabels[s.value] = s.label; });
     const levelLabels = { iniciante: 'iniciante/amador', intermediario: 'nível intermediário', alto: 'alto rendimento' };
     const goalLabels = { competir: 'competir e vencer', consistencia: 'manter consistência', superar: 'superar meus limites', 'bem-estar': 'cuidar do processo' };
 
@@ -1720,83 +1631,51 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    document.querySelectorAll('.chip').forEach(chip => {
+    document.querySelectorAll('.chip[data-group]').forEach(chip => {
       chip.addEventListener('click', () => {
         const g = chip.dataset.group;
         document.querySelectorAll(`.chip[data-group="${g}"]`).forEach(c => c.classList.remove('selected'));
         chip.classList.add('selected');
         if (g === 'sport') {
           profile.sport = chip.dataset.value;
-          clearSportSearch();
+          profile.sportLabel = chip.textContent.trim();
+          closeSportOther();
+          sportOtherToggle.classList.remove('selected');
+          sportOtherToggle.textContent = '🔍 Outros esportes';
         }
         else if (g === 'level') profile.level = chip.dataset.value;
         else profile.goal = chip.dataset.value;
       });
     });
 
-    // ── Busca de esporte (autocomplete) ──────────────────────────
-    const sportSearchInput = $('sportSearchInput');
-    const sportSearchResults = $('sportSearchResults');
+    // ── "Outros esportes" — seletor de categoria ──────────────────
+    const sportOtherToggle = $('sportOtherToggle');
+    const sportOtherResults = $('sportOtherResults');
 
-    function normalize(str) {
-      return str.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+    function closeSportOther() {
+      sportOtherResults.classList.remove('open');
     }
 
-    function clearSportSearch() {
-      sportSearchInput.value = '';
-      sportSearchResults.classList.remove('open');
-      sportSearchResults.innerHTML = '';
-    }
-
-    function selectSearchedSport(sport) {
-      document.querySelectorAll('.chip[data-group="sport"]').forEach(c => c.classList.remove('selected'));
-      profile.sport = sport.value;
-      sportSearchInput.value = `${sport.emoji} ${sport.label}`;
-      sportSearchResults.classList.remove('open');
-      sportSearchResults.innerHTML = '';
-    }
-
-    function renderSportResults(matches) {
-      sportSearchResults.innerHTML = '';
-      if (matches.length === 0) {
-        const empty = document.createElement('div');
-        empty.className = 'sport-search-empty';
-        empty.textContent = 'Nenhum esporte encontrado';
-        sportSearchResults.appendChild(empty);
-      } else {
-        matches.forEach(s => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'sport-result';
-          btn.textContent = `${s.emoji} ${s.label}`;
-          btn.addEventListener('click', () => selectSearchedSport(s));
-          sportSearchResults.appendChild(btn);
-        });
-      }
-      sportSearchResults.classList.add('open');
-    }
-
-    sportSearchInput.addEventListener('input', () => {
-      const q = normalize(sportSearchInput.value.trim());
-      if (!q) { sportSearchResults.classList.remove('open'); sportSearchResults.innerHTML = ''; return; }
-      renderSportResults(SPORTS_LIST.filter(s => normalize(s.label).includes(q)));
+    sportOtherToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sportOtherResults.classList.toggle('open');
     });
 
-    $('sportSearchArrow').addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (sportSearchResults.classList.contains('open')) {
-        sportSearchResults.classList.remove('open');
-        sportSearchResults.innerHTML = '';
-        return;
-      }
-      renderSportResults(SPORTS_LIST);
-      sportSearchInput.focus();
+    sportOtherResults.querySelectorAll('.sport-other-result').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.chip[data-group="sport"]').forEach(c => c.classList.remove('selected'));
+        sportOtherResults.querySelectorAll('.sport-other-result').forEach(c => c.classList.remove('selected'));
+        btn.classList.add('selected');
+        profile.sport = btn.dataset.value;
+        profile.sportLabel = btn.textContent.trim();
+        sportOtherToggle.textContent = profile.sportLabel;
+        sportOtherToggle.classList.add('selected');
+        closeSportOther();
+      });
     });
 
     document.addEventListener('click', (e) => {
-      if (!e.target.closest('.sport-search-wrap')) {
-        sportSearchResults.classList.remove('open');
-      }
+      if (!e.target.closest('.sport-other-wrap')) closeSportOther();
     });
 
     function startQuestions() {
@@ -2035,7 +1914,7 @@
 
         // Athlete
         ensureSp(30); sf('bold', 9, C_DARK); doc.text('ATLETA', M, y);
-        sf('normal', 9, C_GRAY); doc.text(`${profile.name}  ·  ${sportLabels[profile.sport] || profile.sport}  ·  ${levelLabels[profile.level]}  ·  ${goalLabels[profile.goal]}`, M + 50, y); y += 20;
+        sf('normal', 9, C_GRAY); doc.text(`${profile.name}  ·  ${profile.sportLabel || profile.sport}  ·  ${levelLabels[profile.level]}  ·  ${goalLabels[profile.goal]}`, M + 50, y); y += 20;
 
         // Profile block
         if (prof) {
@@ -2182,13 +2061,14 @@
     }
 
     function restartQuiz() {
-      profile = { name: '', sport: '', level: '', goal: '' };
+      profile = { name: '', sport: '', sportLabel: '', level: '', goal: '' };
       scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       answers = {}; current = 0; resolvedProfile = null;
       ACTIVE = [];
       prog.style.width = '0%';
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
-      clearSportSearch();
+      document.querySelectorAll('.chip, .sport-other-result').forEach(c => c.classList.remove('selected'));
+      sportOtherToggle.textContent = '🔍 Outros esportes';
+      closeSportOther();
       $('athleteName').value = '';
       goTo('s-intro');
     }
