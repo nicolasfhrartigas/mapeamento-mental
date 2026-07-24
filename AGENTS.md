@@ -18,6 +18,16 @@ Repositório de contexto único; glossário em `CONTEXT.md` e decisões em `docs
 
 ## Convenções que já foram violadas antes — não regredir
 
+## Validação visual e mobile
+
+Há um harness local de Playwright em `scripts/ui-harness.js`. Ele sobe e encerra um servidor HTTP próprio para o `index.html`, sem depender de servidor já aberto.
+
+- Instalação inicial: `npm install` e `npx playwright install chromium`.
+- Jornada e assertions: `npm run test:ui`.
+- Jornada com screenshots auditáveis: `npm run screenshots`.
+- O relatório e as imagens ficam em `artifacts/ui/` e são ignorados pelo Git. Antes de declarar validação mobile concluída, execute `npm run screenshots`, inspecione os PNGs mobile e cite `artifacts/ui/report.json` e os screenshots relevantes no handoff.
+- O harness já verifica os viewports mobile (390 × 844, touch) e desktop (1440 × 900), dropdown de “Outros esportes”, as 11 perguntas, voltar/troca de resposta, perfis oficiais, sobreposição dos controles e o guard de hover. Mantenha essas validações atualizadas quando alterar a jornada ou controles interativos.
+
 ### 1. Todo `:hover` de elemento interativo vai dentro de `@media (hover: hover) and (pointer: fine)`
 
 Em telas touch não existe `mouseleave`, então um `:hover` fora desse guard "gruda" no elemento depois do toque — ele fica com aparência de selecionado/hover até o usuário tocar em outro lugar. Isso já foi corrigido uma vez (commit que adicionou o guard) e depois **regrediu silenciosamente** num rewrite de tema/paleta que reescreveu o `<style>` inteiro e recriou os seletores sem o wrapper.
