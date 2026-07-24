@@ -37,7 +37,7 @@ function createRuntime() {
       start: sport => { profile.sport = sport; profile.sportLabel = CONTEXTUAL_QUESTIONS[sport].sportName; profile.level = 'alto'; profile.goal = 'competir'; $('athleteName').value = 'Ana'; startQuestions(); },
       answer: index => { const question = ACTIVE[current]; answers[current] = index; applyAnswer(question, question.opts[index], 1); current += 1; },
       replaceAnswer: (questionIndex, from, to) => { applyAnswer(ACTIVE[questionIndex], ACTIVE[questionIndex].opts[from], -1); applyAnswer(ACTIVE[questionIndex], ACTIVE[questionIndex].opts[to], 1); answers[questionIndex] = to; },
-      state: () => ({ active: ACTIVE, answers: { ...answers }, scores: { ...scores }, evidenceMax: { ...evidenceMax }, fixedEvidenceMax: { ...fixedEvidenceMax }, attentionEvidence: { ...attentionEvidence } }),
+      state: () => ({ active: ACTIVE, answers: { ...answers }, scores: { ...scores }, evidenceMax: { ...evidenceMax }, fixedEvidenceMax: { ...fixedEvidenceMax } }),
       profile: () => selectProfile(),
       q11OnlyProfile: (sport, answer) => {
         profile.sport = sport;
@@ -45,10 +45,7 @@ function createRuntime() {
         answers = { 0: answer };
         scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
         evidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-        fixedScores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
         fixedEvidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-        attentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-        fixedAttentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
         applyAnswer(ACTIVE[0], ACTIVE[0].opts[answer], 1);
         return selectProfile();
       },
@@ -114,7 +111,6 @@ test('the evidence model handles full evidence, indeterminacy, ambiguity, edits,
   const after = ambiguous.state();
   assert.deepEqual(toPlain(after.scores), toPlain(before.scores));
   assert.deepEqual(toPlain(after.evidenceMax), toPlain(before.evidenceMax));
-  assert.equal(after.attentionEvidence.reg, before.attentionEvidence.reg);
   assert.equal(ambiguous.contextual().flag, 'afastamento da informação');
 
   const edited = createRuntime();
@@ -124,7 +120,6 @@ test('the evidence model handles full evidence, indeterminacy, ambiguity, edits,
   const state = edited.state();
   assert.deepEqual(toPlain(state.scores), { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 });
   assert.deepEqual(toPlain(state.evidenceMax), { perf: 2, motiv: 0, reg: 2, medo: 0, ident: 0, sup: 0 });
-  assert.deepEqual(toPlain(state.attentionEvidence), { perf: 1, motiv: 0, reg: 1, medo: 0, ident: 0, sup: 0 });
 });
 
 test('the output stays educational, names eleven questions, and preserves the touch hover guard', () => {

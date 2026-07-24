@@ -43,10 +43,7 @@ vm.runInNewContext(
   let profile = { name: '', sport: '', sportLabel: '', level: 'competitivo', goal: 'performance' };
   let scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
   let evidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-  let fixedScores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
   let fixedEvidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-  let attentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-  let fixedAttentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
   let answers = {};
   let current = 0;
   let ACTIVE = [];
@@ -76,7 +73,6 @@ test('each direct modality is ten fixed questions plus its approved Q11', () => 
     const contextual = CONTEXTUAL_QUESTIONS[sport];
     assert.ok(contextual, `${sport} must have a contextual question`);
     assert.equal(contextual.sportName, expected.sportName);
-    assert.match(contextual.label, /^Pergunta contextual/);
     assert.ok(contextual.hook);
     assert.equal(contextual.opts.length, 4);
   }

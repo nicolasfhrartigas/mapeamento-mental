@@ -29,19 +29,8 @@
       /* Identidade */
       --green: #657542;
       /* cor principal */
-      --green-light: #A8B991;
-      /* derivação para indicadores sobre fundo escuro */
-      --teal: #8EA465;
-      /* variação clara do verde, reservada a indicadores */
       --orange: #DC5F28;
       /* cor de contraponto */
-      --orange-light: #F08550;
-
-      /* Estados */
-      --amber: #DC5F28;
-      /* atenção */
-      --rose: #F08550;
-      /* alerta/baixo desempenho */
 
       /* Tipografia */
       --text: #FFFFFF;
@@ -542,16 +531,6 @@
       background: var(--border)
     }
 
-    .narrative-block {
-      font-size: 14.5px;
-      color: var(--text2);
-      line-height: 1.72
-    }
-
-    .narrative-block p+p {
-      margin-top: 12px
-    }
-
     .dims-grid {
       display: flex;
       flex-direction: column;
@@ -570,23 +549,6 @@
       font-weight: 500
     }
 
-    .dim-score-label {
-      font-size: 11px;
-      font-weight: 600
-    }
-
-    .dim-score-label.high {
-      color: var(--green)
-    }
-
-    .dim-score-label.mid {
-      color: var(--amber)
-    }
-
-    .dim-score-label.low {
-      color: var(--rose)
-    }
-
     .dim-track {
       height: 6px;
       background: var(--border2);
@@ -601,122 +563,11 @@
       transition: width 1.2s cubic-bezier(.4, 0, .2, 1)
     }
 
-    .dim-fill.high {
-      background: linear-gradient(90deg, #6d8a3c, var(--green))
-    }
-
-    .dim-fill.mid {
-      background: linear-gradient(90deg, #b07a1e, var(--amber))
-    }
-
-    .dim-fill.low {
-      background: linear-gradient(90deg, #c23a17, var(--rose))
-    }
-
     .dim-insight {
       font-size: 12px;
       color: var(--text3);
       margin-top: 5px;
       line-height: 1.5
-    }
-
-    .fv-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px
-    }
-
-    .fv-card {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px
-    }
-
-    .fv-card.force {
-      border-color: rgba(101, 117, 66, .62)
-    }
-
-    .fv-card.vuln {
-      border-color: rgba(220, 95, 40, .45)
-    }
-
-    .fv-title {
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 6px
-    }
-
-    .fv-card.force .fv-title {
-      color: var(--green-light)
-    }
-
-    .fv-card.vuln .fv-title {
-      color: var(--rose)
-    }
-
-    .fv-text {
-      font-size: 12.5px;
-      color: var(--text3);
-      line-height: 1.55
-    }
-
-    .risk-block {
-      background: rgba(220, 95, 40, .06);
-      border: 1px solid rgba(220, 95, 40, .42);
-      border-radius: 8px;
-      padding: 20px
-    }
-
-    .risk-title {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--rose);
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      margin-bottom: 10px
-    }
-
-    .risk-text {
-      font-size: 14px;
-      color: var(--text2);
-      line-height: 1.65
-    }
-
-    .dev-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px
-    }
-
-    .dev-item {
-      display: flex;
-      gap: 12px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 16px;
-      align-items: flex-start
-    }
-
-    .dev-num {
-      font-family: var(--display);
-      font-size: 22px;
-      color: var(--orange);
-      line-height: 1;
-      min-width: 24px
-    }
-
-    .dev-title {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 3px
-    }
-
-    .dev-text {
-      font-size: 12.5px;
-      color: var(--text3);
-      line-height: 1.55
     }
 
     .cta-block {
@@ -929,10 +780,6 @@
       .q-text {
         font-size: 19px
       }
-
-      .fv-grid {
-        grid-template-columns: 1fr
-      }
     }
   </style>
 </head>
@@ -1041,7 +888,6 @@
           <div class="options" id="qOptions"></div>
           <div class="nav-row">
             <button class="nav-btn" id="btnBack" onclick="goBack()">← voltar</button>
-            <span></span>
           </div>
         </div>
 
@@ -1074,7 +920,6 @@
       'medo+perf': {
         factors: ['medo', 'perf'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Perfeccionista em Chamas', subtitle: 'Quando erro, padrão e exposição ganham muito peso',
         essence: 'Um modo educativo de organizar respostas sobre erro, exigência e a possibilidade de falhar.',
-        narrative: ['Este perfil é uma forma educativa de organizar as respostas de hoje; ele não descreve uma identidade fixa.', 'Nas suas respostas, erro, padrão de desempenho e a possibilidade de falhar apareceram como temas que podem valer observação. Em vez de concluir algo sobre você, o resultado convida a notar o que acontece entre um resultado e a próxima ação.'],
         forces: [{ title: 'Revisar a experiência', text: 'Você pode usar uma situação concreta para distinguir informação útil de julgamento sobre si.' }],
         vulns: [{ title: 'Separar resultado e identidade', text: 'Pode valer observar quando uma régua de desempenho passa a decidir a leitura que você faz de si.' }],
         observations: ['Depois de um erro, qual informação ajuda a escolher a próxima ação?', 'Em quais situações a possibilidade de falhar muda sua disposição de se expor?'],
@@ -1084,7 +929,6 @@
       'motiv+sup': {
         factors: ['motiv', 'sup'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Navegador sem Bússola', subtitle: 'Quando propósito e conversa sobre o esporte pedem espaço',
         essence: 'Um retrato educativo de respostas sobre o que sustenta a prática e o apoio mobilizado.',
-        narrative: ['Este perfil é uma forma educativa de organizar as respostas de hoje; ele não descreve uma identidade fixa.', 'Apareceram pistas sobre o que sustenta sua prática neste momento e sobre como você usa apoio quando o esporte pesa. Essas pistas não definem sua motivação nem a qualidade da sua rede.'],
         forces: [{ title: 'Perguntar pelo que importa agora', text: 'Nomear o que faz sentido na prática de hoje pode abrir uma conversa mais concreta.' }],
         vulns: [{ title: 'Não carregar tudo sozinho', text: 'Pode valer observar em que situações uma conversa ajuda, mesmo que não resolva a situação na hora.' }],
         observations: ['O que sustenta sua prática nesta fase?', 'Com quem você poderia compartilhar uma pergunta concreta sobre o esporte?'],
@@ -1094,7 +938,6 @@
       'reg+sup': {
         factors: ['reg', 'sup'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Atleta Pressão Constante', subtitle: 'Quando situações de demanda e apoio merecem observação',
         essence: 'Um retrato educativo de como você descreveu situações de pressão e uso de apoio.',
-        narrative: ['Este perfil é uma forma educativa de organizar as respostas de hoje; ele não descreve uma identidade fixa.', 'As respostas trouxeram situações de demanda e de conversa sobre o esporte. Elas não medem controle emocional nem permitem prever como será uma competição.'],
         forces: [{ title: 'Reconhecer o contexto', text: 'Identificar o momento em que a pressão muda já oferece um ponto concreto para observar.' }],
         vulns: [{ title: 'Nomear o próximo passo', text: 'Pode valer separar a sensação do momento da próxima ação que ainda está ao seu alcance.' }],
         observations: ['Que sinal simples ajuda a escolher a próxima ação sob pressão?', 'Que tipo de apoio seria útil nessa situação: técnico, prático, emocional ou de estima?'],
@@ -1104,7 +947,6 @@
       'ident+motiv': {
         factors: ['ident', 'motiv'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Atleta em Travessia', subtitle: 'Quando prática e outras áreas da vida entram na conversa',
         essence: 'Um retrato educativo de respostas sobre prática, rotina e outras áreas da vida.',
-        narrative: ['Este perfil é uma forma educativa de organizar as respostas de hoje; ele não descreve uma identidade fixa.', 'Apareceram pistas sobre o lugar do esporte entre outras áreas e sobre o que sustenta sua prática agora. Isso não determina uma identidade nem diz o que você deve fazer com o esporte.'],
         forces: [{ title: 'Abrir espaço para a experiência inteira', text: 'Observar o esporte junto das outras áreas da vida pode tornar escolhas mais claras.' }],
         vulns: [{ title: 'Evitar respostas prontas', text: 'Pode valer notar quando uma decisão nasce de hábito, de interesse ou de pressão externa.' }],
         observations: ['Onde o esporte encontra espaço entre as outras áreas da sua vida hoje?', 'O que faz sua prática ter sentido nesta fase?'],
@@ -1114,7 +956,6 @@
       'perf+reg': {
         factors: ['perf', 'reg'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Motor Sem Freio', subtitle: 'Quando padrão de desempenho e pressão se cruzam',
         essence: 'Um retrato educativo de como erro, padrão e situações de demanda apareceram nas respostas.',
-        narrative: ['Este perfil é uma forma educativa de organizar as respostas de hoje; ele não descreve uma identidade fixa.', 'Nas situações perguntadas, apareceu uma combinação de atenção ao desempenho e desafios para escolher a próxima ação sob demanda. O resultado não mede rendimento nem prevê consequências futuras.'],
         forces: [{ title: 'Atenção ao que acontece', text: 'A revisão de uma situação pode ser útil quando termina em uma decisão pequena e observável.' }],
         vulns: [{ title: 'Uma coisa por vez', text: 'Pode valer observar quando tentar corrigir tudo de uma vez aumenta o peso do momento.' }],
         observations: ['Qual é o único ponto controlável que você consegue observar depois de um erro?', 'O que muda quando você escolhe um sinal de processo em vez de revisar tudo?'],
@@ -1124,7 +965,6 @@
       equilibrado: {
         factors: ['perf', 'motiv', 'reg', 'medo', 'ident', 'sup'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'A Mente Calibrada', subtitle: 'Quando há evidência direta nos seis fatores acompanhados',
         essence: 'Um resumo educativo de respostas funcionais nas situações perguntadas, não um padrão-ouro.',
-        narrative: ['Este perfil é uma forma educativa de organizar as respostas de hoje; ele não descreve uma identidade fixa.', 'Há evidência direta nos seis fatores e, pelas convenções editoriais deste questionário, as respostas não mostraram um tema predominante de atenção. Isso não mede equilíbrio psicológico, não garante desempenho e pode mudar em outro momento.'],
         forces: [{ title: 'Usar o que já funciona', text: 'Pode valer observar quais referências e conversas ajudam nas situações específicas da sua modalidade.' }],
         vulns: [{ title: 'Manter curiosidade', text: 'Uma resposta funcional em um cenário não elimina a utilidade de continuar observando o contexto.' }],
         observations: ['Que estratégia situada você gostaria de entender melhor ao longo das próximas semanas?'],
@@ -1134,7 +974,6 @@
       'ident+medo': {
         factors: ['ident', 'medo'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Gigante Contido', subtitle: 'Quando exposição e lugar do esporte pedem observação',
         essence: 'Um retrato educativo de respostas sobre falha, exposição e outras áreas da vida.',
-        narrative: ['Este perfil é uma forma educativa de organizar as respostas de hoje; ele não descreve uma identidade fixa.', 'A possibilidade de falhar e o lugar do esporte entre outras áreas apareceram como temas para observar. O resultado não conclui que você evita desafios nem interpreta a importância que o esporte tem para você.'],
         forces: [{ title: 'Reconhecer o que importa', text: 'Perceber o peso de uma situação pode ajudar a distinguir cuidado estratégico de afastamento por receio.' }],
         vulns: [{ title: 'Diferenciar situação e pessoa', text: 'Pode valer observar quando um resultado parece dizer mais sobre você do que a situação realmente mostra.' }],
         observations: ['O que ajuda a diferenciar cuidado estratégico de afastamento por receio?', 'Quais outras áreas seguem presentes quando o esporte exige muito?'],
@@ -1144,7 +983,6 @@
       'medo+reg': {
         factors: ['medo', 'reg'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Atleta de Dois Tempos', subtitle: 'Quando falha e demanda se encontram na próxima ação',
         essence: 'Um retrato educativo de respostas sobre possibilidade de falhar e situações de pressão.',
-        narrative: ['Este perfil é uma forma educativa de organizar as respostas de hoje; ele não descreve uma identidade fixa.', 'Apareceram pistas sobre como a possibilidade de falhar entra em situações de demanda. Elas não definem coragem, controle emocional ou capacidade de competir.'],
         forces: [{ title: 'Voltar à tarefa', text: 'Uma referência concreta pode ajudar a transformar uma leitura ampla em próxima ação possível.' }],
         vulns: [{ title: 'Observar a urgência', text: 'Pode valer notar quando o resultado imediato passa a conduzir a decisão seguinte.' }],
         observations: ['Que sinal da tarefa ajuda a voltar ao presente quando o momento pesa?', 'Em que situações a possibilidade de falhar muda sua próxima decisão?'],
@@ -1154,61 +992,61 @@
     };
 
     const FIXED_QUESTIONS = [
-      { label: 'Pergunta fixa', text: 'Você erra uma execução simples no treino, algo que normalmente acerta sem pensar. O que acontece na sua cabeça logo depois?', opts: [
+      { text: 'Você erra uma execução simples no treino, algo que normalmente acerta sem pensar. O que acontece na sua cabeça logo depois?', opts: [
         { text: 'O resto do treino fica contaminado. Você continua, mas a cabeça volta naquele erro.', d: { perf: 0, reg: 0 } },
         { text: 'Irrita na hora, você xinga baixinho, e nas séries seguintes já passou.', d: { reg: 1 } },
         { text: 'Você registra o que causou, corrige na repetição seguinte e segue.', d: { perf: 2, reg: 2 } },
         { text: 'Nem entra no radar. Errar num treino não é assunto.', d: {} },
       ] },
-      { label: 'Pergunta fixa', text: 'Se alguém te perguntasse, sem julgamento nenhum, qual é o motivo real de você continuar treinando, o que você responderia?', context: 'Não existe resposta certa aqui. A honestidade é o que torna o resultado preciso.', opts: [
+      { text: 'Se alguém te perguntasse, sem julgamento nenhum, qual é o motivo real de você continuar treinando, o que você responderia?', context: 'Não existe resposta certa aqui. A honestidade é o que torna o resultado preciso.', opts: [
         { text: 'Sem o esporte, você não saberia bem o que sobra de você.', d: { ident: 0, motiv: 0 } },
         { text: 'A superação em si. Você treinaria mesmo que ninguém soubesse.', d: { motiv: 2 } },
         { text: 'O reconhecimento pesa. Ser visto como atleta faz parte do que te move.', d: { motiv: 1 }, flag: 'validação externa' },
         { text: 'Hoje é mais hábito do que escolha. Parar seria pior do que continuar.', d: { motiv: 0 } },
       ] },
-      { label: 'Pergunta fixa', text: 'Momento decisivo: última série, ponto de partida, prova principal, gente olhando. Como seu corpo e sua cabeça reagem?', opts: [
+      { text: 'Momento decisivo: última série, ponto de partida, prova principal, gente olhando. Como seu corpo e sua cabeça reagem?', opts: [
         { text: 'A tensão vira foco. Você costuma render mais quando o momento pesa.', d: { reg: 2, medo: 1 } },
         { text: 'A cabeça acelera, o corpo trava um pouco, e sai abaixo do que você treinou.', d: { reg: 0 }, flag: 'travamento sob pressão' },
         { text: 'Você tem um jeito próprio de se acalmar, com respiração, uma frase, um ritual. E funciona.', d: { reg: 2 } },
         { text: 'Você diminui o peso do momento. Convencer-se de que não importa tanto é o que te mantém funcional.', d: {}, flag: 'estratégia a entender' },
       ] },
-      { label: 'Pergunta fixa', text: 'Véspera de uma competição importante. Você imagina o cenário de fracassar. Qual pensamento aparece com mais força?', opts: [
+      { text: 'Véspera de uma competição importante. Você imagina o cenário de fracassar. Qual pensamento aparece com mais força?', opts: [
         { text: 'O que mais pesa é como as pessoas vão te olhar depois.', d: { medo: 0 }, flag: 'avaliação social' },
         { text: 'Bate a sensação de que todo o trabalho até aqui não provou nada.', d: { medo: 0 }, flag: 'autoestima contingente' },
         { text: 'Vai doer, mas você já sabe que aquilo vira informação para a semana seguinte.', d: { medo: 2, reg: 1 } },
         { text: 'Você não vai até lá. Pensar em perder antes da hora só atrapalha.', d: {}, flag: 'evitação/supressão a entender' },
       ] },
-      { label: 'Pergunta fixa', text: 'Uma lesão te tira do esporte por três meses. Sem exceção, sem antecipar o prazo. Qual seria sua reação mais provável?', opts: [
+      { text: 'Uma lesão te tira do esporte por três meses. Sem exceção, sem antecipar o prazo. Qual seria sua reação mais provável?', opts: [
         { text: 'Seria o tipo de pausa que mexe com a base. Sem a rotina, você não sabe direito quem é.', d: { ident: 0 } },
         { text: 'Frustrante, mas você redirecionaria o tempo para o que andou adiando.', d: { ident: 2, reg: 1 } },
         { text: 'Você transformaria a recuperação em projeto, fisioterapia no limite para voltar antes.', d: {}, flag: 'pressa de retorno' },
         { text: 'Continuaria por perto: acompanhando treino, mantendo o vínculo com o grupo.', d: { sup: 1 } },
       ] },
-      { label: 'Pergunta fixa', text: 'Treino sólido, dentro do planejado, mas longe de perfeito. Como você avalia esse desempenho?', opts: [
+      { text: 'Treino sólido, dentro do planejado, mas longe de perfeito. Como você avalia esse desempenho?', opts: [
         { text: 'Se não chegou perto do ideal, não conta muito.', d: { perf: 0 } },
         { text: 'Você reconhece que bateu o planejado e fica satisfeito com isso.', d: { perf: 2 } },
         { text: 'Fica a dúvida se foi suficiente e se os outros estão fazendo mais.', d: { perf: 0 }, flag: 'comparação e dúvida' },
         { text: 'Cumpriu o combinado, tá bom. Você não costuma revisar muito além disso.', d: {} },
       ] },
-      { label: 'Pergunta fixa', text: 'Sequência ruim: semanas de resultado estagnado, nada saindo como deveria. Como você costuma atravessar essa fase?', opts: [
+      { text: 'Sequência ruim: semanas de resultado estagnado, nada saindo como deveria. Como você costuma atravessar essa fase?', opts: [
         { text: 'Você fecha. Não é assunto para dividir, resolve treinando mais.', d: { sup: 0, reg: 0 } },
         { text: 'Você fala com quem confia. Não para resolver, mas para não carregar sozinho.', d: { sup: 2 } },
         { text: 'Você busca a comissão técnica: revisar vídeo, ajustar plano. O lado técnico primeiro.', d: { sup: 2, reg: 1 } },
         { text: 'Você reduz o contato com o ambiente até a fase passar.', d: { sup: 0 }, flag: 'afastamento' },
       ] },
-      { label: 'Pergunta fixa', text: 'Pensando nos últimos meses: como o esporte tem convivido com o resto da sua vida, família, amigos, trabalho, estudos?', opts: [
+      { text: 'Pensando nos últimos meses: como o esporte tem convivido com o resto da sua vida, família, amigos, trabalho, estudos?', opts: [
         { text: 'Já custou presenças importantes e algumas relações. O treino não se negocia.', d: { ident: 0, reg: 0 } },
         { text: 'Atropela às vezes, mas você reorganiza depois para compensar quem importa.', d: { ident: 1, reg: 1 } },
         { text: 'O horário de treino é sagrado, mas o resto tem espaço garantido.', d: { ident: 2, reg: 1 } },
         { text: 'O treino é a primeira coisa que cai quando aparece outra coisa.', d: {} },
       ] },
-      { label: 'Pergunta fixa', text: 'Já aconteceu de você não entrar numa competição, num confronto direto ou num teste por causa de como poderia sair dali?', opts: [
+      { text: 'Já aconteceu de você não entrar numa competição, num confronto direto ou num teste por causa de como poderia sair dali?', opts: [
         { text: 'Já deixou de entrar em disputas onde a chance de aparecer mal era grande.', d: { medo: 0 } },
         { text: 'Já aconteceu de achar um motivo para não ir e depois perceber que o motivo era outro.', d: { medo: 0 }, flag: 'justificativa/evitação percebida' },
         { text: 'Você prefere perder tentando a ficar com a dúvida. Raramente recua por isso.', d: { medo: 2 } },
         { text: 'Você recua quando a leitura objetiva mostra que não compensa e consegue distinguir isso do medo.', d: { medo: 1 } },
       ] },
-      { label: 'Pergunta fixa', text: 'Quando o esporte pesa emocionalmente, cobrança, insegurança, frustração, com quem você realmente fala sobre isso?', opts: [
+      { text: 'Quando o esporte pesa emocionalmente, cobrança, insegurança, frustração, com quem você realmente fala sobre isso?', opts: [
         { text: 'Com ninguém. Quem está fora não entenderia mesmo.', d: { sup: 0 } },
         { text: 'Tem o pessoal do treino, mas a conversa fica no técnico. Essa parte não entra.', d: { sup: 1 }, flag: 'apoio principalmente técnico' },
         { text: 'Tem gente que te sustenta independente de resultado família, parceiro(a), profissional.', d: { sup: 2 } },
@@ -1217,27 +1055,27 @@
     ].map(question => ({ ...question, fixed: true }));
 
     const CONTEXTUAL_QUESTIONS = {
-      fisiculturismo: { label: 'Pergunta contextual · Fisiculturismo', sportName: 'Fisiculturismo', hook: 'Na avaliação física/apresentação, você descreveu como transforma uma impressão pontual em decisão de processo.', text: 'Em uma semana de avaliação, uma foto, medida ou apresentação isolada parece diferente do esperado. Como você decide o próximo passo?', opts: [
+      fisiculturismo: { sportName: 'Fisiculturismo', hook: 'Na avaliação física/apresentação, você descreveu como transforma uma impressão pontual em decisão de processo.', text: 'Em uma semana de avaliação, uma foto, medida ou apresentação isolada parece diferente do esperado. Como você decide o próximo passo?', opts: [
         { text: 'Comparo com os registros e o plano do período; escolho um único ponto a acompanhar antes de mudar algo.', d: { reg: 2 } }, { text: 'Mudo a rotina na hora para compensar o que vi ou porque alguém parece melhor.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Paro de olhar ou registrar para não ter de lidar com isso.', d: {}, flag: 'afastamento da informação' }, { text: 'Levo a observação concreta para o critério já combinado com a equipe de saúde/técnica, antes de alterar o plano.', d: { reg: 1, sup: 1 } }] },
-      futebol: { label: 'Pergunta contextual · Futebol', sportName: 'Futebol', hook: 'No ajuste tático em campo, apareceu a forma como você volta a uma função observável e coordena a próxima ação.', text: 'Quando o plano do time deixa de funcionar porque o adversário mudou a marcação, como você entra na próxima sequência de jogo?', opts: [
+      futebol: { sportName: 'Futebol', hook: 'No ajuste tático em campo, apareceu a forma como você volta a uma função observável e coordena a próxima ação.', text: 'Quando o plano do time deixa de funcionar porque o adversário mudou a marcação, como você entra na próxima sequência de jogo?', opts: [
         { text: 'Escolho uma referência da minha função para a próxima ação e volto a oferecê-la ao time.', d: { reg: 2 } }, { text: 'Tento resolver sozinho e acelerar a jogada para recuperar o que o time perdeu.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Evito pedir a bola ou me prendo ao que estava combinado antes, sem atualizar a leitura.', d: {}, flag: 'afastamento da informação' }, { text: 'Uso uma comunicação curta, combinada com o grupo, para confirmar a função e a mudança necessária.', d: { reg: 1, sup: 1 } }] },
-      corrida: { label: 'Pergunta contextual · Corrida / Atletismo', sportName: 'Corrida / Atletismo', hook: 'Na calibração de ritmo, suas respostas mostram como você converte sinais da prova em um ajuste observável.', text: 'Em uma prova, calor, terreno ou sensação de esforço mostram que o ritmo planejado não cabe naquele dia. Como você recalibra?', opts: [
+      corrida: { sportName: 'Corrida / Atletismo', hook: 'Na calibração de ritmo, suas respostas mostram como você converte sinais da prova em um ajuste observável.', text: 'Em uma prova, calor, terreno ou sensação de esforço mostram que o ritmo planejado não cabe naquele dia. Como você recalibra?', opts: [
         { text: 'Volto à faixa de esforço/ritmo definida para a prova e ajusto por trechos, não por um minuto isolado.', d: { reg: 2 } }, { text: 'Forço o ritmo original ou sigo alguém para não “perder” a prova cedo.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Deixo de olhar para qualquer sinal e espero o fim para descobrir o que acontece.', d: {}, flag: 'afastamento da informação' }, { text: 'Uso os marcos permitidos e o plano prévio para registrar a mudança e revisar depois com a equipe.', d: { reg: 1 } }] },
-      volei: { label: 'Pergunta contextual · Vôlei', sportName: 'Vôlei', hook: 'No ajuste de rotação, você indicou como organiza seu papel e a troca de informação imediatamente utilizável.', text: 'Quando uma rotação ou combinação não está encaixando no set, como você participa do ajuste para o próximo rally?', opts: [
+      volei: { sportName: 'Vôlei', hook: 'No ajuste de rotação, você indicou como organiza seu papel e a troca de informação imediatamente utilizável.', text: 'Quando uma rotação ou combinação não está encaixando no set, como você participa do ajuste para o próximo rally?', opts: [
         { text: 'Volto a uma responsabilidade simples da minha posição e executo o combinado no próximo rally.', d: { reg: 2 } }, { text: 'Tento uma solução de alto risco para compensar o placar de uma vez.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Fico sem comunicar e espero que outra pessoa resolva a desorganização.', d: {}, flag: 'afastamento da informação' }, { text: 'Dou ou peço uma informação curta e objetiva — cobertura, chamada ou ajuste de posição — antes do saque.', d: { reg: 1, sup: 1 } }] },
-      tenis: { label: 'Pergunta contextual · Tênis', sportName: 'Tênis', hook: 'No changeover, suas respostas sugerem a maneira como você reduz uma leitura ampla a uma intenção tática testável.', text: 'No changeover, você percebe que um padrão de jogo não está rendendo. Como escolhe o foco do próximo game?', opts: [
+      tenis: { sportName: 'Tênis', hook: 'No changeover, suas respostas sugerem a maneira como você reduz uma leitura ampla a uma intenção tática testável.', text: 'No changeover, você percebe que um padrão de jogo não está rendendo. Como escolhe o foco do próximo game?', opts: [
         { text: 'Escolho uma intenção tática simples a testar por alguns pontos e observo o efeito.', d: { reg: 2 } }, { text: 'Troco tudo pelo placar ou tento encerrar cada ponto de uma vez.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Evito rever o padrão e só tento “bater mais forte” sem uma referência.', d: {}, flag: 'afastamento da informação' }, { text: 'Uso o que é permitido no torneio para confirmar uma observação objetiva e manter um foco por vez.', d: { reg: 1 } }] },
-      coletivos: { label: 'Pergunta contextual · Esportes Coletivos', sportName: 'Esportes Coletivos', hook: 'Na mudança de plano coletivo, você descreveu como torna sua função e a informação compartilhada mais claras.', text: 'Quando a equipe precisa mudar o plano no meio da partida, como você ajuda a alinhar a próxima sequência?', opts: [
+      coletivos: { sportName: 'Esportes Coletivos', hook: 'Na mudança de plano coletivo, você descreveu como torna sua função e a informação compartilhada mais claras.', text: 'Quando a equipe precisa mudar o plano no meio da partida, como você ajuda a alinhar a próxima sequência?', opts: [
         { text: 'Defino minha tarefa imediata dentro do novo plano e a executo de forma clara.', d: { reg: 2 } }, { text: 'Priorizo uma ação individual para mostrar que estou bem, mesmo sem relação com o ajuste do grupo.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Espero os outros decidirem e sigo no automático, sem checar a nova função.', d: {}, flag: 'afastamento da informação' }, { text: 'Confirmo uma instrução objetiva com quem coordena a jogada e comunico o que observei.', d: { reg: 1, sup: 1 } }] },
-      resistencia: { label: 'Pergunta contextual · Esporte de Resistência', sportName: 'Esporte de Resistência', hook: 'No esforço prolongado, você mostrou como usa um critério prévio para adaptar a tarefa sem transformar uma sensação isolada em veredito.', text: 'Em um esforço longo, um sinal inicial indica que o plano precisa ser adaptado. Como decide a continuação?', opts: [
+      resistencia: { sportName: 'Esporte de Resistência', hook: 'No esforço prolongado, você mostrou como usa um critério prévio para adaptar a tarefa sem transformar uma sensação isolada em veredito.', text: 'Em um esforço longo, um sinal inicial indica que o plano precisa ser adaptado. Como decide a continuação?', opts: [
         { text: 'Uso faixas de esforço e marcos definidos antes para fazer um ajuste gradual.', d: { reg: 2 } }, { text: 'Tento compensar logo o tempo perdido ou sigo o ritmo de outra pessoa sem voltar ao meu critério.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Ignoro todos os sinais até terminar, para não ter de decidir durante o esforço.', d: {}, flag: 'afastamento da informação' }, { text: 'Aplico o critério pré-definido de ajuste ou de interrupção segura e deixo a revisão detalhada para depois.', d: { reg: 1 } }] },
-      luta: { label: 'Pergunta contextual · Esportes de Luta', sportName: 'Esportes de Luta', hook: 'Entre rounds, você descreveu como transforma a leitura do adversário em um ajuste técnico limitado e verificável.', text: 'No intervalo, o adversário neutralizou uma sequência que costuma funcionar. Como você volta para o próximo round?', opts: [
+      luta: { sportName: 'Esportes de Luta', hook: 'Entre rounds, você descreveu como transforma a leitura do adversário em um ajuste técnico limitado e verificável.', text: 'No intervalo, o adversário neutralizou uma sequência que costuma funcionar. Como você volta para o próximo round?', opts: [
         { text: 'Escolho uma instrução técnica para testar e volto com esse único foco.', d: { reg: 2 } }, { text: 'Entro querendo recuperar tudo na força ou provar que a sequência ainda funciona.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Desconsidero a leitura do round e repito no automático, sem verificar o que mudou.', d: {}, flag: 'afastamento da informação' }, { text: 'Troco uma observação curta com o corner e confirmo o sinal técnico acordado para a volta.', d: { reg: 1, sup: 1 } }] },
-      raquetes: { label: 'Pergunta contextual · Esportes de Raquete', sportName: 'Esportes de Raquete', hook: 'Na leitura do padrão de troca, você indicou como transforma uma sequência em uma hipótese tática para testar.', text: 'Durante uma sequência de pontos, o adversário passa a explorar o mesmo padrão. Como você prepara a próxima decisão?', opts: [
+      raquetes: { sportName: 'Esportes de Raquete', hook: 'Na leitura do padrão de troca, você indicou como transforma uma sequência em uma hipótese tática para testar.', text: 'Durante uma sequência de pontos, o adversário passa a explorar o mesmo padrão. Como você prepara a próxima decisão?', opts: [
         { text: 'Elejo uma resposta tática específica e observo se ela muda o padrão nos próximos pontos.', d: { reg: 2 } }, { text: 'Tento encerrar a troca rapidamente em toda bola para compensar o que já aconteceu.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Deixo de observar o padrão e sigo só pela urgência de não errar.', d: {}, flag: 'afastamento da informação' }, { text: 'No intervalo permitido, confirmo uma leitura objetiva com dupla/equipe, quando houver, ou com meu registro de jogo.', d: { reg: 1 } }] },
-      habilidades_mira: { label: 'Pergunta contextual · Esportes de Habilidades e Mira', sportName: 'Esportes de Habilidades e Mira', hook: 'Na série de precisão, você descreveu como usa a rotina e um critério de revisão em vez de responder só ao resultado imediato.', text: 'Uma série fica mais dispersa do que o seu padrão. Como você escolhe a próxima tentativa?', opts: [
+      habilidades_mira: { sportName: 'Esportes de Habilidades e Mira', hook: 'Na série de precisão, você descreveu como usa a rotina e um critério de revisão em vez de responder só ao resultado imediato.', text: 'Uma série fica mais dispersa do que o seu padrão. Como você escolhe a próxima tentativa?', opts: [
         { text: 'Retomo a rotina pré-execução e um único sinal técnico controlável antes da próxima tentativa.', d: { reg: 2 } }, { text: 'Mudo vários detalhes de uma vez para recuperar o placar imediatamente.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Evito conferir o padrão e acelero as tentativas para acabar logo a série.', d: {}, flag: 'afastamento da informação' }, { text: 'Aplico o critério de pausa/revisão acordado para a sessão e registro o que mudou.', d: { reg: 1 } }] },
-      e_sports: { label: 'Pergunta contextual · E-sports', sportName: 'E-sports', hook: 'No ajuste entre rodadas, apareceu como você transforma informação do jogo em chamada curta, função clara e revisão posterior.', text: 'Uma rodada revela uma estratégia que a equipe não esperava. Como você participa do ajuste da próxima rodada?', opts: [
+      e_sports: { sportName: 'E-sports', hook: 'No ajuste entre rodadas, apareceu como você transforma informação do jogo em chamada curta, função clara e revisão posterior.', text: 'Uma rodada revela uma estratégia que a equipe não esperava. Como você participa do ajuste da próxima rodada?', opts: [
         { text: 'Comunico uma informação verificável e executo uma função clara no ajuste combinado.', d: { reg: 2 } }, { text: 'Tento recuperar a rodada sozinho ou tomo decisões pelo placar/KDA, sem alinhar o time.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Paro de comunicar ou sigo o plano antigo sem checar a informação nova.', d: {}, flag: 'afastamento da informação' }, { text: 'Uso a janela permitida para confirmar uma chamada curta, prioridades e responsabilidades antes de retomar.', d: { reg: 1 } }] },
     };
 
@@ -1305,10 +1143,7 @@
     let profile = { name: '', sport: '', sportLabel: '', level: '', goal: '' };
     let scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
     let evidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-    let fixedScores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
     let fixedEvidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-    let attentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-    let fixedAttentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
     let answers = {};
     let current = 0;
     let resolvedProfile = null;
@@ -1405,10 +1240,7 @@
       current = 0;
       scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       evidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-      fixedScores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       fixedEvidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-      attentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-      fixedAttentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       answers = {};
       goTo('s-question'); renderQuestion();
     }
@@ -1433,12 +1265,7 @@
       Object.entries(opt.d).forEach(([d, p]) => {
         scores[d] += p * direction;
         evidenceMax[d] += 2 * direction;
-        if (p === 0) attentionEvidence[d] += direction;
-        if (q.fixed) {
-          fixedScores[d] += p * direction;
-          fixedEvidenceMax[d] += 2 * direction;
-          if (p === 0) fixedAttentionEvidence[d] += direction;
-        }
+        if (q.fixed) fixedEvidenceMax[d] += 2 * direction;
       });
     }
 
@@ -1466,24 +1293,24 @@
     //  ALGORITMO DE PERFIL
     // ══════════════════════════════════════════
     const FACTOR_ORDER = ['perf', 'motiv', 'reg', 'medo', 'ident', 'sup'];
-    function summarizeFactor(points, maximum, attention, d) {
+    function summarizeFactor(points, maximum, d) {
       const known = maximum[d] > 0;
-      return { known, attention: known && attention[d] > 0, percent: known ? points[d] / maximum[d] : null };
+      return { known, percent: known ? points[d] / maximum[d] : null };
     }
 
     function factorSummary(d) {
-      return summarizeFactor(scores, evidenceMax, attentionEvidence, d);
+      return summarizeFactor(scores, evidenceMax, d);
     }
 
     function selectProfile() {
-      const fixedKnownCount = FACTOR_ORDER.filter(d => fixedEvidenceMax[d] > 0).length;
+      const fixedKnown = FACTOR_ORDER.filter(d => fixedEvidenceMax[d] > 0);
+      const fixedKnownCount = fixedKnown.length;
       const known = FACTOR_ORDER
         .filter(d => evidenceMax[d] > 0)
-        .map(d => ({ d, percent: summarizeFactor(scores, evidenceMax, attentionEvidence, d).percent }))
+        .map(d => ({ d, percent: summarizeFactor(scores, evidenceMax, d).percent }))
         .sort((a, b) => a.percent - b.percent || FACTOR_ORDER.indexOf(a.d) - FACTOR_ORDER.indexOf(b.d));
       const pairProfiles = Object.values(PROFILES).filter(item => item.factors.length === 2);
       const partialProfile = (base, reason) => ({ ...base, partial: true, partialReason: reason });
-      const fixedKnown = FACTOR_ORDER.filter(d => fixedEvidenceMax[d] > 0);
       const fallbackFactor = known.find(item => fixedEvidenceMax[item.d] > 0)?.d;
       const catalogFallback = pairProfiles.find(item => item.factors.includes(fallbackFactor)) || pairProfiles[0];
       if (fixedKnownCount >= 2 && known.length === 6 && known.every(item => item.percent >= .5)) return PROFILES.equilibrado;
@@ -1494,7 +1321,7 @@
         const candidates = pairProfiles
           .filter(item => item.factors.every(factor => evidenceMax[factor] > 0))
           .sort((a, b) => {
-            const score = item => item.factors.reduce((sum, factor) => sum + summarizeFactor(scores, evidenceMax, attentionEvidence, factor).percent, 0);
+            const score = item => item.factors.reduce((sum, factor) => sum + summarizeFactor(scores, evidenceMax, factor).percent, 0);
             return score(a) - score(b) || FACTOR_ORDER.indexOf(a.factors[0]) - FACTOR_ORDER.indexOf(b.factors[0]);
           });
         if (candidates.length) return candidates[0];
@@ -1593,7 +1420,6 @@
 
         const ensureSp = (n) => { if (y + n > H - M) { doc.addPage(); y = M; } };
         const sf = (style, size, color) => { doc.setFont('helvetica', style); doc.setFontSize(size); doc.setTextColor(...(color || C_DARK)); };
-        const wt = (text, x, opts, lh) => { const lines = doc.splitTextToSize(text, opts.maxW || CW); ensureSp(lines.length * (lh || 13) + 4); doc.text(lines, x, y, opts); y += lines.length * (lh || 13); return lines; };
         const div = (color) => { doc.setDrawColor(...(color || C_LGRAY)); doc.setLineWidth(.5); doc.line(M, y, W - M, y); y += 14; };
         const sec = (label) => { ensureSp(28); sf('bold', 8, C_TEAL); doc.text(label.toUpperCase(), M, y); y += 5; div(C_TEAL); };
         const factorBar = (percent) => {
@@ -1776,10 +1602,7 @@
       profile = { name: '', sport: '', sportLabel: '', level: '', goal: '' };
       scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       evidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-      fixedScores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       fixedEvidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-      attentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-      fixedAttentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
       answers = {}; current = 0; resolvedProfile = null;
       ACTIVE = [];
       prog.style.width = '0%';

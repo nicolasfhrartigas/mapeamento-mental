@@ -45,10 +45,7 @@ vm.runInNewContext(
   let profile = { name: '', sport: '', sportLabel: '', level: 'competitivo', goal: 'performance' };
   let scores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
   let evidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-  let fixedScores = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
   let fixedEvidenceMax = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-  let attentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
-  let fixedAttentionEvidence = { perf: 0, motiv: 0, reg: 0, medo: 0, ident: 0, sup: 0 };
   let answers = {};
   let current = 0;
   let ACTIVE = [];
