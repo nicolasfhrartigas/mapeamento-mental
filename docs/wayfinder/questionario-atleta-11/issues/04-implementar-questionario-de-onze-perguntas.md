@@ -1,7 +1,7 @@
 # Implementar o questionário de onze perguntas
 
 Type: task
-Status: resolved
+Status: claimed
 Blocked by: 01, 02, 03
 
 ## Objetivo
@@ -24,7 +24,7 @@ Implementado em `index.html`:
 - resultado e PDF com linguagem educativa, fatores sem porcentagens e a seção única “Ponto de atenção da sua modalidade”; e
 - remoção da projeção futura, substituída por convites de observação presentes.
 
-As verificações estruturais confirmaram as 10 perguntas fixas, as 11 Q11 e o limite de dois fatores da Q11. A sintaxe JavaScript e o `git diff --check` também passaram.
+As verificações estruturais confirmaram as 10 perguntas fixas, as 11 Q11 e o limite de dois fatores da Q11. A sintaxe JavaScript e o `git diff --check` também passaram. O ticket permanece reivindicado até a verificação visual obrigatória em viewport móvel, indisponível nesta sessão.
 
 ## Comments
 
