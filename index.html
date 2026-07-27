@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qual é o seu tipo mental como atleta?</title>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #0B0D07; }
+  #dc-frame { display: block; width: 100vw; height: 100vh; border: 0; }
+</style>
+<script>
+  (function () {
+    var STORAGE_KEY = "mm-view";
+    var params = new URLSearchParams(location.search);
+    var requested = params.get("view");
+
+    if (requested === "web" || requested === "mobile") {
+      localStorage.setItem(STORAGE_KEY, requested);
+    } else if (requested === "auto") {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+
+    var saved = localStorage.getItem(STORAGE_KEY);
+    var view = saved === "web" || saved === "mobile" ? saved : detect();
+
+    function detect() {
+      var width = window.innerWidth;
+      var isCoarse = window.matchMedia("(pointer: coarse)").matches;
+      if (width <= 820) return "mobile";
+      if (isCoarse && width <= 1180) return "mobile";
+      return "web";
+    }
+
+    window.__mmView = view;
+  })();
+</script>
+</head>
+<body>
+<iframe id="dc-frame" title="Mapeamento mental" allow="clipboard-write"></iframe>
+<script>
+  document.getElementById("dc-frame").src = "src/" + window.__mmView + ".dc.html";
+</script>
+</body>
+</html>

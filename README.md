@@ -2,11 +2,36 @@
 
 Landing page do teste "qual é o seu tipo mental como atleta?", de Nicolas Artigas (psicólogo do esporte). Ferramenta **educativa**: 10 perguntas fixas + 1 pergunta contextual da modalidade, resultado na tela e PDF para download.
 
-Tudo vive em `index.html` — HTML, CSS e JS num arquivo só. **Sem build, sem dependências locais, sem testes.** Para rodar, abra o arquivo no navegador (ou `python3 -m http.server` na pasta, se precisar de origem HTTP).
+`index-original.html` — HTML, CSS e JS num arquivo só — é a versão **pré-redesign**. É o que o GitHub Pages (branch `main`) serve hoje da raiz do repo. Continua funcional como fallback; não apague nem sobrescreva. O mapa de arquivo e o `BUGS.md` abaixo se referem a ele.
 
-Únicas dependências externas: jsPDF por CDN (`<script>` no `<head>`) e Google Fonts por `@import` no topo do `<style>`.
+`index.html` é o roteador do redesign: detecta o dispositivo no carregamento e injeta `src/web.dc.html` ou `src/mobile.dc.html` num iframe de página inteira. Ainda não é o que está publicado em produção — só entra no ar quando alguém decidir substituir o deploy da branch `main`.
 
-## Mapa do arquivo
+### Como `index.html` decide a versão
+
+1. Detecção automática ao carregar: `mobile` se a largura ≤ 820px, ou se o ponteiro for `coarse` (touch) e a largura ≤ 1180px; `web` nos demais casos.
+2. Redimensionar a janela depois não troca de versão — só um novo carregamento decide de novo.
+3. Override manual via query string, persistido em `localStorage`: `?view=web`, `?view=mobile`, `?view=auto` (volta à detecção automática).
+4. A escolha vira o `src` de um `<iframe>` full-page — não fetch+injeção, porque `support.js` depende de `location.pathname` do próprio documento para resolver os imports relativos (`./quiz-engine.js` etc.) e isso só funciona se o `.dc.html` carregar na sua própria URL.
+
+Para testar localmente: `python3 -m http.server` na raiz do repo (não abre com `file://`, veja abaixo o motivo) e acesse `http://localhost:8000/index.html`.
+
+## Redesign: `src/` (web + mobile)
+
+O redesign vive em `src/`, como fonte editável — não em arquivos compactados:
+
+| Arquivo | Papel |
+|---|---|
+| `src/web.dc.html` | Fonte da tela web/desktop (layout 2 colunas) |
+| `src/mobile.dc.html` | Fonte da tela mobile |
+| `src/quiz-engine.js` | Lógica: perguntas, scoring, monta os dados do relatório — igual nas duas telas |
+| `src/pdf-report.js` | Só o desenho do PDF (jsPDF); recebe os dados já prontos do `quiz-engine.js` |
+| `src/support.js` | Runtime do Design Component (React/Babel via CDN + interpretador de `{{ }}`, `<sc-if>`, `<sc-for>`). **Gerado, não editar à mão** — primeira linha do arquivo diz de onde vem. |
+
+Os `.dc.html` usam um formato declarativo (bindings `{{ var }}`, `<sc-if>`, `<sc-for>`) interpretado pelo `support.js` em runtime — não é HTML puro, não abre "funcionando 100%" só com duplo clique sem servidor (o `import()` do `quiz-engine.js` exige origem HTTP).
+
+Únicas dependências externas: jsPDF, React, ReactDOM e Babel por CDN, e Google Fonts.
+
+## Mapa do arquivo (`index-original.html`, versão legada)
 
 Os números de linha envelhecem — procure pelo símbolo. A ordem é estável.
 
