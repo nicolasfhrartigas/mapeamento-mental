@@ -66,6 +66,25 @@
           }
         }
 
+        .factor-loader {
+          height: 22px;
+          aspect-ratio: 7;
+          background:
+            radial-gradient(farthest-side, #DC5F28 98%, #0000) 0%/18px 18px,
+            radial-gradient(farthest-side, #DC5F28 98%, #0000) 0%/18px 18px,
+            radial-gradient(farthest-side, #DC5F28 98%, #0000) 25%/18px 18px,
+            radial-gradient(farthest-side, #DC5F28 98%, #0000) 50%/18px 18px,
+            radial-gradient(farthest-side, #DC5F28 98%, #0000) 75%/18px 18px,
+            radial-gradient(farthest-side, #DC5F28 98%, #0000) 100%/18px 18px;
+          background-repeat: no-repeat;
+          filter: blur(3px) contrast(10);
+          animation: mm-load 1.1s infinite;
+        }
+
+        @keyframes mm-load {
+          100% { background-position: 100%, 0%, 25%, 50%, 75%, 100% }
+        }
+
         [data-h="row"]:active {
           background: rgba(220, 95, 40, .14) !important;
           color: #FFFFFF !important
@@ -364,29 +383,54 @@
                   Seus fatores mentais no esporte
                   <span style="flex: 1; height: 1px; background: rgba(255,255,255,.14)"></span>
                 </div>
-                <div style="display: flex; flex-direction: column">
-                  <sc-for list="{{ dims }}" as="dim" hint-placeholder-count="6">
+                <sc-if value="{{ factorsLoading }}" hint-placeholder-val="{{ false }}">
+                  <div
+                    style="display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 40px 0">
+                    <div class="factor-loader"></div>
                     <div
-                      style="border-bottom: 1px solid rgba(255,255,255,.12); padding: 16px 0; display: flex; flex-direction: column; gap: 9px">
-                      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
-                        <span style="font-size: 14.5px; font-weight: 500; line-height: 1.35">{{ dim.name }}</span>
-                        <span
-                          style="font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; color: {{ dim.numColor }}; white-space: nowrap">{{
-                          dim.readout }}</span>
-                      </div>
-                      <sc-if value="{{ dim.known }}" hint-placeholder-val="{{ true }}">
-                        <div style="height: 4px; background: rgba(255,255,255,.14)">
-                          <div
-                            style="height: 100%; background: linear-gradient(90deg, #657542, #DC5F28); transition: width 1.2s cubic-bezier(.4,0,.2,1); width: {{ dim.width }}">
-                          </div>
-                        </div>
-                      </sc-if>
+                      style="font-size: 10.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.4)">
+                      Lendo seus fatores mentais…</div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ factorsReady }}" hint-placeholder-val="{{ false }}">
+                  <div style="border: 1px solid rgba(255,255,255,.14)">
+                    <button sc-camel-on-click="{{ toggleResult }}"
+                      style="display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; background: transparent; border: none; cursor: pointer; text-align: left; font-family: 'Oswald', sans-serif; color: #FFFFFF; padding: 18px 16px; min-height: 56px">
+                      <span style="font-size: 16px; font-weight: 600; text-transform: uppercase; letter-spacing: .02em">Resultado
+                        Resumido</span>
+                      <span style="position: relative; display: inline-block; width: 14px; height: 14px; flex-shrink: 0">
+                        <span style="position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: rgba(255,255,255,.5); transform: translateY(-50%)"></span>
+                        <span style="position: absolute; left: 50%; top: 0; width: 2px; height: 100%; background: rgba(255,255,255,.5); transform: translateX(-50%) {{ resultChevronRotate }}; transition: transform .25s ease"></span>
+                      </span>
+                    </button>
+                    <sc-if value="{{ resultOpen }}" hint-placeholder-val="{{ false }}">
                       <div
-                        style="font-size: 12.5px; color: rgba(255,255,255,.48); line-height: 1.55; text-wrap: pretty">{{
-                        dim.insight }}</div>
-                    </div>
-                  </sc-for>
-                </div>
+                        style="animation: rise .22s ease; display: flex; flex-direction: column; padding: 0 16px 6px; border-top: 1px solid rgba(255,255,255,.14)">
+                        <sc-for list="{{ dims }}" as="dim" hint-placeholder-count="6">
+                          <div
+                            style="border-bottom: 1px solid rgba(255,255,255,.12); padding: 16px 0; display: flex; flex-direction: column; gap: 9px">
+                            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
+                              <span style="font-size: 14.5px; font-weight: 500; line-height: 1.35">{{ dim.name }}</span>
+                              <span
+                                style="font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; color: {{ dim.numColor }}; white-space: nowrap">{{
+                                dim.readout }}</span>
+                            </div>
+                            <sc-if value="{{ dim.known }}" hint-placeholder-val="{{ true }}">
+                              <div style="height: 4px; background: rgba(255,255,255,.14)">
+                                <div
+                                  style="height: 100%; background: linear-gradient(90deg, #657542, #DC5F28); width: {{ dim.width }}">
+                                </div>
+                              </div>
+                            </sc-if>
+                            <div
+                              style="font-size: 12.5px; color: rgba(255,255,255,.48); line-height: 1.55; text-wrap: pretty">{{
+                              dim.insight }}</div>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
               </div>
 
               <div
@@ -439,11 +483,11 @@
                   </div>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 8px">
-                  <button data-h="ghost" sc-camel-on-click="{{ downloadPDF }}"
-                    style="background: transparent; border: 1px solid rgba(255,255,255,.28); color: #FFFFFF; font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600; letter-spacing: .04em; padding: 16px 18px; min-height: 54px; cursor: pointer; transition: all .15s">{{
+                  <button data-h="ghost" sc-camel-on-click="{{ downloadPDF }}" disabled="{{ factorsLoading }}"
+                    style="{{ pdfBtnStyle }}">{{
                     pdfLabel }}</button>
                   <a data-h="ghost" href="{{ waLink }}" target="_blank"
-                    style="border: 1px solid rgba(255,255,255,.28); color: rgba(255,255,255,.7); font-size: 13.5px; padding: 16px 18px; min-height: 54px; display: flex; align-items: center; justify-content: center; transition: all .15s">Enviar
+                    style="{{ waBtnStyle }}">Enviar
                     pelo WhatsApp</a>
                 </div>
               </div>
@@ -524,7 +568,12 @@ class Component extends DCLogic {
   state = {
     screen: 'intro', name: '', sport: '', sportLabel: '', level: '', goal: '',
     sportOpen: false, setupError: false, missing: [], tick: 0, result: null, animate: false, pdfBusy: false,
+    factorsLoading: false, resultOpen: false,
   };
+
+  toggleResult() {
+    this.setState({ resultOpen: !this.state.resultOpen });
+  }
 
   clearMissing(field) {
     if (!this.state.missing.length) return;
@@ -597,9 +646,10 @@ class Component extends DCLogic {
     const done = this.engine.select(i);
     if (done) {
       const result = this.engine.result();
-      this.setState({ screen: 'result', result, animate: false });
+      this.setState({ screen: 'result', result, animate: false, factorsLoading: true, resultOpen: false });
       this.top();
-      setTimeout(() => this.setState({ animate: true }), 140);
+      const wait = 3000 + Math.random() * 3000;
+      setTimeout(() => this.setState({ animate: true, factorsLoading: false }), wait);
     } else {
       this.setState({ tick: this.state.tick + 1 });
       this.top();
@@ -615,7 +665,7 @@ class Component extends DCLogic {
 
   restart() {
     this.engine.resetState();
-    this.setState({ screen: 'intro', name: '', sport: '', sportLabel: '', level: '', goal: '', result: null, animate: false, setupError: false, missing: [] });
+    this.setState({ screen: 'intro', name: '', sport: '', sportLabel: '', level: '', goal: '', result: null, animate: false, setupError: false, missing: [], factorsLoading: false, resultOpen: false });
     this.top();
   }
 
@@ -698,16 +748,24 @@ class Component extends DCLogic {
       profEssence: r ? '"' + r.prof.essence + '"' : '',
       profCta: r ? r.prof.cta : '',
       waLink: r ? r.waLink : '#',
+      factorsLoading: s.factorsLoading,
+      factorsReady: s.screen === 'result' && !s.factorsLoading,
+      resultOpen: s.resultOpen,
+      resultChevronRotate: s.resultOpen ? 'rotate(90deg)' : 'rotate(0deg)',
+      toggleResult: () => this.toggleResult(),
       dims: r ? r.dims.map(d => ({
         name: d.name,
         known: d.known,
         insight: d.insight,
         readout: d.known ? d.percent + '%' : 'sem evidência',
         numColor: d.known ? '#FFFFFF' : 'rgba(255,255,255,.35)',
-        width: s.animate ? d.visible + '%' : '0%',
+        width: d.visible + '%',
       })) : [],
+      pdfBtnStyle: "background: transparent; border: 1px solid rgba(255,255,255,.28); color: #FFFFFF; font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600; letter-spacing: .04em; padding: 16px 18px; min-height: 54px; transition: all .15s" + (s.factorsLoading ? '; opacity: .35; cursor: not-allowed; pointer-events: none; filter: grayscale(1)' : '; cursor: pointer'),
+      waBtnStyle: "border: 1px solid rgba(255,255,255,.28); color: rgba(255,255,255,.7); font-size: 13.5px; padding: 16px 18px; min-height: 54px; display: flex; align-items: center; justify-content: center; transition: all .15s" + (s.factorsLoading ? '; opacity: .35; cursor: not-allowed; pointer-events: none; filter: grayscale(1)' : ''),
       pdfLabel: s.pdfBusy ? '⏳ Gerando PDF…' : '⤓ Baixar PDF do resultado',
       downloadPDF: () => {
+        if (s.factorsLoading) return;
         this.setState({ pdfBusy: true });
         setTimeout(() => { this.engine.downloadPDF(); this.setState({ pdfBusy: false }); }, 30);
       },
