@@ -2,9 +2,9 @@
 
 Landing page do teste "qual é o seu tipo mental como atleta?", de Nicolas Artigas (psicólogo do esporte). Ferramenta **educativa**: 10 perguntas fixas + 1 pergunta contextual da modalidade, resultado na tela e PDF para download.
 
-`index-original.html` — HTML, CSS e JS num arquivo só — é a versão **pré-redesign**. É o que o GitHub Pages (branch `main`) serve hoje da raiz do repo. Continua funcional como fallback; não apague nem sobrescreva. O mapa de arquivo e o `BUGS.md` abaixo se referem a ele.
+`index-original.html` — HTML, CSS e JS num arquivo só — é a versão **pré-redesign**, preservada e acessível diretamente por essa URL. Não é um fallback automático; não apague nem sobrescreva. O mapa de arquivo e o `BUGS.md` abaixo se referem a ele.
 
-`index.html` é o roteador do redesign: detecta o dispositivo no carregamento e injeta `src/web.dc.html` ou `src/mobile.dc.html` num iframe de página inteira. Ainda não é o que está publicado em produção — só entra no ar quando alguém decidir substituir o deploy da branch `main`.
+`index.html` é o roteador do redesign: detecta o dispositivo no carregamento e injeta `src/web.dc.html` ou `src/mobile.dc.html` num iframe de página inteira. Ao mergear `dev` em `main`, o GitHub Pages publicará esse novo `index.html` e, portanto, o redesign.
 
 ### Como `index.html` decide a versão
 
@@ -24,6 +24,7 @@ O redesign vive em `src/`, como fonte editável — não em arquivos compactados
 | `src/web.dc.html` | Fonte da tela web/desktop (layout 2 colunas) |
 | `src/mobile.dc.html` | Fonte da tela mobile |
 | `src/quiz-engine.js` | Lógica: perguntas, scoring, monta os dados do relatório — igual nas duas telas |
+| `src/quiz-flow.js` | Fluxo compartilhado de setup, seleção, navegação do quiz, reinício e fechamento do seletor “Outros esportes”; as diferenças de layout continuam nos HTMLs |
 | `src/pdf-report.js` | Só o desenho do PDF (jsPDF); recebe os dados já prontos do `quiz-engine.js` |
 | `src/support.js` | Runtime do Design Component (React/Babel via CDN + interpretador de `{{ }}`, `<sc-if>`, `<sc-for>`). **Gerado, não editar à mão** — primeira linha do arquivo diz de onde vem. |
 
@@ -63,11 +64,11 @@ Os números de linha envelhecem — procure pelo símbolo. A ordem é estável.
 **Todo `:hover` de elemento interativo fica dentro do único bloco `@media (hover: hover) and (pointer: fine)`.** Em tela touch não existe `mouseleave`: um `:hover` fora do bloco "gruda" depois do toque e o elemento fica com cara de selecionado. Isso já regrediu duas vezes, sempre em reescrita grande do `<style>`. Antes de fechar qualquer edição de CSS:
 
 ```
-grep -n ":hover" index.html
+rg -n ":hover" src/web.dc.html src/mobile.dc.html
 ```
 
 Toda linha que aparecer tem que estar indentada dentro daquele bloco. Estado "selecionado" é `.chip.selected`, nunca `:hover`.
 
-**Testar em viewport mobile antes de dar como pronto.** Não há suíte automatizada. Para mudanças em elementos clicáveis, confira em device mode que nada fica grudado em hover e que nenhuma área de toque se sobrepõe.
+**Testar em viewport mobile antes de dar como pronto.** Rode `node --test tests/*.test.js`; a suíte cobre o motor, o fluxo compartilhado e a proteção de hover. Para mudanças em elementos clicáveis, também confira em device mode que nada fica grudado em hover e que nenhuma área de toque se sobrepõe.
 
 **O catálogo tem acoplamentos estruturais.** `selectProfile` percorre `Object.values(PROFILES)` lendo `item.factors.length` — todo perfil precisa do campo `factors`, inclusive o `equilibrado`, que não é um par.
