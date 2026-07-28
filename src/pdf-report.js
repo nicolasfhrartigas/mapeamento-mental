@@ -33,8 +33,6 @@ export function generatePdfReport(data) {
   const OLIVE = [101, 117, 66];    // #657542
   const OLIVE_D = [79, 92, 52];
   const TERRA = [193, 90, 44];     // #C15A2C — laranja da marca rebaixado
-  const PANEL = [47, 56, 26];      // #2F381A — só no bloco de CTA
-  const PANEL_TX = [214, 219, 203];
 
   const MAX_PAGES = 2;
 
@@ -238,24 +236,7 @@ export function generatePdfReport(data) {
       y += sp(8);
     }
 
-    // ── CTA — antes do anexo ─────────────────────────────────────
-    const ctaTxt = (prof ? prof.cta : 'Fala comigo pelo WhatsApp para uma análise aprofundada do seu perfil.');
-    sf('normal', 8.4, PANEL_TX);
-    const ctaLines = doc.splitTextToSize(ctaTxt, CW - sp(40));
-    const CTA_BTN_H = sp(28);
-    const ctaH = sp(44) + ctaLines.length * sp(10.4) + CTA_BTN_H + sp(18);
-    ensureSp(ctaH + sp(16));
-    doc.setFillColor(...PANEL); doc.rect(M, y, CW, ctaH, 'F');
-    sf('bold', 7, [168, 180, 127], 1.6); doc.text('PRÓXIMO PASSO', M + sp(20), y + sp(20));
-    sf('bold', 13, [255, 255, 255], .2); doc.text('O próximo passo é uma conversa.', M + sp(20), y + sp(39));
-    sf('normal', 8.4, PANEL_TX); doc.text(ctaLines, M + sp(20), y + sp(55));
-    const btnY = y + sp(55) + ctaLines.length * sp(10.4) + sp(8);
-    doc.setFillColor(...TERRA); doc.rect(M + sp(20), btnY, CW - sp(40), CTA_BTN_H, 'F');
-    sf('bold', 8.4, [255, 255, 255], 1);
-    doc.text('wa.me/5544988433895   ·   @nicolasartigas.psico', M + sp(34), btnY + CTA_BTN_H / 2 + sp(3));
-    y += ctaH + sp(22);
-
-    // ── Anexo — registro das respostas (depois do CTA) ───────────
+    // ── Anexo — registro das respostas ────────────────────────────
     sec('Anexo · Registro das suas respostas');
     sf('normal', 7, MUTED);
     const axL = doc.splitTextToSize('Registro compacto para retomar as respostas em uma conversa.', CW);

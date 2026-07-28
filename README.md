@@ -4,6 +4,8 @@ Landing page do teste "qual é o seu tipo mental como atleta?", de Nicolas Artig
 
 `index-original.html` — HTML, CSS e JS num arquivo só — é a versão **pré-redesign**, preservada e acessível diretamente por essa URL. Não é um fallback automático; não apague nem sobrescreva. O mapa de arquivo e o `BUGS.md` abaixo se referem a ele.
 
+'index-original.html' é legado nao precisa ser lido, editado, modificado.
+
 `index.html` é o roteador do redesign: detecta o dispositivo no carregamento e injeta `src/web.dc.html` ou `src/mobile.dc.html` num iframe de página inteira. Ao mergear `dev` em `main`, o GitHub Pages publicará esse novo `index.html` e, portanto, o redesign.
 
 ### Como `index.html` decide a versão
