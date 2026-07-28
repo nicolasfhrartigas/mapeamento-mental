@@ -1,277 +1,492 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="./support.js"></script>
 </head>
+
 <body>
-<x-dc>
-<helmet>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box }
-    html { -webkit-text-size-adjust: 100% }
-    body { background: #0B0D07; color: #FFFFFF; font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; overscroll-behavior-y: none }
-    a { color: #DC5F28; text-decoration: none }
-    a:hover { color: #EE8355 }
-    button, input, a { -webkit-tap-highlight-color: transparent }
-    @keyframes rise { from { opacity: 0; transform: translateY(10px) } to { opacity: 1; transform: translateY(0) } }
-    [data-h="row"]:active { background: rgba(220,95,40,.14) !important; color: #FFFFFF !important }
-    [data-h="row"]:active [data-mark] { background: #DC5F28 !important; color: #FFFFFF !important; border-color: #DC5F28 !important }
-    [data-h="chip"]:active { border-color: rgba(255,255,255,.5) !important }
-    [data-h="cta"]:active { background: #C24F1D !important }
-    [data-h="ghost"]:active { border-color: #DC5F28 !important }
-    @media (hover: hover) and (pointer: fine) {
-      [data-h="row"]:hover { background: rgba(220,95,40,.08) !important; color: #FFFFFF !important }
-      [data-h="row"]:hover [data-mark] { background: #DC5F28 !important; color: #FFFFFF !important; border-color: #DC5F28 !important }
-      [data-h="chip"]:not([data-selected="1"]):hover { border-color: rgba(255,255,255,.45) !important; color: #FFFFFF !important }
-      [data-h="cta"]:hover { background: #EE7443 !important }
-      [data-h="ghost"]:hover { border-color: #DC5F28 !important; color: #FFFFFF !important }
-      [data-h="quiet"]:hover { color: #FFFFFF !important }
-    }
-  </style>
-</helmet>
-<div style="min-height: 100dvh; display: flex; justify-content: center; background: #0B0D07">
-  <div style="width: 100%; max-width: 520px; background: #0B0D07; display: flex; flex-direction: column; border-left: 1px solid rgba(255,255,255,.06); border-right: 1px solid rgba(255,255,255,.06)">
+  <x-dc>
+    <helmet>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap"
+        rel="stylesheet">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+      <style>
+        *,
+        *::before,
+        *::after {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box
+        }
 
-    <header style="position: sticky; top: 0; z-index: 30; background: #2F381A; padding: calc(12px + env(safe-area-inset-top)) 20px 0; border-bottom: 1px solid rgba(255,255,255,.08)">
-      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 12px">
-        <div>
-          <div style="font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; line-height: 1.1">Nicolas Artigas</div>
-          <div style="font-size: 9px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 4px">Psicologia do esporte</div>
-        </div>
-        <div style="display: flex; align-items: baseline; gap: 7px">
-          <span style="font-family: 'Oswald', sans-serif; font-size: 30px; font-weight: 500; line-height: .8; font-variant-numeric: tabular-nums">{{ railNum }}</span>
-          <span style="font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.5); text-align: right; max-width: 84px; line-height: 1.3">{{ railLabel }}</span>
-        </div>
-      </div>
-      <div style="height: 3px; background: rgba(255,255,255,.16); margin: 0 -20px">
-        <div style="height: 100%; background: #DC5F28; transition: width .45s cubic-bezier(.4,0,.2,1); width: {{ progress }}"></div>
-      </div>
-    </header>
+        html {
+          -webkit-text-size-adjust: 100%
+        }
 
-    <main style="flex: 1; min-width: 0; padding: 26px 20px 32px; display: flex; flex-direction: column">
+        body {
+          background: #0B0D07;
+          color: #FFFFFF;
+          font-family: 'DM Sans', system-ui, sans-serif;
+          line-height: 1.6;
+          -webkit-font-smoothing: antialiased;
+          overscroll-behavior-y: none
+        }
 
-      <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
-        <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 22px">
-          <div style="font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F; line-height: 1.5">A performance começa antes do treino</div>
-          <h1 style="font-family: 'Oswald', sans-serif; font-size: 40px; font-weight: 600; line-height: .98; text-transform: uppercase; letter-spacing: -.005em; text-wrap: balance">Qual é o seu <span style="color: #DC5F28">tipo mental</span> como atleta?</h1>
-          <div style="height: 1px; background: rgba(255,255,255,.14)"></div>
-          <p style="font-size: 15.5px; color: rgba(255,255,255,.74); line-height: 1.65; text-wrap: pretty">Todo atleta conhece o próprio corpo em detalhe: carga, pace, medidas, tempo de prova. Quase nenhum tem formas de observar o que acontece nas situações que o esporte traz.</p>
-          <p style="font-size: 14.5px; color: rgba(255,255,255,.62); line-height: 1.7; text-wrap: pretty">Este mapeamento organiza tendências que apareceram nas suas respostas de hoje. São dez perguntas fixas e uma pergunta contextual para sua modalidade. <strong style="color: #FFFFFF; font-weight: 600">Não existem respostas certas:</strong> responda pela situação que mais se parece com o seu momento.</p>
+        a {
+          color: #DC5F28;
+          text-decoration: none
+        }
 
-          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 12px; border-top: 1px solid rgba(255,255,255,.14); border-bottom: 1px solid rgba(255,255,255,.14); padding: 16px 0">
+        a:hover {
+          color: #EE8355
+        }
+
+        button,
+        input,
+        a {
+          -webkit-tap-highlight-color: transparent
+        }
+
+        @keyframes rise {
+          from {
+            opacity: 0;
+            transform: translateY(10px)
+          }
+
+          to {
+            opacity: 1;
+            transform: translateY(0)
+          }
+        }
+
+        [data-h="row"]:active {
+          background: rgba(220, 95, 40, .14) !important;
+          color: #FFFFFF !important
+        }
+
+        [data-h="row"]:active [data-mark] {
+          background: #DC5F28 !important;
+          color: #FFFFFF !important;
+          border-color: #DC5F28 !important
+        }
+
+        [data-h="chip"]:active {
+          border-color: rgba(255, 255, 255, .5) !important
+        }
+
+        [data-h="cta"]:active {
+          background: #C24F1D !important
+        }
+
+        [data-h="ghost"]:active {
+          border-color: #DC5F28 !important
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+          [data-h="row"]:hover {
+            background: rgba(220, 95, 40, .08) !important;
+            color: #FFFFFF !important
+          }
+
+          [data-h="row"]:hover [data-mark] {
+            background: #DC5F28 !important;
+            color: #FFFFFF !important;
+            border-color: #DC5F28 !important
+          }
+
+          [data-h="chip"]:not([data-selected="1"]):hover {
+            border-color: rgba(255, 255, 255, .45) !important;
+            color: #FFFFFF !important
+          }
+
+          [data-h="cta"]:hover {
+            background: #EE7443 !important
+          }
+
+          [data-h="ghost"]:hover {
+            border-color: #DC5F28 !important;
+            color: #FFFFFF !important
+          }
+
+          [data-h="quiet"]:hover {
+            color: #FFFFFF !important
+          }
+        }
+      </style>
+    </helmet>
+    <div style="min-height: 100dvh; display: flex; justify-content: center; background: #0B0D07">
+      <div
+        style="width: 100%; max-width: 520px; background: #0B0D07; display: flex; flex-direction: column; border-left: 1px solid rgba(255,255,255,.06); border-right: 1px solid rgba(255,255,255,.06)">
+
+        <header
+          style="position: sticky; top: 0; z-index: 30; background: #2F381A; padding: calc(12px + env(safe-area-inset-top)) 20px 0; border-bottom: 1px solid rgba(255,255,255,.08)">
+          <div
+            style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 12px">
             <div>
-              <div style="font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums">11</div>
-              <div style="font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-top: 5px">Perguntas</div>
+              <div
+                style="font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; line-height: 1.1">
+                Nicolas Artigas</div>
+              <div
+                style="font-size: 9px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.5); margin-top: 4px">
+                Psicologia do esporte</div>
             </div>
-            <div>
-              <div style="font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums">8</div>
-              <div style="font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-top: 5px">Tipos</div>
-            </div>
-            <div>
-              <div style="font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums">5<span style="font-size: .48em"> min</span></div>
-              <div style="font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-top: 5px">Duração</div>
+            <div style="display: flex; align-items: baseline; gap: 7px">
+              <span
+                style="font-family: 'Oswald', sans-serif; font-size: 30px; font-weight: 500; line-height: .8; font-variant-numeric: tabular-nums">{{
+                railNum }}</span>
+              <span
+                style="font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.5); text-align: right; max-width: 84px; line-height: 1.3">{{
+                railLabel }}</span>
             </div>
           </div>
-
-          <div style="background: rgba(220,95,40,.07); border-left: 2px solid #DC5F28; padding: 15px 16px; font-size: 13.5px; color: rgba(255,255,255,.7); line-height: 1.6"><strong style="color: #FFFFFF; font-weight: 600">O que é isso?</strong> Uma ferramenta educativa criada por um psicólogo do esporte para organizar respostas atuais. <strong style="color: #FFFFFF; font-weight: 600">Não é</strong> diagnóstico ou avaliação clínica, nem rótulo de personalidade. É um convite educativo para observar situações do esporte.</div>
-
-          <div style="font-size: 11px; line-height: 1.6; color: rgba(255,255,255,.4); border-top: 1px solid rgba(255,255,255,.1); padding-top: 14px">Ferramenta educativa. Não é diagnóstico, avaliação clínica ou rótulo de personalidade.<br>CRP 08/45704</div>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ false }}">
-        <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 26px">
-          <div>
-            <h2 style="font-family: 'Oswald', sans-serif; font-size: 31px; font-weight: 600; line-height: 1.04; text-transform: uppercase; text-wrap: balance">Antes de começar,<br>me conta sobre você</h2>
-            <p style="font-size: 14.5px; color: rgba(255,255,255,.6); margin-top: 10px; line-height: 1.6">Isso torna o resultado muito mais preciso e específico para o seu contexto.</p>
+          <div style="height: 3px; background: rgba(255,255,255,.16); margin: 0 -20px">
+            <div
+              style="height: 100%; background: #DC5F28; transition: width .45s cubic-bezier(.4,0,.2,1); width: {{ progress }}">
+            </div>
           </div>
+        </header>
 
-          <div ref="{{ refName }}" style="display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 110px">
-            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
-              <label style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: {{ nameLabelColor }}; transition: color .2s">Seu nome</label>
-              <sc-if value="{{ missName }}" hint-placeholder-val="{{ false }}">
-                <span style="font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #DC5F28; animation: rise .3s ease">Falta preencher</span>
-              </sc-if>
-            </div>
-            <input type="text" value="{{ name }}" sc-camel-on-change="{{ onName }}" placeholder="Como prefere ser chamado(a)?" maxlength="40" autocomplete="given-name" ref="{{ refInput }}" style="background: transparent; border: none; border-bottom: 1px solid {{ nameBorder }}; padding: 12px 0; font-size: 20px; font-family: 'Oswald', sans-serif; font-weight: 500; color: #FFFFFF; width: 100%; min-height: 52px; outline: none; transition: border-color .15s" style-focus="border-color: #DC5F28">
-          </div>
+        <main style="flex: 1; min-width: 0; padding: 26px 20px 32px; display: flex; flex-direction: column">
 
-          <div ref="{{ refSport }}" style="display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 110px">
-            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
-              <label style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: {{ sportLabelColor }}; transition: color .2s">Modalidade principal</label>
-              <sc-if value="{{ missSport }}" hint-placeholder-val="{{ false }}">
-                <span style="font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #DC5F28; animation: rise .3s ease">Escolha uma</span>
-              </sc-if>
+          <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
+            <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 22px">
+              <div
+                style="font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F; line-height: 1.5">
+                A performance começa antes do treino</div>
+              <h1
+                style="font-family: 'Oswald', sans-serif; font-size: 40px; font-weight: 600; line-height: .98; text-transform: uppercase; letter-spacing: -.005em; text-wrap: balance">
+                Qual é o seu <span style="color: #DC5F28">tipo mental</span> como atleta?</h1>
+              <div style="height: 1px; background: rgba(255,255,255,.14)"></div>
+              <p style="font-size: 15.5px; color: rgba(255,255,255,.74); line-height: 1.65; text-wrap: pretty">Todo
+                atleta conhece o próprio corpo em detalhe: carga, pace, medidas, tempo de prova. Quase nenhum tem formas
+                de observar o que acontece nas situações que o esporte traz.</p>
+              <p style="font-size: 14.5px; color: rgba(255,255,255,.62); line-height: 1.7; text-wrap: pretty">Este
+                mapeamento organiza tendências que apareceram nas suas respostas de hoje. São dez perguntas fixas e uma
+                pergunta contextual para sua modalidade. <strong style="color: #FFFFFF; font-weight: 600">Não existem
+                  respostas certas:</strong> responda pela situação que mais se parece com o seu momento.</p>
+
+              <div
+                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 12px; border-top: 1px solid rgba(255,255,255,.14); border-bottom: 1px solid rgba(255,255,255,.14); padding: 16px 0">
+                <div>
+                  <div
+                    style="font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums">
+                    11</div>
+                  <div
+                    style="font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-top: 5px">
+                    Perguntas</div>
+                </div>
+                <div>
+                  <div
+                    style="font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums">
+                    8</div>
+                  <div
+                    style="font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-top: 5px">
+                    Tipos</div>
+                </div>
+                <div>
+                  <div
+                    style="font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums">
+                    5<span style="font-size: .48em"> min</span></div>
+                  <div
+                    style="font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-top: 5px">
+                    Duração</div>
+                </div>
+              </div>
+
+              <div
+                style="font-size: 11px; line-height: 1.6; color: rgba(255,255,255,.4); border-top: 1px solid rgba(255,255,255,.1); padding-top: 14px">
+                Ferramenta educativa de autoconhecimento sobre fatores mentais no esporte. Não constitui diagnóstico
+                clínico, avaliação psicológica formal ou prescrição de tratamento. O padrão descrito é um retrato do
+                momento, não um rótulo fixo.<br><br>Nicolas Artigas, Psicólogo do Esporte (CRP 08/45704)</div>
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
-              <sc-for list="{{ sports }}" as="sport" hint-placeholder-count="5">
-                <button data-h="chip" data-selected="{{ sport.on }}" sc-camel-on-click="{{ sport.pick }}" style="{{ sport.style }}">{{ sport.label }}</button>
-              </sc-for>
-              <button data-h="chip" data-selected="{{ otherOn }}" sc-camel-on-click="{{ toggleOther }}" style="{{ otherStyle }}">{{ otherLabel }}</button>
+          </sc-if>
+
+          <sc-if value="{{ isSetup }}" hint-placeholder-val="{{ false }}">
+            <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 26px">
+              <div>
+                <h2
+                  style="font-family: 'Oswald', sans-serif; font-size: 31px; font-weight: 600; line-height: 1.04; text-transform: uppercase; text-wrap: balance">
+                  Antes de começar,<br>me conta sobre você</h2>
+                <p style="font-size: 14.5px; color: rgba(255,255,255,.6); margin-top: 10px; line-height: 1.6">Isso torna
+                  o resultado muito mais preciso e específico para o seu contexto.</p>
+              </div>
+
+              <div ref="{{ refName }}"
+                style="display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 110px">
+                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+                  <label
+                    style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: {{ nameLabelColor }}; transition: color .2s">Seu
+                    nome</label>
+                  <sc-if value="{{ missName }}" hint-placeholder-val="{{ false }}">
+                    <span
+                      style="font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #DC5F28; animation: rise .3s ease">Falta
+                      preencher</span>
+                  </sc-if>
+                </div>
+                <input type="text" value="{{ name }}" sc-camel-on-change="{{ onName }}"
+                  placeholder="Como prefere ser chamado(a)?" maxlength="40" autocomplete="given-name"
+                  ref="{{ refInput }}"
+                  style="background: transparent; border: none; border-bottom: 1px solid {{ nameBorder }}; padding: 12px 0; font-size: 20px; font-family: 'Oswald', sans-serif; font-weight: 500; color: #FFFFFF; width: 100%; min-height: 52px; outline: none; transition: border-color .15s"
+                  style-focus="border-color: #DC5F28">
+              </div>
+
+              <div ref="{{ refSport }}"
+                style="display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 110px">
+                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+                  <label
+                    style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: {{ sportLabelColor }}; transition: color .2s">Modalidade
+                    principal</label>
+                  <sc-if value="{{ missSport }}" hint-placeholder-val="{{ false }}">
+                    <span
+                      style="font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #DC5F28; animation: rise .3s ease">Escolha
+                      uma</span>
+                  </sc-if>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+                  <sc-for list="{{ sports }}" as="sport" hint-placeholder-count="5">
+                    <button data-h="chip" data-selected="{{ sport.on }}" sc-camel-on-click="{{ sport.pick }}"
+                      style="{{ sport.style }}">{{ sport.label }}</button>
+                  </sc-for>
+                  <button data-h="chip" data-selected="{{ otherOn }}" sc-camel-on-click="{{ toggleOther }}"
+                    style="{{ otherStyle }}">{{ otherLabel }}</button>
+                </div>
+                <sc-if value="{{ sportOpen }}" hint-placeholder-val="{{ false }}">
+                  <div
+                    style="display: flex; flex-direction: column; background: #171B0F; border: 1px solid rgba(255,255,255,.16); animation: rise .25s ease">
+                    <sc-for list="{{ others }}" as="other" hint-placeholder-count="6">
+                      <button data-h="quiet" data-selected="{{ other.on }}" sc-camel-on-click="{{ other.pick }}"
+                        style="{{ other.style }}">{{ other.label }}</button>
+                    </sc-for>
+                  </div>
+                </sc-if>
+              </div>
+
+              <div ref="{{ refLevel }}"
+                style="display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 110px">
+                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+                  <label
+                    style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: {{ levelLabelColor }}; transition: color .2s">Nível
+                    competitivo</label>
+                  <sc-if value="{{ missLevel }}" hint-placeholder-val="{{ false }}">
+                    <span
+                      style="font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #DC5F28; animation: rise .3s ease">Escolha
+                      uma</span>
+                  </sc-if>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px">
+                  <sc-for list="{{ levels }}" as="level" hint-placeholder-count="3">
+                    <button data-h="chip" data-selected="{{ level.on }}" sc-camel-on-click="{{ level.pick }}"
+                      style="{{ level.style }}">{{ level.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div ref="{{ refGoal }}"
+                style="display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 110px">
+                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
+                  <label
+                    style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: {{ goalLabelColor }}; transition: color .2s">Seu
+                    objetivo principal agora</label>
+                  <sc-if value="{{ missGoal }}" hint-placeholder-val="{{ false }}">
+                    <span
+                      style="font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #DC5F28; animation: rise .3s ease">Escolha
+                      uma</span>
+                  </sc-if>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+                  <sc-for list="{{ goals }}" as="goal" hint-placeholder-count="4">
+                    <button data-h="chip" data-selected="{{ goal.on }}" sc-camel-on-click="{{ goal.pick }}"
+                      style="{{ goal.style }}">{{ goal.label }}</button>
+                  </sc-for>
+                </div>
+              </div>
+
             </div>
-            <sc-if value="{{ sportOpen }}" hint-placeholder-val="{{ false }}">
-              <div style="display: flex; flex-direction: column; background: #171B0F; border: 1px solid rgba(255,255,255,.16); animation: rise .25s ease">
-                <sc-for list="{{ others }}" as="other" hint-placeholder-count="6">
-                  <button data-h="quiet" data-selected="{{ other.on }}" sc-camel-on-click="{{ other.pick }}" style="{{ other.style }}">{{ other.label }}</button>
+          </sc-if>
+
+          <sc-if value="{{ isQuestion }}" hint-placeholder-val="{{ false }}">
+            <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 24px">
+              <div style="display: flex; flex-direction: column; gap: 14px">
+                <div
+                  style="font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">
+                  {{ qCounter }}</div>
+                <div
+                  style="font-size: 22px; font-weight: 500; line-height: 1.28; letter-spacing: -.005em; text-wrap: pretty">
+                  {{ qText }}</div>
+                <sc-if value="{{ qContext }}" hint-placeholder-val="{{ false }}">
+                  <div
+                    style="font-size: 13px; color: rgba(255,255,255,.5); font-style: italic; line-height: 1.6; border-left: 1px solid rgba(220,95,40,.6); padding-left: 12px">
+                    {{ qContext }}</div>
+                </sc-if>
+              </div>
+
+              <div
+                style="display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,.14); margin: 0 -20px">
+                <sc-for list="{{ options }}" as="opt" hint-placeholder-count="4">
+                  <button data-h="row" sc-camel-on-click="{{ opt.pick }}"
+                    style="display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: start; text-align: left; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,.14); padding: 18px 20px; min-height: 64px; color: rgba(255,255,255,.74); font-family: 'DM Sans', sans-serif; font-size: 15.5px; line-height: 1.5; cursor: pointer; transition: background .15s, color .15s">
+                    <span data-mark="1"
+                      style="display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 500; color: #FFFFFF; transition: all .15s">{{
+                      opt.letter }}</span>
+                    <span>{{ opt.text }}</span>
+                  </button>
                 </sc-for>
               </div>
-            </sc-if>
-          </div>
-
-          <div ref="{{ refLevel }}" style="display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 110px">
-            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
-              <label style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: {{ levelLabelColor }}; transition: color .2s">Nível competitivo</label>
-              <sc-if value="{{ missLevel }}" hint-placeholder-val="{{ false }}">
-                <span style="font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #DC5F28; animation: rise .3s ease">Escolha uma</span>
-              </sc-if>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 8px">
-              <sc-for list="{{ levels }}" as="level" hint-placeholder-count="3">
-                <button data-h="chip" data-selected="{{ level.on }}" sc-camel-on-click="{{ level.pick }}" style="{{ level.style }}">{{ level.label }}</button>
-              </sc-for>
-            </div>
-          </div>
-
-          <div ref="{{ refGoal }}" style="display: flex; flex-direction: column; gap: 10px; scroll-margin-top: 110px">
-            <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 10px">
-              <label style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: {{ goalLabelColor }}; transition: color .2s">Seu objetivo principal agora</label>
-              <sc-if value="{{ missGoal }}" hint-placeholder-val="{{ false }}">
-                <span style="font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #DC5F28; animation: rise .3s ease">Escolha uma</span>
-              </sc-if>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
-              <sc-for list="{{ goals }}" as="goal" hint-placeholder-count="4">
-                <button data-h="chip" data-selected="{{ goal.on }}" sc-camel-on-click="{{ goal.pick }}" style="{{ goal.style }}">{{ goal.label }}</button>
-              </sc-for>
-            </div>
-          </div>
-
-          <sc-if value="{{ setupError }}" hint-placeholder-val="{{ false }}">
-            <div style="border-left: 2px solid #DC5F28; background: rgba(220,95,40,.08); padding: 14px 16px; font-size: 13.5px; color: rgba(255,255,255,.72); line-height: 1.6; animation: rise .3s ease">{{ setupErrorText }}</div>
           </sc-if>
-        </div>
-      </sc-if>
 
-      <sc-if value="{{ isQuestion }}" hint-placeholder-val="{{ false }}">
-        <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 24px">
-          <div style="display: flex; flex-direction: column; gap: 14px">
-            <div style="font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">{{ qCounter }}</div>
-            <div style="font-size: 22px; font-weight: 500; line-height: 1.28; letter-spacing: -.005em; text-wrap: pretty">{{ qText }}</div>
-            <sc-if value="{{ qContext }}" hint-placeholder-val="{{ false }}">
-              <div style="font-size: 13px; color: rgba(255,255,255,.5); font-style: italic; line-height: 1.6; border-left: 1px solid rgba(220,95,40,.6); padding-left: 12px">{{ qContext }}</div>
+          <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
+            <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 32px">
+              <div style="display: flex; flex-direction: column; gap: 12px">
+                <div
+                  style="font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">
+                  {{ profType }}</div>
+                <h2
+                  style="font-family: 'Oswald', sans-serif; font-size: 38px; font-weight: 600; line-height: 1; text-transform: uppercase; text-wrap: balance">
+                  {{ profName }}</h2>
+                <div style="width: 56px; height: 3px; background: #DC5F28"></div>
+                <div style="font-size: 15.5px; color: #FFFFFF; font-weight: 500; line-height: 1.5">{{ profSubtitle }}
+                </div>
+                <div style="font-size: 14px; color: rgba(255,255,255,.6); font-style: italic; line-height: 1.65">{{
+                  profEssence }}</div>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 8px">
+                <div
+                  style="display: flex; align-items: center; gap: 12px; font-size: 10px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.45); line-height: 1.4">
+                  Seus fatores mentais no esporte
+                  <span style="flex: 1; height: 1px; background: rgba(255,255,255,.14)"></span>
+                </div>
+                <div style="display: flex; flex-direction: column">
+                  <sc-for list="{{ dims }}" as="dim" hint-placeholder-count="6">
+                    <div
+                      style="border-bottom: 1px solid rgba(255,255,255,.12); padding: 16px 0; display: flex; flex-direction: column; gap: 9px">
+                      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
+                        <span style="font-size: 14.5px; font-weight: 500; line-height: 1.35">{{ dim.name }}</span>
+                        <span
+                          style="font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; color: {{ dim.numColor }}; white-space: nowrap">{{
+                          dim.readout }}</span>
+                      </div>
+                      <sc-if value="{{ dim.known }}" hint-placeholder-val="{{ true }}">
+                        <div style="height: 4px; background: rgba(255,255,255,.14)">
+                          <div
+                            style="height: 100%; background: linear-gradient(90deg, #657542, #DC5F28); transition: width 1.2s cubic-bezier(.4,0,.2,1); width: {{ dim.width }}">
+                          </div>
+                        </div>
+                      </sc-if>
+                      <div
+                        style="font-size: 12.5px; color: rgba(255,255,255,.48); line-height: 1.55; text-wrap: pretty">{{
+                        dim.insight }}</div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div
+                style="background: #2F381A; padding: 24px 20px; margin: 0 -20px; display: flex; flex-direction: column; gap: 16px">
+                <div
+                  style="font-family: 'Oswald', sans-serif; font-size: 25px; font-weight: 600; line-height: 1.08; text-transform: uppercase">
+                  Esse resultado é o começo da conversa</div>
+                <div style="font-size: 14px; color: rgba(255,255,255,.72); line-height: 1.65; text-wrap: pretty">{{
+                  profCta }}<br><br>Uma conversa de 15 minutos pode deixar muito mais claro o que fazer com esse perfil.
+                  Sem compromisso.</div>
+                <a data-h="cta" href="{{ waLink }}" target="_blank"
+                  style="background: #DC5F28; color: #FFFFFF; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 18px 20px; min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: background .15s">Falar
+                  com Nicolas no WhatsApp <span>→</span></a>
+              </div>
+
+              <div
+                style="display: flex; flex-direction: column; gap: 16px; border: 1px solid rgba(255,255,255,.14); padding: 20px">
+                <div>
+                  <div
+                    style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 8px">
+                    Salve e compartilhe seu resultado</div>
+                  <div
+                    style="font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; line-height: 1.12; text-transform: uppercase">
+                    Baixe o PDF do seu tipo mental</div>
+                  <div style="font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-top: 8px">Salve o
+                    resultado e envie ao Nicolas pelo WhatsApp. Assim, ele já chega sabendo seu perfil antes de vocês
+                    conversarem.</div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px">
+                  <div
+                    style="background: #0B0D07; border: 1px solid rgba(255,255,255,.14); padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center">
+                    <span
+                      style="font-family: 'Oswald', sans-serif; font-size: 19px; color: #DC5F28; line-height: 1">01</span>
+                    <span style="font-size: 12.5px; color: rgba(255,255,255,.68); line-height: 1.5">Clique em "Baixar
+                      PDF" e salve o arquivo no celular</span>
+                  </div>
+                  <div
+                    style="background: #0B0D07; border: 1px solid rgba(255,255,255,.14); padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center">
+                    <span
+                      style="font-family: 'Oswald', sans-serif; font-size: 19px; color: #DC5F28; line-height: 1">02</span>
+                    <span style="font-size: 12.5px; color: rgba(255,255,255,.68); line-height: 1.5">Clique em "Enviar
+                      pelo WhatsApp" e anexe o PDF na conversa</span>
+                  </div>
+                  <div
+                    style="background: #0B0D07; border: 1px solid rgba(255,255,255,.14); padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center">
+                    <span
+                      style="font-family: 'Oswald', sans-serif; font-size: 19px; color: #DC5F28; line-height: 1">03</span>
+                    <span style="font-size: 12.5px; color: rgba(255,255,255,.68); line-height: 1.5">Receba uma análise
+                      personalizada do seu perfil com ele</span>
+                  </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px">
+                  <button data-h="ghost" sc-camel-on-click="{{ downloadPDF }}"
+                    style="background: transparent; border: 1px solid rgba(255,255,255,.28); color: #FFFFFF; font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600; letter-spacing: .04em; padding: 16px 18px; min-height: 54px; cursor: pointer; transition: all .15s">{{
+                    pdfLabel }}</button>
+                  <a data-h="ghost" href="{{ waLink }}" target="_blank"
+                    style="border: 1px solid rgba(255,255,255,.28); color: rgba(255,255,255,.7); font-size: 13.5px; padding: 16px 18px; min-height: 54px; display: flex; align-items: center; justify-content: center; transition: all .15s">Enviar
+                    pelo WhatsApp</a>
+                </div>
+              </div>
+
+              <div
+                style="display: flex; flex-direction: column; gap: 14px; border-top: 1px solid rgba(255,255,255,.14); padding-top: 20px">
+                <button data-h="quiet" sc-camel-on-click="{{ restart }}"
+                  style="align-self: flex-start; background: none; border: none; color: rgba(255,255,255,.45); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: color .15s; min-height: 44px; padding: 10px 0">↺
+                  Refazer o mapeamento</button>
+                <p style="font-size: 11px; color: rgba(255,255,255,.38); line-height: 1.65; text-wrap: pretty">
+                  Se alguma situação estiver causando sofrimento importante ou prejudicando sua vida, procure apoio
+                  profissional. Em risco imediato, procure um serviço local de urgência.</p>
+              </div>
+            </div>
+          </sc-if>
+
+        </main>
+
+        <sc-if value="{{ showBar }}" hint-placeholder-val="{{ true }}">
+          <div
+            style="position: sticky; bottom: 0; z-index: 25; background: rgba(11,13,7,.94); backdrop-filter: blur(8px); border-top: 1px solid rgba(255,255,255,.12); padding: 12px 20px calc(12px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 12px">
+            <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
+              <button data-h="quiet" sc-camel-on-click="{{ barBack }}"
+                style="flex: 0 0 auto; background: none; border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.55); font-family: 'DM Sans', sans-serif; font-size: 16px; cursor: pointer; transition: color .15s; min-height: 54px; min-width: 54px">←</button>
+            </sc-if>
+            <sc-if value="{{ showNext }}" hint-placeholder-val="{{ true }}">
+              <button data-h="cta" sc-camel-on-click="{{ barNext }}"
+                style="flex: 1; background: #DC5F28; color: #FFFFFF; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 16px 18px; min-height: 54px; border: none; cursor: pointer; transition: background .15s; display: flex; align-items: center; justify-content: space-between; gap: 10px">{{
+                barLabel }} <span>→</span></button>
+            </sc-if>
+            <sc-if value="{{ isQuestion }}" hint-placeholder-val="{{ false }}">
+              <div
+                style="flex: 1; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.4); text-align: right">
+                Toque na resposta</div>
             </sc-if>
           </div>
-
-          <div style="display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,.14); margin: 0 -20px">
-            <sc-for list="{{ options }}" as="opt" hint-placeholder-count="4">
-              <button data-h="row" sc-camel-on-click="{{ opt.pick }}" style="display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: start; text-align: left; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,.14); padding: 18px 20px; min-height: 64px; color: rgba(255,255,255,.74); font-family: 'DM Sans', sans-serif; font-size: 15.5px; line-height: 1.5; cursor: pointer; transition: background .15s, color .15s">
-                <span data-mark="1" style="display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 500; color: #FFFFFF; transition: all .15s">{{ opt.letter }}</span>
-                <span>{{ opt.text }}</span>
-              </button>
-            </sc-for>
-          </div>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{ isResult }}" hint-placeholder-val="{{ false }}">
-        <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 32px">
-          <div style="display: flex; flex-direction: column; gap: 12px">
-            <div style="font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">{{ profType }}</div>
-            <h2 style="font-family: 'Oswald', sans-serif; font-size: 38px; font-weight: 600; line-height: 1; text-transform: uppercase; text-wrap: balance">{{ profName }}</h2>
-            <div style="width: 56px; height: 3px; background: #DC5F28"></div>
-            <div style="font-size: 15.5px; color: #FFFFFF; font-weight: 500; line-height: 1.5">{{ profSubtitle }}</div>
-            <div style="font-size: 14px; color: rgba(255,255,255,.6); font-style: italic; line-height: 1.65">{{ profEssence }}</div>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 8px">
-            <div style="display: flex; align-items: center; gap: 12px; font-size: 10px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.45); line-height: 1.4">
-              Seus fatores mentais no esporte
-              <span style="flex: 1; height: 1px; background: rgba(255,255,255,.14)"></span>
-            </div>
-            <div style="display: flex; flex-direction: column">
-              <sc-for list="{{ dims }}" as="dim" hint-placeholder-count="6">
-                <div style="border-bottom: 1px solid rgba(255,255,255,.12); padding: 16px 0; display: flex; flex-direction: column; gap: 9px">
-                  <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
-                    <span style="font-size: 14.5px; font-weight: 500; line-height: 1.35">{{ dim.name }}</span>
-                    <span style="font-family: 'Oswald', sans-serif; font-size: 17px; font-weight: 500; font-variant-numeric: tabular-nums; color: {{ dim.numColor }}; white-space: nowrap">{{ dim.readout }}</span>
-                  </div>
-                  <sc-if value="{{ dim.known }}" hint-placeholder-val="{{ true }}">
-                    <div style="height: 4px; background: rgba(255,255,255,.14)">
-                      <div style="height: 100%; background: linear-gradient(90deg, #657542, #DC5F28); transition: width 1.2s cubic-bezier(.4,0,.2,1); width: {{ dim.width }}"></div>
-                    </div>
-                  </sc-if>
-                  <div style="font-size: 12.5px; color: rgba(255,255,255,.48); line-height: 1.55; text-wrap: pretty">{{ dim.insight }}</div>
-                </div>
-              </sc-for>
-            </div>
-          </div>
-
-          <div style="background: #2F381A; padding: 24px 20px; margin: 0 -20px; display: flex; flex-direction: column; gap: 16px">
-            <div style="font-family: 'Oswald', sans-serif; font-size: 25px; font-weight: 600; line-height: 1.08; text-transform: uppercase">Esse resultado é o começo da conversa</div>
-            <div style="font-size: 14px; color: rgba(255,255,255,.72); line-height: 1.65; text-wrap: pretty">{{ profCta }}<br><br>Uma conversa de 15 minutos pode deixar muito mais claro o que fazer com esse perfil. Sem compromisso.</div>
-            <a data-h="cta" href="{{ waLink }}" target="_blank" style="background: #DC5F28; color: #FFFFFF; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 18px 20px; min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: background .15s">Falar com Nicolas no WhatsApp <span>→</span></a>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 16px; border: 1px solid rgba(255,255,255,.14); padding: 20px">
-            <div>
-              <div style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 8px">Salve e compartilhe seu resultado</div>
-              <div style="font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; line-height: 1.12; text-transform: uppercase">Baixe o PDF do seu tipo mental</div>
-              <div style="font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-top: 8px">Salve o resultado e envie ao Nicolas pelo WhatsApp. Assim, ele já chega sabendo seu perfil antes de vocês conversarem.</div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px">
-              <div style="background: #0B0D07; border: 1px solid rgba(255,255,255,.14); padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center">
-                <span style="font-family: 'Oswald', sans-serif; font-size: 19px; color: #DC5F28; line-height: 1">01</span>
-                <span style="font-size: 12.5px; color: rgba(255,255,255,.68); line-height: 1.5">Clique em "Baixar PDF" e salve o arquivo no celular</span>
-              </div>
-              <div style="background: #0B0D07; border: 1px solid rgba(255,255,255,.14); padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center">
-                <span style="font-family: 'Oswald', sans-serif; font-size: 19px; color: #DC5F28; line-height: 1">02</span>
-                <span style="font-size: 12.5px; color: rgba(255,255,255,.68); line-height: 1.5">Clique em "Enviar pelo WhatsApp" e anexe o PDF na conversa</span>
-              </div>
-              <div style="background: #0B0D07; border: 1px solid rgba(255,255,255,.14); padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center">
-                <span style="font-family: 'Oswald', sans-serif; font-size: 19px; color: #DC5F28; line-height: 1">03</span>
-                <span style="font-size: 12.5px; color: rgba(255,255,255,.68); line-height: 1.5">Receba uma análise personalizada do seu perfil com ele</span>
-              </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 8px">
-              <button data-h="ghost" sc-camel-on-click="{{ downloadPDF }}" style="background: transparent; border: 1px solid rgba(255,255,255,.28); color: #FFFFFF; font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600; letter-spacing: .04em; padding: 16px 18px; min-height: 54px; cursor: pointer; transition: all .15s">{{ pdfLabel }}</button>
-              <a data-h="ghost" href="{{ waLink }}" target="_blank" style="border: 1px solid rgba(255,255,255,.28); color: rgba(255,255,255,.7); font-size: 13.5px; padding: 16px 18px; min-height: 54px; display: flex; align-items: center; justify-content: center; transition: all .15s">Enviar pelo WhatsApp</a>
-            </div>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 14px; border-top: 1px solid rgba(255,255,255,.14); padding-top: 20px">
-            <button data-h="quiet" sc-camel-on-click="{{ restart }}" style="align-self: flex-start; background: none; border: none; color: rgba(255,255,255,.45); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: color .15s; min-height: 44px; padding: 10px 0">↺ Refazer o mapeamento</button>
-            <p style="font-size: 11px; color: rgba(255,255,255,.38); line-height: 1.65; text-wrap: pretty">Ferramenta educativa de autoconhecimento sobre fatores mentais no esporte. Não constitui diagnóstico clínico, avaliação psicológica formal ou prescrição de tratamento. O padrão descrito é um retrato do momento, não um rótulo fixo. Se alguma situação estiver causando sofrimento importante ou prejudicando sua vida, procure apoio profissional. Em risco imediato, procure um serviço local de urgência.<br>Desenvolvido por Nicolas Artigas, Psicólogo do Esporte (CRP 08/45704), com fins educativos e de orientação.</p>
-          </div>
-        </div>
-      </sc-if>
-
-    </main>
-
-    <sc-if value="{{ showBar }}" hint-placeholder-val="{{ true }}">
-      <div style="position: sticky; bottom: 0; z-index: 25; background: rgba(11,13,7,.94); backdrop-filter: blur(8px); border-top: 1px solid rgba(255,255,255,.12); padding: 12px 20px calc(12px + env(safe-area-inset-bottom)); display: flex; align-items: center; gap: 12px">
-        <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
-          <button data-h="quiet" sc-camel-on-click="{{ barBack }}" style="flex: 0 0 auto; background: none; border: 1px solid rgba(255,255,255,.2); color: rgba(255,255,255,.55); font-family: 'DM Sans', sans-serif; font-size: 16px; cursor: pointer; transition: color .15s; min-height: 54px; min-width: 54px">←</button>
         </sc-if>
-        <sc-if value="{{ showNext }}" hint-placeholder-val="{{ true }}">
-          <button data-h="cta" sc-camel-on-click="{{ barNext }}" style="flex: 1; background: #DC5F28; color: #FFFFFF; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 16px 18px; min-height: 54px; border: none; cursor: pointer; transition: background .15s; display: flex; align-items: center; justify-content: space-between; gap: 10px">{{ barLabel }} <span>→</span></button>
-        </sc-if>
-        <sc-if value="{{ isQuestion }}" hint-placeholder-val="{{ false }}">
-          <div style="flex: 1; font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.4); text-align: right">Toque na resposta</div>
-        </sc-if>
+
       </div>
-    </sc-if>
-
-  </div>
-</div>
-</x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 430, &quot;height&quot;: 932}, &quot;startScreen&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;intro&quot;, &quot;setup&quot;], &quot;default&quot;: &quot;intro&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Pré-visualização&quot;}}">
+    </div>
+  </x-dc>
+  <script type="text/x-dc" data-dc-script
+    data-props="{&quot;$preview&quot;: {&quot;width&quot;: 430, &quot;height&quot;: 932}, &quot;startScreen&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;intro&quot;, &quot;setup&quot;], &quot;default&quot;: &quot;intro&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Pré-visualização&quot;}}">
 const SPORTS = [
   { value: 'fisiculturismo', label: '🏋️ Fisiculturismo' },
   { value: 'futebol', label: '⚽ Futebol' },
@@ -502,4 +717,5 @@ class Component extends DCLogic {
 }
 </script>
 </body>
+
 </html>
