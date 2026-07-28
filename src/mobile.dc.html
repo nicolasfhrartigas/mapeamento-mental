@@ -44,10 +44,6 @@
           text-decoration: none
         }
 
-        a:hover {
-          color: #EE8355
-        }
-
         button,
         input,
         a {
@@ -134,6 +130,10 @@
         }
 
         @media (hover: hover) and (pointer: fine) {
+          a:hover {
+            color: #EE8355
+          }
+
           [data-h="row"]:hover {
             background: rgba(220, 95, 40, .08) !important;
             color: #FFFFFF !important
@@ -536,32 +536,6 @@
   </x-dc>
   <script type="text/x-dc" data-dc-script
     data-props="{&quot;$preview&quot;: {&quot;width&quot;: 430, &quot;height&quot;: 932}, &quot;startScreen&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;intro&quot;, &quot;setup&quot;], &quot;default&quot;: &quot;intro&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Pré-visualização&quot;}}">
-const SPORTS = [
-  { value: 'fisiculturismo', label: '🏋️ Fisiculturismo' },
-  { value: 'futebol', label: '⚽ Futebol' },
-  { value: 'corrida', label: '🏃 Corrida / Atletismo' },
-  { value: 'volei', label: '🏐 Vôlei' },
-  { value: 'tenis', label: '🎾 Tênis' },
-];
-const OTHERS = [
-  { value: 'coletivos', label: '⛹🏼‍♀️ Esportes Coletivos' },
-  { value: 'resistencia', label: '🏊🏼‍♀️ Esporte de Resistência' },
-  { value: 'luta', label: '👨🏻‍🫯‍👨🏼 Esportes de Luta' },
-  { value: 'raquetes', label: '🏸 Esportes de Raquete' },
-  { value: 'habilidades_mira', label: '🎯 Esportes de Habilidades e Mira' },
-  { value: 'e_sports', label: '🕹️ E-sports' },
-];
-const LEVELS = [
-  { value: 'iniciante', label: 'Iniciante / Amador' },
-  { value: 'intermediario', label: 'Intermediário' },
-  { value: 'alto', label: 'Alto Rendimento' },
-];
-const GOALS = [
-  { value: 'competir', label: 'Competir e vencer' },
-  { value: 'consistencia', label: 'Manter consistência' },
-  { value: 'superar', label: 'Superar meu limite' },
-  { value: 'bem-estar', label: 'Cuidar do processo' },
-];
 const LETTERS = ['A', 'B', 'C', 'D'];
 
 const CHIP = "background: transparent; border: 1px solid rgba(255,255,255,.2); padding: 14px 14px; min-height: 56px; font-size: 13px; color: rgba(255,255,255,.72); cursor: pointer; transition: all .15s ease; font-family: 'DM Sans', sans-serif; text-align: left; line-height: 1.3; width: 100%; display: flex; align-items: center";
@@ -580,34 +554,32 @@ class Component extends DCLogic {
     this.setState({ resultOpen: !this.state.resultOpen });
   }
 
-  clearMissing(field) {
-    if (!this.state.missing.length) return;
-    const missing = this.state.missing.filter(m => m !== field);
-    this.setState({ missing, setupError: missing.length > 0 });
-  }
-
   componentDidMount() {
-    import(window.__resources ? window.__resources.quizEngine : './quiz-engine.js').then(mod => {
+    this.unmounted = false;
+    Promise.all([import('./quiz-flow.js'), import(window.__resources ? window.__resources.quizEngine : './quiz-engine.js')]).then(([flow, mod]) => {
+      if (this.unmounted) return;
       this.engine = mod.createEngine();
+      this.SPORTS = flow.SPORTS; this.OTHERS = flow.OTHER_SPORTS; this.LEVELS = flow.LEVELS; this.GOALS = flow.GOALS;
+      this.flow = flow.createQuizFlow({
+        engine: this.engine, getState: () => this.state, setState: patch => this.setState(patch),
+        top: () => this.top(), scrollToRef: key => this.scrollToRef(key),
+        scrollOnQuestionChange: true,
+        onAnswer: done => {
+          if (!done) return;
+          this.resultTimer = setTimeout(() => this.setState({ animate: true, factorsLoading: false }), 3000 + Math.random() * 3000);
+        },
+      });
+      this.flow.attachOutsideClick(this.fieldRefs.sport);
       this.forceUpdate();
     });
     if (this.props.startScreen === 'setup') this.setState({ screen: 'setup' });
   }
 
+  componentWillUnmount() { this.unmounted = true; if (this.flow) this.flow.detachOutsideClick(); clearTimeout(this.resultTimer); }
+
   top() { try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {} }
 
-  pickChip(field, item) {
-    if (field === 'sport') {
-      this.engine && this.engine.setProfileField('sport', item.value);
-      this.engine && this.engine.setProfileField('sportLabel', item.label);
-      this.setState({ sport: item.value, sportLabel: item.label, sportOpen: false });
-      this.clearMissing('sport');
-      return;
-    }
-    this.engine && this.engine.setProfileField(field, item.value);
-    this.setState({ [field]: item.value });
-    this.clearMissing(field);
-  }
+  pickChip(field, item) { if (this.flow) this.flow.pick(field, item); }
 
   chipList(list, field) {
     const active = this.state[field];
@@ -629,50 +601,10 @@ class Component extends DCLogic {
     if (key === 'name') setTimeout(() => { const i = this.fieldRefs.input.current; i && i.focus({ preventScroll: true }); }, 420);
   }
 
-  startQuestions() {
-    const s = this.state;
-    const missing = [];
-    if (!s.name.trim()) missing.push('name');
-    if (!s.sport) missing.push('sport');
-    if (!s.level) missing.push('level');
-    if (!s.goal) missing.push('goal');
-    if (missing.length || !this.engine) {
-      this.setState({ setupError: true, missing });
-      if (missing.length) this.scrollToRef(missing[0]);
-      return;
-    }
-    this.engine.setProfileField('name', s.name.trim());
-    this.engine.start();
-    this.setState({ setupError: false, missing: [], screen: 'question', tick: s.tick + 1 });
-    this.top();
-  }
-
-  answer(i) {
-    const done = this.engine.select(i);
-    if (done) {
-      const result = this.engine.result();
-      this.setState({ screen: 'result', result, animate: false, factorsLoading: true, resultOpen: false });
-      this.top();
-      const wait = 3000 + Math.random() * 3000;
-      setTimeout(() => this.setState({ animate: true, factorsLoading: false }), wait);
-    } else {
-      this.setState({ tick: this.state.tick + 1 });
-      this.top();
-    }
-  }
-
-  back() {
-    if (!this.engine || this.engine.getCurrent() === 0) { this.setState({ screen: 'setup' }); this.top(); return; }
-    this.engine.back();
-    this.setState({ tick: this.state.tick + 1 });
-    this.top();
-  }
-
-  restart() {
-    this.engine.resetState();
-    this.setState({ screen: 'intro', name: '', sport: '', sportLabel: '', level: '', goal: '', result: null, animate: false, setupError: false, missing: [], factorsLoading: false, resultOpen: false });
-    this.top();
-  }
+  startQuestions() { return this.flow && this.flow.start(); }
+  answer(i) { return this.flow && this.flow.answer(i); }
+  back() { return this.flow && this.flow.back(); }
+  restart() { return this.flow && this.flow.restart(); }
 
   renderVals() {
     const s = this.state;
@@ -708,7 +640,7 @@ class Component extends DCLogic {
       barBack: () => { if (s.screen === 'setup') { this.setState({ screen: 'intro' }); this.top(); } else this.back(); },
 
       name: s.name,
-      onName: e => { this.setState({ name: e.target.value }); if (e.target.value.trim()) this.clearMissing('name'); },
+      onName: e => { this.setState({ name: e.target.value }); if (e.target.value.trim() && this.flow) this.flow.clearMissing('name'); },
       refName: this.fieldRefs.name,
       refInput: this.fieldRefs.input,
       refSport: this.fieldRefs.sport,
@@ -726,20 +658,20 @@ class Component extends DCLogic {
       setupErrorText: s.missing.length === 1
         ? 'Falta 1 item para continuar — marcado em laranja acima.'
         : 'Faltam ' + s.missing.length + ' itens para continuar — marcados em laranja acima.',
-      sports: this.chipList(SPORTS, 'sport'),
-      levels: this.chipList(LEVELS, 'level'),
-      goals: this.chipList(GOALS, 'goal'),
-      others: OTHERS.map(item => ({
+      sports: this.chipList(this.SPORTS || [], 'sport'),
+      levels: this.chipList(this.LEVELS || [], 'level'),
+      goals: this.chipList(this.GOALS || [], 'goal'),
+      others: (this.OTHERS || []).map(item => ({
         label: item.label,
         on: s.sport === item.value ? '1' : '0',
         style: s.sport === item.value ? ROW + '; ' + ROW_ON : ROW,
         pick: () => this.pickChip('sport', item),
       })),
-      otherOn: OTHERS.some(o => o.value === s.sport) ? '1' : '0',
-      otherLabel: OTHERS.some(o => o.value === s.sport) ? s.sportLabel : '🔍 Outros esportes',
-      otherStyle: OTHERS.some(o => o.value === s.sport) ? CHIP + '; ' + CHIP_ON : CHIP,
+      otherOn: (this.OTHERS || []).some(o => o.value === s.sport) ? '1' : '0',
+      otherLabel: (this.OTHERS || []).some(o => o.value === s.sport) ? s.sportLabel : '🔍 Outros esportes',
+      otherStyle: (this.OTHERS || []).some(o => o.value === s.sport) ? CHIP + '; ' + CHIP_ON : CHIP,
       sportOpen: s.sportOpen,
-      toggleOther: () => this.setState({ sportOpen: !s.sportOpen }),
+      toggleOther: () => this.flow && this.flow.toggleOther(),
       setupError: s.setupError,
 
       qCounter: q ? 'Pergunta ' + pad(index + 1) + ' de ' + pad(total) : '',
