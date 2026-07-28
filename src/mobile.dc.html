@@ -465,6 +465,26 @@
               </div>
 
               <div
+                style="display: flex; flex-direction: column; gap: 16px; border: 1px solid rgba(255,255,255,.14); padding: 20px">
+                <div>
+                  <div
+                    style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 8px">
+                    Salve e compartilhe seu resultado</div>
+                  <div
+                    style="font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; line-height: 1.12; text-transform: uppercase">
+                    Baixe o PDF do seu tipo mental</div>
+                  <div style="font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-top: 8px">Salve
+                    o seu resultado e me envie pelo WhatsApp.<br>Assim, já conheço seu perfil antes da nossa
+                    conversa.</div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px">
+                  <button data-h="ghost" sc-camel-on-click="{{ downloadPDF }}" disabled="{{ factorsLoading }}"
+                    style="{{ pdfBtnStyle }}">{{
+                    pdfLabel }}</button>
+                </div>
+              </div>
+
+              <div
                 style="background: #2F381A; padding: 24px 20px; margin: 0 -20px; display: flex; flex-direction: column; gap: 16px">
                 <div
                   style="font-family: 'Oswald', sans-serif; font-size: 25px; font-weight: 600; line-height: 1.08; text-transform: uppercase">
@@ -475,52 +495,6 @@
                 <a data-h="cta" href="{{ waLink }}" target="_blank"
                   style="background: #DC5F28; color: #FFFFFF; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 18px 20px; min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: background .15s">Falar
                   com Nicolas no WhatsApp <span>→</span></a>
-              </div>
-
-              <div
-                style="display: flex; flex-direction: column; gap: 16px; border: 1px solid rgba(255,255,255,.14); padding: 20px">
-                <div>
-                  <div
-                    style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 8px">
-                    Salve e compartilhe seu resultado</div>
-                  <div
-                    style="font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; line-height: 1.12; text-transform: uppercase">
-                    Baixe o PDF do seu tipo mental</div>
-                  <div style="font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-top: 8px">Salve o
-                    resultado e envie ao Nicolas pelo WhatsApp. Assim, ele já chega sabendo seu perfil antes de vocês
-                    conversarem.</div>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 8px">
-                  <div
-                    style="background: #0B0D07; border: 1px solid rgba(255,255,255,.14); padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center">
-                    <span
-                      style="font-family: 'Oswald', sans-serif; font-size: 19px; color: #DC5F28; line-height: 1">01</span>
-                    <span style="font-size: 12.5px; color: rgba(255,255,255,.68); line-height: 1.5">Clique em "Baixar
-                      PDF" e salve o arquivo no celular</span>
-                  </div>
-                  <div
-                    style="background: #0B0D07; border: 1px solid rgba(255,255,255,.14); padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center">
-                    <span
-                      style="font-family: 'Oswald', sans-serif; font-size: 19px; color: #DC5F28; line-height: 1">02</span>
-                    <span style="font-size: 12.5px; color: rgba(255,255,255,.68); line-height: 1.5">Clique em "Enviar
-                      pelo WhatsApp" e anexe o PDF na conversa</span>
-                  </div>
-                  <div
-                    style="background: #0B0D07; border: 1px solid rgba(255,255,255,.14); padding: 14px 16px; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center">
-                    <span
-                      style="font-family: 'Oswald', sans-serif; font-size: 19px; color: #DC5F28; line-height: 1">03</span>
-                    <span style="font-size: 12.5px; color: rgba(255,255,255,.68); line-height: 1.5">Receba uma análise
-                      personalizada do seu perfil com ele</span>
-                  </div>
-                </div>
-                <div style="display: flex; flex-direction: column; gap: 8px">
-                  <button data-h="ghost" sc-camel-on-click="{{ downloadPDF }}" disabled="{{ factorsLoading }}"
-                    style="{{ pdfBtnStyle }}">{{
-                    pdfLabel }}</button>
-                  <a data-h="ghost" href="{{ waLink }}" target="_blank"
-                    style="{{ waBtnStyle }}">Enviar
-                    pelo WhatsApp</a>
-                </div>
               </div>
 
               <div
@@ -792,8 +766,7 @@ class Component extends DCLogic {
         numColor: d.known ? '#FFFFFF' : 'rgba(255,255,255,.35)',
         width: d.visible + '%',
       })) : [],
-      pdfBtnStyle: "background: transparent; border: 1px solid rgba(255,255,255,.28); color: #FFFFFF; font-family: 'DM Sans', sans-serif; font-size: 13.5px; font-weight: 600; letter-spacing: .04em; padding: 16px 18px; min-height: 54px; transition: all .15s" + (s.factorsLoading ? '; opacity: .35; cursor: not-allowed; pointer-events: none; filter: grayscale(1)' : '; cursor: pointer'),
-      waBtnStyle: "border: 1px solid rgba(255,255,255,.28); color: rgba(255,255,255,.7); font-size: 13.5px; padding: 16px 18px; min-height: 54px; display: flex; align-items: center; justify-content: center; transition: all .15s" + (s.factorsLoading ? '; opacity: .35; cursor: not-allowed; pointer-events: none; filter: grayscale(1)' : ''),
+      pdfBtnStyle: "background: transparent; border: 1px solid rgba(255,255,255,.28); color: #FFFFFF; font-family: 'DM Sans', sans-serif; font-size: 15.5px; font-weight: 600; letter-spacing: .04em; padding: 16px 18px; min-height: 54px; transition: all .15s" + (s.factorsLoading ? '; opacity: .35; cursor: not-allowed; pointer-events: none; filter: grayscale(1)' : '; cursor: pointer'),
       pdfLabel: s.pdfBusy ? '⏳ Gerando PDF…' : '⤓ Baixar PDF do resultado',
       downloadPDF: () => {
         if (s.factorsLoading) return;
