@@ -20,50 +20,42 @@ import { generatePdfReport } from './pdf-report.js';
       'medo+perf': {
         factors: ['medo', 'perf'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Perfeccionista em Chamas', subtitle: 'Quando erro, padrão e exposição ganham muito peso',
         essence: 'Um modo educativo de organizar respostas sobre erro, exigência e a possibilidade de falhar.',
-        observations: ['Depois de um erro, qual informação ajuda a escolher a próxima ação?', 'Em quais situações a possibilidade de falhar muda sua disposição de se expor?'],
-        cta: 'Se fizer sentido, leve uma situação concreta para conversar com alguém de confiança ou com um profissional.'
+        observations: ['Depois de um erro, qual informação ajuda a escolher a próxima ação?', 'Em quais situações a possibilidade de falhar muda sua disposição de se expor?']
       },
       'motiv+sup': {
         factors: ['motiv', 'sup'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Navegador sem Bússola', subtitle: 'Quando propósito e conversa sobre o esporte pedem espaço',
         essence: 'Um retrato educativo de respostas sobre o que sustenta a prática e o apoio mobilizado.',
-        observations: ['O que sustenta sua prática nesta fase?', 'Com quem você poderia compartilhar uma pergunta concreta sobre o esporte?'],
-        cta: 'Se fizer sentido, converse sobre uma situação específica com alguém de confiança ou com um profissional.'
+        observations: ['O que sustenta sua prática nesta fase?', 'Com quem você poderia compartilhar uma pergunta concreta sobre o esporte?']
       },
       'reg+sup': {
         factors: ['reg', 'sup'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Atleta Pressão Constante', subtitle: 'Quando situações de demanda e apoio merecem observação',
         essence: 'Um retrato educativo de como você descreveu situações de pressão e uso de apoio.',
-        observations: ['Que sinal simples ajuda a escolher a próxima ação sob pressão?', 'Que tipo de apoio seria útil nessa situação: técnico, prático, emocional ou de estima?'],
-        cta: 'Se o peso dessas situações estiver se repetindo ou trazendo sofrimento, procure apoio profissional.'
+        observations: ['Que sinal simples ajuda a escolher a próxima ação sob pressão?', 'Que tipo de apoio seria útil nessa situação: técnico, prático, emocional ou de estima?']
       },
       'ident+motiv': {
         factors: ['ident', 'motiv'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Atleta em Travessia', subtitle: 'Quando prática e outras áreas da vida entram na conversa',
         essence: 'Um retrato educativo de respostas sobre prática, rotina e outras áreas da vida.',
-        observations: ['Onde o esporte encontra espaço entre as outras áreas da sua vida hoje?', 'O que faz sua prática ter sentido nesta fase?'],
-        cta: 'Se fizer sentido, use esse registro como ponto de partida para uma conversa de apoio.'
+        observations: ['Onde o esporte encontra espaço entre as outras áreas da sua vida hoje?', 'O que faz sua prática ter sentido nesta fase?']
       },
       'perf+reg': {
         factors: ['perf', 'reg'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Motor Sem Freio', subtitle: 'Quando padrão de desempenho e pressão se cruzam',
         essence: 'Um retrato educativo de como erro, padrão e situações de demanda apareceram nas respostas.',
-        observations: ['Qual é o único ponto controlável que você consegue observar depois de um erro?', 'O que muda quando você escolhe um sinal de processo em vez de revisar tudo?'],
-        cta: 'Se essas situações estiverem trazendo sofrimento ou prejuízo fora do esporte, procure apoio profissional.'
+        observations: ['Qual é o único ponto controlável que você consegue observar depois de um erro?', 'O que muda quando você escolhe um sinal de processo em vez de revisar tudo?']
       },
       equilibrado: {
         factors: ['perf', 'motiv', 'reg', 'medo', 'ident', 'sup'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'A Mente Calibrada', subtitle: 'Quando há evidência direta nos seis fatores acompanhados',
         essence: 'Um resumo educativo de respostas funcionais nas situações perguntadas, não um padrão-ouro.',
-        observations: ['Que estratégia situada você gostaria de entender melhor ao longo das próximas semanas?'],
-        cta: 'Se fizer sentido, compartilhe uma situação concreta em uma conversa de acompanhamento.'
+        observations: ['Que estratégia situada você gostaria de entender melhor ao longo das próximas semanas?']
       },
       'ident+medo': {
         factors: ['ident', 'medo'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Gigante Contido', subtitle: 'Quando exposição e lugar do esporte pedem observação',
         essence: 'Um retrato educativo de respostas sobre falha, exposição e outras áreas da vida.',
-        observations: ['O que ajuda a diferenciar cuidado estratégico de afastamento por receio?', 'Quais outras áreas seguem presentes quando o esporte exige muito?'],
-        cta: 'Se fizer sentido, converse sobre uma situação específica com alguém de confiança ou com um profissional.'
+        observations: ['O que ajuda a diferenciar cuidado estratégico de afastamento por receio?', 'Quais outras áreas seguem presentes quando o esporte exige muito?']
       },
       'medo+reg': {
         factors: ['medo', 'reg'], type: 'PERFIL MENTAL · PADRÃO ATUAL', name: 'O Atleta de Dois Tempos', subtitle: 'Quando falha e demanda se encontram na próxima ação',
         essence: 'Um retrato educativo de respostas sobre possibilidade de falhar e situações de pressão.',
-        observations: ['Que sinal da tarefa ajuda a voltar ao presente quando o momento pesa?', 'Em que situações a possibilidade de falhar muda sua próxima decisão?'],
-        cta: 'Se o sofrimento estiver persistente, trazendo isolamento ou prejuízo fora do esporte, procure apoio profissional.'
+        observations: ['Que sinal da tarefa ajuda a voltar ao presente quando o momento pesa?', 'Em que situações a possibilidade de falhar muda sua próxima decisão?']
       },
     };
 
@@ -499,7 +491,6 @@ export function createEngine() {
   function result() {
     const prof = selectProfile();
     resolvedProfile = prof;
-    const waText = `Oi Nicolas! Concluí o mapeamento educativo de autoconhecimento com 11 perguntas. Minha leitura de hoje foi "${prof.name}". Quero entender melhor o resultado e como funciona o acompanhamento. | ${profile.name}`;
     const dims = FACTOR_ORDER.map(key => {
       const summary = factorSummary(key);
       return {
@@ -511,7 +502,7 @@ export function createEngine() {
         insight: DIM_INSIGHTS[key][summary.known ? 'known' : 'unknown'],
       };
     });
-    return { prof, dims, waLink: `https://wa.me/5544988433895?text=${encodeURIComponent(waText)}` };
+    return { prof, dims };
   }
 
   return {

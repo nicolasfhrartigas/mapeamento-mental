@@ -474,27 +474,13 @@
                     style="font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; line-height: 1.12; text-transform: uppercase">
                     Baixe o PDF do seu tipo mental</div>
                   <div style="font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-top: 8px">Salve
-                    o seu resultado e me envie pelo WhatsApp.<br>Assim, já conheço seu perfil antes da nossa
-                    conversa.</div>
+                    o seu resultado para consultar quando quiser.</div>
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 8px">
                   <button data-h="ghost" sc-camel-on-click="{{ downloadPDF }}" disabled="{{ factorsLoading }}"
                     style="{{ pdfBtnStyle }}">{{
                     pdfLabel }}</button>
                 </div>
-              </div>
-
-              <div
-                style="background: #2F381A; padding: 24px 20px; margin: 0 -20px; display: flex; flex-direction: column; gap: 16px">
-                <div
-                  style="font-family: 'Oswald', sans-serif; font-size: 25px; font-weight: 600; line-height: 1.08; text-transform: uppercase">
-                  Esse resultado é o começo da conversa</div>
-                <div style="font-size: 14px; color: rgba(255,255,255,.72); line-height: 1.65; text-wrap: pretty">{{
-                  profCta }}<br><br>Uma conversa de 15 minutos pode deixar muito mais claro o que fazer com esse perfil.
-                  Sem compromisso.</div>
-                <a data-h="cta" href="{{ waLink }}" target="_blank"
-                  style="background: #DC5F28; color: #FFFFFF; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 18px 20px; min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: background .15s">Falar
-                  com Nicolas no WhatsApp <span>→</span></a>
               </div>
 
               <div
@@ -683,8 +669,6 @@ class Component extends DCLogic {
       profName: r ? r.prof.name : '',
       profSubtitle: r ? r.prof.subtitle : '',
       profEssence: r ? '"' + r.prof.essence + '"' : '',
-      profCta: r ? r.prof.cta : '',
-      waLink: r ? r.waLink : '#',
       factorsLoading: s.factorsLoading,
       factorsReady: s.screen === 'result' && !s.factorsLoading,
       resultOpen: s.resultOpen,

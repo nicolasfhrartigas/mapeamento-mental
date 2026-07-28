@@ -33,7 +33,7 @@ test('conclui as 11 perguntas e gera resultado consistente', () => {
   assert.equal(engine.getCurrent(), 11);
   assert.equal(first.prof.name, second.prof.name);
   assert.deepEqual(first.dims, second.dims);
-  assert.match(first.waLink, /^https:\/\/wa\.me\//);
+  assert.equal('waLink' in first, false);
 });
 
 test('voltar e responder de novo substitui a pontuação, sem acumulá-la', () => {
