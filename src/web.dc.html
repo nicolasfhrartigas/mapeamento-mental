@@ -52,23 +52,49 @@
           }
         }
 
+        /* Loader "onda". O efeito gooey vem do filtro SVG #mm-goo, que endurece o
+           canal ALPHA — por isso as formas já nascem laranjas e transparentes, sem
+           precisar de fundo branco opaco nem da pilha invert/multiply/screen. Isso
+           importa: com fundo opaco, o retângulo pisca preto no primeiro frame,
+           antes do compositing dos blend modes entrar. Aqui não existe pixel opaco
+           em momento nenhum. O filtro fica no <i> porque a máscara é aplicada
+           depois do filtro — se estivessem no mesmo elemento, os traços sairiam
+           cortados retos em vez de arredondados. */
         .factor-loader {
-          height: 24px;
-          aspect-ratio: 7;
+          position: relative;
+          width: 200px;
+          height: 40px;
+        }
+
+        .factor-loader i {
+          position: absolute;
+          inset: 0;
+          display: grid;
+          place-items: center;
+          filter: url(#mm-goo);
+        }
+
+        .factor-loader i::before {
+          content: "";
+          height: 40px;
+          aspect-ratio: 4.2;
+          --c: #0000 64%, #DC5F28 66% 98%, #0000 101%;
           background:
-            radial-gradient(farthest-side, #DC5F28 98%, #0000) 0%/20px 20px,
-            radial-gradient(farthest-side, #DC5F28 98%, #0000) 0%/20px 20px,
-            radial-gradient(farthest-side, #DC5F28 98%, #0000) 25%/20px 20px,
-            radial-gradient(farthest-side, #DC5F28 98%, #0000) 50%/20px 20px,
-            radial-gradient(farthest-side, #DC5F28 98%, #0000) 75%/20px 20px,
-            radial-gradient(farthest-side, #DC5F28 98%, #0000) 100%/20px 20px;
-          background-repeat: no-repeat;
-          filter: blur(3px) contrast(10);
-          animation: mm-load 1.1s infinite;
+            radial-gradient(35% 146% at 50% 159%, var(--c)) 0 0,
+            radial-gradient(35% 146% at 50% -59%, var(--c)) 100% 100%;
+          background-size: calc(200% / 3) 50%;
+          background-repeat: repeat-x;
+          /* Período de 12,5% = 8 repetições exatas em 100%, senão o último traço
+             fica cortado pela metade na borda direita. */
+          -webkit-mask: repeating-linear-gradient(90deg, #0000 0 2.25%, #000 0 10.25%, #0000 0 12.5%);
+          mask: repeating-linear-gradient(90deg, #0000 0 2.25%, #000 0 10.25%, #0000 0 12.5%);
+          animation: mm-load .8s infinite linear;
         }
 
         @keyframes mm-load {
-          100% { background-position: 100%, 0%, 25%, 50%, 75%, 100% }
+          to {
+            background-position: -200% 0, -100% 100%
+          }
         }
 
         /* Único bloco de hover do arquivo — em tela touch o :hover gruda depois do toque. */
@@ -318,7 +344,13 @@
                 </div>
                 <sc-if value="{{ factorsLoading }}" hint-placeholder-val="{{ false }}">
                   <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; padding: clamp(36px, 6vw, 56px) 0">
-                    <div class="factor-loader"></div>
+                    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+                      <filter id="mm-goo">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b"></feGaussianBlur>
+                        <feColorMatrix in="b" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"></feColorMatrix>
+                      </filter>
+                    </svg>
+                    <div class="factor-loader"><i></i></div>
                     <div style="font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.4)">
                       Lendo seus fatores mentais…</div>
                   </div>
