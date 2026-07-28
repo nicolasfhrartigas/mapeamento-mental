@@ -33,6 +33,7 @@ export function generatePdfReport(data) {
   const OLIVE = [101, 117, 66];    // #657542
   const OLIVE_D = [79, 92, 52];
   const TERRA = [193, 90, 44];     // #C15A2C — laranja da marca rebaixado
+  const PANEL = [47, 56, 26];
 
   const MAX_PAGES = 2;
 
@@ -235,6 +236,19 @@ export function generatePdfReport(data) {
       });
       y += sp(8);
     }
+
+    // ── Contato ───────────────────────────────────────────────────
+    const CTA_BTN_H = sp(28);
+    const ctaH = sp(86);
+    ensureSp(ctaH + sp(16));
+    doc.setFillColor(...PANEL); doc.rect(M, y, CW, ctaH, 'F');
+    sf('bold', 7, [168, 180, 127], 1.6); doc.text('PRÓXIMO PASSO', M + sp(20), y + sp(20));
+    sf('bold', 13, [255, 255, 255], .2); doc.text('O próximo passo é uma conversa.', M + sp(20), y + sp(39));
+    const btnY = y + sp(50);
+    doc.setFillColor(...TERRA); doc.rect(M + sp(20), btnY, CW - sp(40), CTA_BTN_H, 'F');
+    sf('bold', 8.4, [255, 255, 255], 1);
+    doc.text('wa.me/5544988433895   ·   @nicolasfhrartigas', M + sp(34), btnY + CTA_BTN_H / 2 + sp(3));
+    y += ctaH + sp(22);
 
     // ── Anexo — registro das respostas ────────────────────────────
     sec('Anexo · Registro das suas respostas');

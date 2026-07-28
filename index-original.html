@@ -579,6 +579,31 @@
       line-height: 1.5
     }
 
+    .cta-block {
+      background: linear-gradient(135deg, var(--surface2), var(--surface3));
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      padding: 28px;
+      text-align: center;
+      margin-bottom: 12px
+    }
+
+    .cta-lead {
+      font-family: var(--display);
+      font-size: 18px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-weight: 600
+    }
+
+    .cta-sub {
+      font-size: 13.5px;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 20px
+    }
+
     .pdf-cta-block {
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -1447,6 +1472,8 @@
       logLead();
 
       const dimScores = Object.fromEntries(FACTOR_ORDER.map(d => [d, factorSummary(d)]));
+      const waText = `Oi Nicolas! Concluí o mapeamento educativo de autoconhecimento com 11 perguntas. Minha leitura de hoje foi "${prof.name}". Quero entender melhor o resultado e como funciona o acompanhamento. | ${profile.name}`;
+      const waLink = `https://wa.me/5544988433895?text=${encodeURIComponent(waText)}`;
       const dimsHtml = FACTOR_ORDER.map(key => {
         const scorePercentage = Math.round((dimScores[key].percent || 0) * 100);
         const visiblePercentage = displayFactorPercentage(dimScores[key]);
@@ -1479,6 +1506,12 @@
       <div class="dims-grid">${dimsHtml}</div>
     </div>
 
+    <div class="cta-block">
+      <div class="cta-lead">Esse resultado é o começo da conversa.</div>
+      <div class="cta-sub">Uma conversa de 15 minutos pode deixar muito mais claro o que fazer com esse perfil. Sem compromisso.</div>
+      <a class="btn-primary" href="${waLink}" target="_blank">Falar com Nicolas pelo WhatsApp →</a>
+    </div>
+
     <div class="pdf-cta-block">
       <div class="pdf-cta-label">📄 Salve seu resultado</div>
       <div class="pdf-cta-title">Baixe o PDF do seu tipo mental</div>
@@ -1487,6 +1520,7 @@
         <div class="pdf-step"><span class="pdf-step-num">1</span><span>Clique em "Baixar PDF" e salve o arquivo no celular ou computador</span></div>
       </div>
       <button class="btn-ghost" onclick="downloadPDF()" id="btnDownload">⤓ Baixar PDF do resultado</button>
+      <a class="btn-secondary" href="${waLink}" target="_blank" style="margin-top:8px">💬 Enviar pelo WhatsApp (com o PDF em mãos)</a>
     </div>
 
     <button class="btn-secondary" onclick="restartQuiz()" style="margin-top:4px">Refazer o quiz</button>

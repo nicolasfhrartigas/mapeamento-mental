@@ -484,6 +484,18 @@
               </div>
 
               <div
+                style="background: #2F381A; padding: 24px 20px; margin: 0 -20px; display: flex; flex-direction: column; gap: 16px">
+                <div
+                  style="font-family: 'Oswald', sans-serif; font-size: 25px; font-weight: 600; line-height: 1.08; text-transform: uppercase">
+                  Esse resultado é o começo da conversa</div>
+                <div style="font-size: 14px; color: rgba(255,255,255,.72); line-height: 1.65; text-wrap: pretty">
+                  Uma conversa de 15 minutos pode deixar muito mais claro o que fazer com esse perfil. Sem compromisso.</div>
+                <a data-h="cta" href="{{ waLink }}" target="_blank"
+                  style="background: #DC5F28; color: #FFFFFF; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 18px 20px; min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: background .15s">Falar
+                  com Nicolas no WhatsApp <span>→</span></a>
+              </div>
+
+              <div
                 style="display: flex; flex-direction: column; gap: 14px; border-top: 1px solid rgba(255,255,255,.14); padding-top: 20px">
                 <button data-h="quiet" sc-camel-on-click="{{ restart }}"
                   style="align-self: flex-start; background: none; border: none; color: rgba(255,255,255,.45); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: color .15s; min-height: 44px; padding: 10px 0">↺
@@ -669,6 +681,7 @@ class Component extends DCLogic {
       profName: r ? r.prof.name : '',
       profSubtitle: r ? r.prof.subtitle : '',
       profEssence: r ? '"' + r.prof.essence + '"' : '',
+      waLink: r ? r.waLink : '#',
       factorsLoading: s.factorsLoading,
       factorsReady: s.screen === 'result' && !s.factorsLoading,
       resultOpen: s.resultOpen,
