@@ -467,25 +467,27 @@
                 </sc-if>
               </div>
 
-              <div
-                style="display: flex; flex-direction: column; gap: 16px; border: 1px solid rgba(255,255,255,.14); padding: 20px">
-                <div>
-                  <div
-                    style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 8px">
-                    Salve e compartilhe seu resultado</div>
-                  <div
-                    style="font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; line-height: 1.12; text-transform: uppercase">
-                    Baixe o PDF do seu tipo mental</div>
-                  <div style="font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-top: 8px">Salve
-                    o seu resultado e me envie pelo WhatsApp.<br>Assim, já conheço seu perfil antes da nossa
-                    conversa.</div>
+              <sc-if value="{{ factorsReady }}" hint-placeholder-val="{{ false }}">
+                <div
+                  style="animation: rise .3s ease; display: flex; flex-direction: column; gap: 16px; border: 1px solid rgba(255,255,255,.14); padding: 20px">
+                  <div>
+                    <div
+                      style="font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 8px">
+                      Salve e compartilhe seu resultado</div>
+                    <div
+                      style="font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; line-height: 1.12; text-transform: uppercase">
+                      Baixe o PDF do seu tipo mental</div>
+                    <div style="font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.6; margin-top: 8px">Salve
+                      o seu resultado e me envie pelo WhatsApp.<br>Assim, já conheço seu perfil antes da nossa
+                      conversa.</div>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px">
+                    <button data-h="ghost" sc-camel-on-click="{{ downloadPDF }}" disabled="{{ factorsLoading }}"
+                      style="{{ pdfBtnStyle }}">{{
+                      pdfLabel }}</button>
+                  </div>
                 </div>
-                <div style="display: flex; flex-direction: column; gap: 8px">
-                  <button data-h="ghost" sc-camel-on-click="{{ downloadPDF }}" disabled="{{ factorsLoading }}"
-                    style="{{ pdfBtnStyle }}">{{
-                    pdfLabel }}</button>
-                </div>
-              </div>
+              </sc-if>
 
               <div
                 style="background: #2F381A; padding: 24px 20px; margin: 0 -20px; display: flex; flex-direction: column; gap: 16px">
