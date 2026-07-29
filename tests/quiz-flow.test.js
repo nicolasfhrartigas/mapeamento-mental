@@ -4,15 +4,17 @@ import assert from 'node:assert/strict';
 import { createEngine } from '../src/quiz-engine.js';
 import { SPORTS, createQuizFlow } from '../src/quiz-flow.js';
 
-function harness() {
+function harness(options = {}) {
   let state = { screen: 'setup', name: '', sport: '', sportLabel: '', level: '', goal: '', sportOpen: false, missing: [], tick: 0 };
   const patches = [];
+  let topCalls = 0;
   const flow = createQuizFlow({
     engine: createEngine(), getState: () => state,
     setState: patch => { patches.push(patch); state = { ...state, ...patch }; },
-    top: () => {}, scrollToRef: () => {},
+    top: () => { topCalls += 1; }, scrollToRef: () => {},
+    ...options,
   });
-  return { flow, state: () => state, patches };
+  return { flow, state: () => state, patches, topCalls: () => topCalls };
 }
 
 test('valida setup, seleciona modalidade e inicia o questionário', () => {
@@ -62,4 +64,18 @@ test('controla responder, voltar e reiniciar a jornada compartilhada', () => {
   assert.equal(app.state().screen, 'intro');
   assert.equal(app.state().result, null);
   assert.equal(app.state().sport, '');
+});
+
+test('reposiciona a rolagem ao avançar e voltar quando a tela solicita', () => {
+  const app = harness({ scrollOnQuestionChange: true });
+  app.state().name = 'Ana';
+  app.flow.pick('sport', SPORTS[0]);
+  app.flow.pick('level', { value: 'alto' });
+  app.flow.pick('goal', { value: 'competir' });
+
+  app.flow.start();
+  app.flow.answer(0);
+  app.flow.back();
+
+  assert.equal(app.topCalls(), 3);
 });

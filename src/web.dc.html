@@ -38,6 +38,11 @@
           text-decoration: none
         }
 
+        .screen-title:focus-visible {
+          outline: 2px solid #DC5F28;
+          outline-offset: 6px
+        }
+
         @keyframes rise {
           from {
             opacity: 0;
@@ -181,13 +186,33 @@
         <main
           style="flex: 2.4 1 480px; min-width: 0; padding: clamp(20px, 3vw, 32px) clamp(22px, 4.6vw, 72px); display: flex; flex-direction: column">
 
+          <sc-if value="{{ isLoading }}" hint-placeholder-val="false">
+            <div role="status" aria-live="polite"
+              style="display: flex; flex-direction: column; gap: 12px; max-width: 560px; padding: clamp(32px, 8vw, 88px) 0">
+              <h1 class="screen-title"
+                style="font-family: 'Oswald', sans-serif; font-size: clamp(32px, 6vw, 52px); font-weight: 600; line-height: 1.02; text-transform: uppercase">Preparando
+                o mapeamento</h1>
+              <p style="font-size: 16px; color: rgba(255,255,255,.65)">Carregando as perguntas. Só um instante.</p>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasLoadError }}" hint-placeholder-val="false">
+            <div role="alert"
+              style="display: flex; flex-direction: column; gap: 12px; max-width: 560px; padding: clamp(32px, 8vw, 88px)">
+              <h1 class="screen-title"
+                style="font-family: 'Oswald', sans-serif; font-size: clamp(32px, 6vw, 52px); font-weight: 600; line-height: 1.02; text-transform: uppercase">Não foi possível
+                carregar o mapeamento</h1>
+              <p style="font-size: 16px; color: rgba(255,255,255,.65)">Atualize a página para tentar novamente.</p>
+            </div>
+          </sc-if>
+
           <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
             <div
               style="animation: rise .4s ease; display: flex; flex-direction: column; gap: clamp(12px, 1.2vw, 16px); max-width: 760px">
               <div
                 style="font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">
                 A performance começa antes do treino</div>
-              <h1
+              <h1 class="screen-title" ref="{{ refIntroHeading }}" tabIndex="-1"
                 style="font-family: 'Oswald', sans-serif; font-size: clamp(38px, 8.4vw, 76px); font-weight: 600; line-height: .96; text-transform: uppercase; letter-spacing: -.005em; text-wrap: balance">
                 Qual é o seu <span style="color: #DC5F28">tipo mental</span> como atleta?</h1>
               <div style="height: 1px; background: rgba(255,255,255,.14)"></div>
@@ -239,7 +264,7 @@
             <div
               style="animation: rise .4s ease; display: flex; flex-direction: column; gap: clamp(24px, 3vw, 34px); max-width: 760px">
               <div>
-                <h2
+                <h2 class="screen-title" ref="{{ refSetupHeading }}" tabIndex="-1"
                   style="font-family: 'Oswald', sans-serif; font-size: clamp(28px, 6.4vw, 48px); font-weight: 600; line-height: 1.02; text-transform: uppercase; text-wrap: balance">
                   Antes de começar,<br>me conta sobre você</h2>
                 <p
@@ -357,9 +382,9 @@
                 <div
                   style="font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">
                   {{ qCounter }}</div>
-                <div
+                <h2 class="screen-title" ref="{{ refQuestionHeading }}" tabIndex="-1"
                   style="font-size: clamp(21px, 5vw, 34px); font-weight: 500; line-height: 1.25; letter-spacing: -.005em; text-wrap: pretty">
-                  {{ qText }}</div>
+                  {{ qText }}</h2>
                 <sc-if value="{{ qContext }}" hint-placeholder-val="{{ false }}">
                   <div
                     style="font-size: clamp(13px, 3.2vw, 14.5px); color: rgba(255,255,255,.5); font-style: italic; line-height: 1.6; border-left: 1px solid rgba(220,95,40,.6); padding-left: 14px">
@@ -392,7 +417,7 @@
                 <div
                   style="font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">
                   {{ profType }}</div>
-                <h2
+                <h2 class="screen-title" ref="{{ refResultHeading }}" tabIndex="-1"
                   style="font-family: 'Oswald', sans-serif; font-size: clamp(34px, 8vw, 68px); font-weight: 600; line-height: .98; text-transform: uppercase; text-wrap: balance">
                   {{ profName }}</h2>
                 <div style="width: 64px; height: 3px; background: #DC5F28"></div>
@@ -536,7 +561,7 @@ class Component extends DCLogic {
   state = {
     screen: 'intro', name: '', sport: '', sportLabel: '', level: '', goal: '',
     sportOpen: false, setupError: false, missing: [], tick: 0, result: null, animate: false, pdfBusy: false,
-    factorsLoading: false, resultOpen: false,
+    factorsLoading: false, resultOpen: false, loadState: 'loading',
   };
 
   toggleResult() {
@@ -544,6 +569,7 @@ class Component extends DCLogic {
   }
 
   fieldRefs = { name: React.createRef(), input: React.createRef(), sport: React.createRef(), level: React.createRef(), goal: React.createRef() };
+  headingRefs = { intro: React.createRef(), setup: React.createRef(), question: React.createRef(), result: React.createRef() };
 
   scrollToRef(key) {
     const el = this.fieldRefs[key] && this.fieldRefs[key].current;
@@ -555,6 +581,9 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.unmounted = false;
+    if (this.props.startScreen === 'setup') this.setState({ screen: 'setup' });
+    this.lastFocusedScreen = this.state.screen;
+    this.lastFocusedTick = this.state.tick;
     Promise.all([import('./quiz-flow.js'), import('./quiz-engine.js?v=2')]).then(([flow, mod]) => {
       if (this.unmounted) return;
       this.engine = mod.createEngine();
@@ -562,18 +591,33 @@ class Component extends DCLogic {
       this.flow = flow.createQuizFlow({
         engine: this.engine, getState: () => this.state, setState: patch => this.setState(patch),
         top: () => this.top(), scrollToRef: key => this.scrollToRef(key),
+        scrollOnQuestionChange: true,
         onAnswer: done => {
           if (!done) return;
           this.resultTimer = setTimeout(() => this.setState({ animate: true, factorsLoading: false }), 3000 + Math.random() * 3000);
         },
       });
       this.flow.attachOutsideClick(this.fieldRefs.sport);
-      this.forceUpdate();
+      this.setState({ loadState: 'ready' });
+    }).catch(() => {
+      if (!this.unmounted) this.setState({ loadState: 'error' });
     });
-    if (this.props.startScreen === 'setup') this.setState({ screen: 'setup' });
   }
 
-  componentWillUnmount() { this.unmounted = true; if (this.flow) this.flow.detachOutsideClick(); clearTimeout(this.resultTimer); }
+  componentDidUpdate() {
+    const screenChanged = this.state.screen !== this.lastFocusedScreen;
+    const questionChanged = this.state.screen === 'question' && this.state.tick !== this.lastFocusedTick;
+    this.lastFocusedScreen = this.state.screen;
+    this.lastFocusedTick = this.state.tick;
+    if (!screenChanged && !questionChanged) return;
+    const target = this.headingRefs[this.state.screen] && this.headingRefs[this.state.screen].current;
+    if (!target) return;
+    this.focusFrame = requestAnimationFrame(() => {
+      if (!this.unmounted) target.focus({ preventScroll: true });
+    });
+  }
+
+  componentWillUnmount() { this.unmounted = true; if (this.flow) this.flow.detachOutsideClick(); clearTimeout(this.resultTimer); cancelAnimationFrame(this.focusFrame); }
 
   top() { try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {} }
 
@@ -616,12 +660,19 @@ class Component extends DCLogic {
       railHint: rail.hint,
       progress: s.screen === 'result' ? '100%' : s.screen === 'question' ? Math.round(index / total * 100) + '%' : '0%',
 
-      isIntro: s.screen === 'intro',
-      isSetup: s.screen === 'setup',
-      isQuestion: s.screen === 'question',
-      isResult: s.screen === 'result',
+      isLoading: s.loadState === 'loading',
+      hasLoadError: s.loadState === 'error',
+      isIntro: s.loadState === 'ready' && s.screen === 'intro',
+      isSetup: s.loadState === 'ready' && s.screen === 'setup',
+      isQuestion: s.loadState === 'ready' && s.screen === 'question',
+      isResult: s.loadState === 'ready' && s.screen === 'result',
       goSetup: () => { this.setState({ screen: 'setup' }); this.top(); },
       goIntro: () => { this.setState({ screen: 'intro' }); this.top(); },
+
+      refIntroHeading: this.headingRefs.intro,
+      refSetupHeading: this.headingRefs.setup,
+      refQuestionHeading: this.headingRefs.question,
+      refResultHeading: this.headingRefs.result,
 
       refName: this.fieldRefs.name,
       refInput: this.fieldRefs.input,
