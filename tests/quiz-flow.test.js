@@ -79,3 +79,34 @@ test('reposiciona a rolagem ao avançar e voltar quando a tela solicita', () => 
 
   assert.equal(app.topCalls(), 3);
 });
+
+test('instrumenta o funil sem duplicar pergunta respondida após voltar', () => {
+  const events = [];
+  const app = harness({
+    trackEvent: (name, data) => events.push({ name, data }),
+  });
+  app.flow.trackSetupOpen();
+  app.state().name = 'Ana';
+  app.flow.pick('sport', SPORTS[0]);
+  app.flow.pick('level', { value: 'alto' });
+  app.flow.pick('goal', { value: 'competir' });
+  app.flow.start();
+  app.flow.answer(0);
+  app.flow.answer(0);
+  app.flow.back();
+  app.flow.answer(1);
+  while (app.state().screen !== 'result') app.flow.answer(0);
+  app.flow.trackPdf();
+
+  assert.equal(events.filter(event => event.name === 'pergunta-respondida').length, 11);
+  assert.deepEqual(
+    events.filter(event => event.name === 'pergunta-respondida').map(event => event.data.numero),
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+  );
+  assert.equal(events.filter(event => event.name === 'quiz-concluido').length, 1);
+  assert.equal(events.at(-1).name, 'pdf-solicitado');
+  assert.equal(
+    events.some(event => JSON.stringify(event.data || {}).includes('fisiculturismo')),
+    false,
+  );
+});
