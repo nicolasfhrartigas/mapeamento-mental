@@ -164,11 +164,54 @@
           }
         }
 
-        /* Disclaimer legal da intro escondido no mobile: libera espaço pro
-           título, texto e números em qualquer altura de tela, não só nas
-           mais baixas. O texto integral segue disponível no PDF do resultado. */
+        /* O disclaimer encerra a intro fora da primeira dobra. Ele continua
+           disponível no mobile, mas só entra na leitura quando a pessoa rola
+           além do conteúdo principal e dos números. */
         .mobile-intro-fine {
-          display: none
+          display: block;
+          margin-top: 72px
+        }
+
+        /* A intro é dividida em três blocos legíveis: promessa, explicação e
+           números. Em telas altas os números ficam ancorados perto do CTA; em
+           telas baixas a margem automática some antes de comprimir o texto. */
+        .mobile-intro-step {
+          flex: 1
+        }
+
+        .mobile-intro-hero,
+        .mobile-intro-copy,
+        .mobile-intro-guide {
+          display: flex;
+          flex-direction: column
+        }
+
+        .mobile-intro-hero {
+          gap: 14px
+        }
+
+        .mobile-intro-copy {
+          gap: 14px;
+          border-top: 1px solid rgba(255, 255, 255, .14);
+          padding-top: 20px
+        }
+
+        .mobile-intro-guide {
+          gap: 5px;
+          border-left: 2px solid #DC5F28;
+          padding-left: 14px
+        }
+
+        .mobile-intro-guide-label {
+          font-size: 9.5px;
+          font-weight: 700;
+          letter-spacing: .16em;
+          text-transform: uppercase;
+          color: #A8B47F
+        }
+
+        .mobile-intro-stats {
+          margin-top: auto
         }
 
         /* Em telefones baixos, a pergunta contextual e as quatro respostas devem
@@ -206,13 +249,27 @@
             gap: 18px !important
           }
 
+          .mobile-intro-hero {
+            gap: 10px
+          }
+
           .mobile-intro-title {
             font-size: 34px !important
           }
 
-          .mobile-intro-p {
+          .mobile-intro-copy {
+            gap: 11px;
+            padding-top: 15px
+          }
+
+          .mobile-intro-lead {
             font-size: 14.5px !important;
             line-height: 1.55 !important
+          }
+
+          .mobile-intro-guide-text {
+            font-size: 13.5px !important;
+            line-height: 1.5 !important
           }
 
           .mobile-intro-stats {
@@ -221,6 +278,10 @@
 
           .mobile-intro-stat-num {
             font-size: 28px !important
+          }
+
+          .mobile-intro-fine {
+            margin-top: 56px
           }
         }
       </style>
@@ -265,20 +326,29 @@
 
           <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
             <div class="mobile-intro-step" style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 22px">
-              <div class="mobile-intro-kicker"
-                style="font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F; line-height: 1.5">
-                A performance começa antes do treino</div>
-              <h1 class="mobile-intro-title"
-                style="font-family: 'Oswald', sans-serif; font-size: 40px; font-weight: 600; line-height: .98; text-transform: uppercase; letter-spacing: -.005em; text-wrap: balance">
-                Qual é o seu <span style="color: #DC5F28">tipo mental</span> como atleta?</h1>
-              <div style="height: 1px; background: rgba(255,255,255,.14)"></div>
-              <p class="mobile-intro-p" style="font-size: 15.5px; color: rgba(255,255,255,.74); line-height: 1.65; text-wrap: pretty">Todo
-                atleta conhece o próprio corpo em detalhe: carga, pace, medidas, tempo de prova. Quase nenhum tem formas
-                de observar o que acontece nas situações que o esporte traz.</p>
-              <p class="mobile-intro-p" style="font-size: 14.5px; color: rgba(255,255,255,.62); line-height: 1.7; text-wrap: pretty">Este
-                mapeamento organiza tendências que apareceram nas suas respostas de hoje. São dez perguntas fixas e uma
-                pergunta contextual para sua modalidade. <strong style="color: #FFFFFF; font-weight: 600">Não existem
-                  respostas certas:</strong> responda pela situação que mais se parece com o seu momento.</p>
+              <div class="mobile-intro-hero">
+                <div class="mobile-intro-kicker"
+                  style="font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F; line-height: 1.5">
+                  A performance começa antes do treino</div>
+                <h1 class="mobile-intro-title"
+                  style="font-family: 'Oswald', sans-serif; font-size: 40px; font-weight: 600; line-height: .98; text-transform: uppercase; letter-spacing: -.005em; text-wrap: balance">
+                  Qual é o seu <span style="color: #DC5F28">tipo mental</span> como atleta?</h1>
+              </div>
+
+              <div class="mobile-intro-copy">
+                <p class="mobile-intro-lead"
+                  style="font-size: 15.5px; color: rgba(255,255,255,.74); line-height: 1.65; text-wrap: pretty">
+                  Você acompanha carga, pace, medidas e tempo de prova. Este mapeamento ajuda a observar o que acontece
+                  com você nas situações que o esporte traz.</p>
+                <div class="mobile-intro-guide">
+                  <div class="mobile-intro-guide-label">Como funciona</div>
+                  <p class="mobile-intro-guide-text"
+                    style="font-size: 14.5px; color: rgba(255,255,255,.62); line-height: 1.65; text-wrap: pretty">
+                    São 10 perguntas fixas e 1 sobre a sua modalidade. <strong
+                      style="color: #FFFFFF; font-weight: 600">Não existem respostas certas:</strong> escolha o que mais
+                    se parece com o seu momento.</p>
+                </div>
+              </div>
 
               <div class="mobile-intro-stats"
                 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 12px; border-top: 1px solid rgba(255,255,255,.14); border-bottom: 1px solid rgba(255,255,255,.14); padding: 16px 0">
