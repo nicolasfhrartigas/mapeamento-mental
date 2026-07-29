@@ -6,7 +6,7 @@
 // self-referrals falsos.
 
 // Website ID de nicolasfhrartigas.github.io no Umami Cloud.
-const WEBSITE_ID = 'ed84c13c-92e0-4515-bf9c-06a475afc769';
+const WEBSITE_ID = '7bd44106-ec92-4860-83c6-ce9557e98bd2';
 const SCRIPT_URL = 'https://cloud.umami.is/script.js';
 const LOCAL_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', ''];
 
