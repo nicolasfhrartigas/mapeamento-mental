@@ -27,12 +27,48 @@ O redesign vive em `src/`, como fonte editável — não em arquivos compactados
 | `src/mobile.dc.html` | Fonte da tela mobile |
 | `src/quiz-engine.js` | Lógica: perguntas, scoring, monta os dados do relatório — igual nas duas telas |
 | `src/quiz-flow.js` | Fluxo compartilhado de setup, seleção, navegação do quiz, reinício e fechamento do seletor “Outros esportes”; as diferenças de layout continuam nos HTMLs |
+| `src/analytics.js` | Integração com Umami Cloud: pageviews, atribuição da landing e eventos do funil |
 | `src/pdf-report.js` | Só o desenho do PDF (jsPDF); recebe os dados já prontos do `quiz-engine.js` |
 | `src/support.js` | Runtime do Design Component (React/Babel via CDN + interpretador de `{{ }}`, `<sc-if>`, `<sc-for>`). **Gerado, não editar à mão** — primeira linha do arquivo diz de onde vem. |
 
 Os `.dc.html` usam um formato declarativo (bindings `{{ var }}`, `<sc-if>`, `<sc-for>`) interpretado pelo `support.js` em runtime — não é HTML puro, não abre "funcionando 100%" só com duplo clique sem servidor (o `import()` do `quiz-engine.js` exige origem HTTP).
 
-Únicas dependências externas: jsPDF, React, ReactDOM e Babel por CDN, e Google Fonts.
+Dependências externas: jsPDF, React, ReactDOM e Babel por CDN, Google Fonts e,
+quando o analytics está ativado, o tracker do Umami Cloud.
+
+## Estatísticas com Umami
+
+O tracker já está integrado às telas web e mobile, mas fica desativado enquanto
+`WEBSITE_ID` em `src/analytics.js` contiver o placeholder. Para ativar:
+
+1. No Umami Cloud, abra **Settings → Websites**, crie/edite o site e copie o
+   **Website ID** (UUID).
+2. Substitua `COLE-AQUI-O-WEBSITE-ID` no início de `src/analytics.js`.
+3. Publique a página e confirme no DevTools que `cloud.umami.is/script.js` e a
+   requisição de coleta carregam sem erro. Em `localhost`, o tracker permanece
+   desativado de propósito.
+
+Como o quiz vive em um iframe, `index.html` repassa a URL e o referrer da landing
+para o tracker. Os acessos aparecem com a URL pública correta, e a tag do Umami
+permite filtrar `web` e `mobile`.
+
+Eventos disponíveis para análise de funil:
+
+| Evento | Momento |
+|---|---|
+| `setup-aberto` | saída da introdução |
+| `perfil-preenchido` | escolha de esporte, nível ou objetivo |
+| `setup-incompleto` | tentativa de avançar com campo ausente |
+| `quiz-iniciado` | início das perguntas |
+| `pergunta-respondida` | primeira resposta de cada uma das 11 etapas |
+| `quiz-concluido` | resultado calculado |
+| `pdf-solicitado` | clique para gerar o PDF |
+| `quiz-reiniciado` | reinício após o resultado |
+| `quiz-abandonado` | retorno da primeira pergunta para o setup |
+
+Nenhum nome, resposta, escolha de perfil ou perfil psicológico resultante é
+enviado. Os eventos registram somente etapas da interface, campos interagidos,
+número da pergunta e a variante web/mobile.
 
 ## Mapa do arquivo (`index-original.html`, versão legada)
 

@@ -38,7 +38,15 @@
 <body>
 <iframe id="dc-frame" title="Mapeamento mental" allow="clipboard-write"></iframe>
 <script>
-  document.getElementById("dc-frame").src = "src/" + window.__mmView + ".dc.html";
+  // O analytics roda dentro do iframe (é lá que o quiz vive), mas de lá a URL e
+  // o referrer visíveis são os do próprio iframe — o referrer viraria sempre
+  // esta página. Repassa os reais para o src/analytics.js corrigir o payload.
+  (function () {
+    var qs = "a_url=" + encodeURIComponent(location.pathname + location.search);
+    if (document.referrer) qs += "&a_ref=" + encodeURIComponent(document.referrer);
+    document.getElementById("dc-frame").src =
+      "src/" + window.__mmView + ".dc.html?" + qs;
+  })();
 </script>
 </body>
 </html>
