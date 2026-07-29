@@ -4,13 +4,14 @@ import assert from 'node:assert/strict';
 import { createEngine } from '../src/quiz-engine.js';
 import { SPORTS, createQuizFlow } from '../src/quiz-flow.js';
 
-function harness() {
+function harness({ trackEvent = () => {} } = {}) {
   let state = { screen: 'setup', name: '', sport: '', sportLabel: '', level: '', goal: '', sportOpen: false, missing: [], tick: 0 };
   const patches = [];
   const flow = createQuizFlow({
     engine: createEngine(), getState: () => state,
     setState: patch => { patches.push(patch); state = { ...state, ...patch }; },
     top: () => {}, scrollToRef: () => {},
+    trackEvent,
   });
   return { flow, state: () => state, patches };
 }
@@ -62,4 +63,35 @@ test('controla responder, voltar e reiniciar a jornada compartilhada', () => {
   assert.equal(app.state().screen, 'intro');
   assert.equal(app.state().result, null);
   assert.equal(app.state().sport, '');
+});
+
+test('instrumenta o funil sem duplicar pergunta respondida após voltar', () => {
+  const events = [];
+  const app = harness({
+    trackEvent: (name, data) => events.push({ name, data }),
+  });
+  app.flow.trackSetupOpen();
+  app.state().name = 'Ana';
+  app.flow.pick('sport', SPORTS[0]);
+  app.flow.pick('level', { value: 'alto' });
+  app.flow.pick('goal', { value: 'competir' });
+  app.flow.start();
+  app.flow.answer(0);
+  app.flow.answer(0);
+  app.flow.back();
+  app.flow.answer(1);
+  while (app.state().screen !== 'result') app.flow.answer(0);
+  app.flow.trackPdf();
+
+  assert.equal(events.filter(event => event.name === 'pergunta-respondida').length, 11);
+  assert.deepEqual(
+    events.filter(event => event.name === 'pergunta-respondida').map(event => event.data.numero),
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+  );
+  assert.equal(events.filter(event => event.name === 'quiz-concluido').length, 1);
+  assert.equal(events.at(-1).name, 'pdf-solicitado');
+  assert.equal(
+    events.some(event => JSON.stringify(event.data || {}).includes('fisiculturismo')),
+    false,
+  );
 });

@@ -1,5 +1,11 @@
 // Fluxo compartilhado entre as telas web e mobile. O módulo não conhece
 // componentes nem estilos: cada tela fornece as pequenas diferenças de UI.
+//
+// É também onde o funil é instrumentado (ver src/analytics.js): como as duas
+// telas compartilham este fluxo, os eventos saem idênticos nas duas sem
+// duplicação.
+
+import { track } from './analytics.js';
 
 export const SPORTS = [
   { value: 'fisiculturismo', label: '🏋️ Fisiculturismo' },
@@ -37,7 +43,16 @@ const EMPTY_JOURNEY = {
   pdfBusy: false, factorsLoading: false, resultOpen: false,
 };
 
-export function createQuizFlow({ engine, getState, setState, top, scrollToRef, onAnswer, scrollOnQuestionChange = false }) {
+export function createQuizFlow({
+  engine,
+  getState,
+  setState,
+  top,
+  scrollToRef,
+  onAnswer,
+  scrollOnQuestionChange = false,
+  trackEvent = track,
+}) {
   let outsideTarget = null;
   let outsideHandler = null;
 
@@ -49,8 +64,23 @@ export function createQuizFlow({ engine, getState, setState, top, scrollToRef, o
     setState({ missing, setupError: missing.length > 0 });
   };
 
+  // Perguntas já contabilizadas nesta rodada. Sem isso, voltar e responder de
+  // novo inflaria o funil e faria a etapa parecer ter mais gente que a anterior.
+  let answered = new Set();
+
   return {
     clearMissing,
+
+    /** Intro → setup: primeiro sinal de intenção, antes de qualquer dado. */
+    trackSetupOpen() {
+      trackEvent('setup-aberto');
+    },
+
+    /** Solicitação do PDF (o gerador captura erros internamente). */
+    trackPdf() {
+      trackEvent('pdf-solicitado');
+    },
+
     pick(field, item) {
       if (field === 'sport') {
         engine.setProfileField('sport', item.value);
@@ -60,6 +90,7 @@ export function createQuizFlow({ engine, getState, setState, top, scrollToRef, o
         engine.setProfileField(field, item.value);
         setState({ [field]: item.value });
       }
+      trackEvent('perfil-preenchido', { campo: field });
       clearMissing(field);
     },
     start() {
@@ -68,18 +99,31 @@ export function createQuizFlow({ engine, getState, setState, top, scrollToRef, o
       if (missing.length) {
         setState({ setupError: true, missing });
         scrollToRef(missing[0]);
+        trackEvent('setup-incompleto', { faltando: missing.join(',') });
         return false;
       }
       engine.setProfileField('name', state.name.trim());
       engine.start();
+      answered = new Set();
       setState({ setupError: false, missing: [], screen: 'question', tick: state.tick + 1 });
+      trackEvent('quiz-iniciado');
       top();
       return true;
     },
     answer(index) {
+      const number = engine.getCurrent() + 1;
+      const total = engine.getTotal();
       const done = engine.select(index);
+      if (!answered.has(number)) {
+        answered.add(number);
+        // Uma etapa por pergunta é o que permite ler a curva de abandono no
+        // relatório de funil do Umami.
+        trackEvent('pergunta-respondida', { numero: number, total });
+      }
       if (done) {
-        setState({ screen: 'result', result: engine.result(), animate: false, factorsLoading: true, resultOpen: false });
+        const result = engine.result();
+        setState({ screen: 'result', result, animate: false, factorsLoading: true, resultOpen: false });
+        trackEvent('quiz-concluido');
       } else {
         setState({ tick: currentState().tick + 1 });
       }
@@ -90,6 +134,7 @@ export function createQuizFlow({ engine, getState, setState, top, scrollToRef, o
     back() {
       if (engine.getCurrent() === 0) {
         setState({ screen: 'setup' });
+        trackEvent('quiz-abandonado', { numero: 1, total: engine.getTotal() });
         top();
         return false;
       }
@@ -99,7 +144,9 @@ export function createQuizFlow({ engine, getState, setState, top, scrollToRef, o
       return true;
     },
     restart() {
+      trackEvent('quiz-reiniciado');
       engine.resetState();
+      answered = new Set();
       setState({ ...EMPTY_JOURNEY });
       top();
     },

@@ -5,6 +5,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="./support.js"></script>
+  <!-- Fora do <helmet>: o conteúdo dentro de <x-dc> passa pelo interpretador de
+       {{ }} do support.js. Aqui não. -->
+  <script type="module" src="./analytics.js"></script>
 </head>
 
 <body>
@@ -622,7 +625,7 @@ class Component extends DCLogic {
       showBack: s.screen === 'setup' || (s.screen === 'question' && index > 0),
       showNext: s.screen === 'intro' || s.screen === 'setup',
       barLabel: s.screen === 'intro' ? 'Começar o mapeamento' : 'Continuar',
-      barNext: () => { if (s.screen === 'intro') { this.setState({ screen: 'setup' }); this.top(); } else this.startQuestions(); },
+      barNext: () => { if (s.screen === 'intro') { if (this.flow) this.flow.trackSetupOpen(); this.setState({ screen: 'setup' }); this.top(); } else this.startQuestions(); },
       barBack: () => { if (s.screen === 'setup') { this.setState({ screen: 'intro' }); this.top(); } else this.back(); },
 
       name: s.name,
@@ -686,6 +689,7 @@ class Component extends DCLogic {
       pdfLabel: s.pdfBusy ? '⏳ Gerando PDF…' : '⤓ Baixar PDF do resultado',
       downloadPDF: () => {
         if (s.factorsLoading) return;
+        if (this.flow) this.flow.trackPdf();
         this.setState({ pdfBusy: true });
         setTimeout(() => { this.engine.downloadPDF(); this.setState({ pdfBusy: false }); }, 30);
       },
