@@ -190,6 +190,37 @@
             font-size: 14px !important;
             line-height: 1.35 !important
           }
+
+          .mobile-intro-main {
+            padding: 16px 20px 20px !important
+          }
+
+          .mobile-intro-step {
+            gap: 14px !important
+          }
+
+          .mobile-intro-title {
+            font-size: 30px !important
+          }
+
+          .mobile-intro-p {
+            font-size: 13.5px !important;
+            line-height: 1.5 !important
+          }
+
+          .mobile-intro-stats {
+            padding: 10px 0 !important
+          }
+
+          .mobile-intro-stat-num {
+            font-size: 24px !important
+          }
+
+          .mobile-intro-fine {
+            font-size: 10px !important;
+            line-height: 1.45 !important;
+            padding-top: 10px !important
+          }
         }
       </style>
     </helmet>
@@ -232,26 +263,26 @@
           style="flex: 1; min-width: 0; padding: 26px 20px 32px; display: flex; flex-direction: column">
 
           <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
-            <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 22px">
-              <div
+            <div class="mobile-intro-step" style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 22px">
+              <div class="mobile-intro-kicker"
                 style="font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F; line-height: 1.5">
                 A performance começa antes do treino</div>
-              <h1
+              <h1 class="mobile-intro-title"
                 style="font-family: 'Oswald', sans-serif; font-size: 40px; font-weight: 600; line-height: .98; text-transform: uppercase; letter-spacing: -.005em; text-wrap: balance">
                 Qual é o seu <span style="color: #DC5F28">tipo mental</span> como atleta?</h1>
               <div style="height: 1px; background: rgba(255,255,255,.14)"></div>
-              <p style="font-size: 15.5px; color: rgba(255,255,255,.74); line-height: 1.65; text-wrap: pretty">Todo
+              <p class="mobile-intro-p" style="font-size: 15.5px; color: rgba(255,255,255,.74); line-height: 1.65; text-wrap: pretty">Todo
                 atleta conhece o próprio corpo em detalhe: carga, pace, medidas, tempo de prova. Quase nenhum tem formas
                 de observar o que acontece nas situações que o esporte traz.</p>
-              <p style="font-size: 14.5px; color: rgba(255,255,255,.62); line-height: 1.7; text-wrap: pretty">Este
+              <p class="mobile-intro-p" style="font-size: 14.5px; color: rgba(255,255,255,.62); line-height: 1.7; text-wrap: pretty">Este
                 mapeamento organiza tendências que apareceram nas suas respostas de hoje. São dez perguntas fixas e uma
                 pergunta contextual para sua modalidade. <strong style="color: #FFFFFF; font-weight: 600">Não existem
                   respostas certas:</strong> responda pela situação que mais se parece com o seu momento.</p>
 
-              <div
+              <div class="mobile-intro-stats"
                 style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 12px; border-top: 1px solid rgba(255,255,255,.14); border-bottom: 1px solid rgba(255,255,255,.14); padding: 16px 0">
                 <div>
-                  <div
+                  <div class="mobile-intro-stat-num"
                     style="font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums">
                     11</div>
                   <div
@@ -259,7 +290,7 @@
                     Perguntas</div>
                 </div>
                 <div>
-                  <div
+                  <div class="mobile-intro-stat-num"
                     style="font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums">
                     8</div>
                   <div
@@ -267,7 +298,7 @@
                     Tipos</div>
                 </div>
                 <div>
-                  <div
+                  <div class="mobile-intro-stat-num"
                     style="font-family: 'Oswald', sans-serif; font-size: 32px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums">
                     5<span style="font-size: .48em"> min</span></div>
                   <div
@@ -276,7 +307,7 @@
                 </div>
               </div>
 
-              <div
+              <div class="mobile-intro-fine"
                 style="font-size: 11px; line-height: 1.6; color: rgba(255,255,255,.4); border-top: 1px solid rgba(255,255,255,.1); padding-top: 14px">
                 Ferramenta educativa de autoconhecimento sobre fatores mentais no esporte. Não constitui diagnóstico
                 clínico, avaliação psicológica formal ou prescrição de tratamento. O padrão descrito é um retrato do
@@ -665,7 +696,7 @@ class Component extends DCLogic {
       isQuestion: s.screen === 'question',
       isResult: s.screen === 'result',
 
-      mainClass: s.screen === 'question' ? 'mobile-question-main' : '',
+      mainClass: s.screen === 'question' ? 'mobile-question-main' : s.screen === 'intro' ? 'mobile-intro-main' : '',
 
       showBar: s.screen !== 'result',
       showBack: s.screen === 'setup' || (s.screen === 'question' && index > 0),
