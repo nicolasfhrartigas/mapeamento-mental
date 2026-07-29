@@ -163,6 +163,34 @@
             color: #FFFFFF !important
           }
         }
+
+        /* Em telefones baixos, a pergunta contextual e as quatro respostas devem
+           caber entre o cabeçalho e a barra fixa, sem esconder a alternativa D. */
+        @media (max-height: 740px) {
+          .mobile-question-main {
+            padding: 10px 20px 12px !important
+          }
+
+          .mobile-question-step {
+            gap: 12px !important
+          }
+
+          .mobile-question-header {
+            gap: 8px !important
+          }
+
+          .mobile-question-title {
+            font-size: 19px !important;
+            line-height: 1.2 !important
+          }
+
+          .mobile-question-option {
+            padding: 9px 20px !important;
+            min-height: 52px !important;
+            font-size: 14px !important;
+            line-height: 1.35 !important
+          }
+        }
       </style>
     </helmet>
     <div style="min-height: 100dvh; display: flex; justify-content: center; background: #0B0D07">
@@ -200,7 +228,8 @@
           </div>
         </header>
 
-        <main style="flex: 1; min-width: 0; padding: 26px 20px 32px; display: flex; flex-direction: column">
+        <main class="{{ mainClass }}"
+          style="flex: 1; min-width: 0; padding: 26px 20px 32px; display: flex; flex-direction: column">
 
           <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
             <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 22px">
@@ -359,12 +388,12 @@
           </sc-if>
 
           <sc-if value="{{ isQuestion }}" hint-placeholder-val="{{ false }}">
-            <div style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 24px">
-              <div style="display: flex; flex-direction: column; gap: 14px">
+            <div class="mobile-question-step" style="animation: rise .4s ease; display: flex; flex-direction: column; gap: 24px">
+              <div class="mobile-question-header" style="display: flex; flex-direction: column; gap: 14px">
                 <div
                   style="font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">
                   {{ qCounter }}</div>
-                <div
+                <div class="mobile-question-title"
                   style="font-size: 22px; font-weight: 500; line-height: 1.28; letter-spacing: -.005em; text-wrap: pretty">
                   {{ qText }}</div>
                 <sc-if value="{{ qContext }}" hint-placeholder-val="{{ false }}">
@@ -377,7 +406,7 @@
               <div
                 style="display: flex; flex-direction: column; border-top: 1px solid rgba(255,255,255,.14); margin: 0 -20px">
                 <sc-for list="{{ options }}" as="opt" hint-placeholder-count="4">
-                  <button data-h="row" sc-camel-on-click="{{ opt.pick }}"
+                  <button class="mobile-question-option" data-h="row" sc-camel-on-click="{{ opt.pick }}"
                     style="display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: start; text-align: left; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,.14); padding: 18px 20px; min-height: 64px; color: rgba(255,255,255,.74); font-family: 'DM Sans', sans-serif; font-size: 15.5px; line-height: 1.5; cursor: pointer; transition: background .15s, color .15s">
                     <span data-mark="1"
                       style="display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,.28); border-radius: 50%; font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 500; color: #FFFFFF; transition: all .15s">{{
@@ -635,6 +664,8 @@ class Component extends DCLogic {
       isSetup: s.screen === 'setup',
       isQuestion: s.screen === 'question',
       isResult: s.screen === 'result',
+
+      mainClass: s.screen === 'question' ? 'mobile-question-main' : '',
 
       showBar: s.screen !== 'result',
       showBack: s.screen === 'setup' || (s.screen === 'question' && index > 0),
