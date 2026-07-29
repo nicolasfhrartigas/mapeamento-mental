@@ -10,5 +10,14 @@ test('mobile reduz a tela inicial em telas baixas para caber sem cortar o CTA', 
   assert.match(source, /class="mobile-intro-stats"/);
   assert.match(source, /@media \(max-height: 740px\)[\s\S]*\.mobile-intro-main[\s\S]*padding: 20px 20px 24px !important/);
   assert.match(source, /@media \(max-height: 740px\)[\s\S]*\.mobile-intro-title[\s\S]*font-size: 34px !important/);
-  assert.match(source, /@media \(max-height: 740px\)[\s\S]*\.mobile-intro-fine[\s\S]*display: none !important/);
+});
+
+test('mobile esconde o disclaimer da intro em qualquer altura de tela, não só nas baixas', async () => {
+  const source = await readFile('src/mobile.dc.html', 'utf8');
+
+  assert.match(source, /\.mobile-intro-fine \{\s*display: none\s*\}/);
+  assert.doesNotMatch(
+    source,
+    /@media \(max-height: 740px\)[\s\S]*\.mobile-intro-fine/,
+  );
 });

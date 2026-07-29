@@ -164,6 +164,13 @@
           }
         }
 
+        /* Disclaimer legal da intro escondido no mobile: libera espaço pro
+           título, texto e números em qualquer altura de tela, não só nas
+           mais baixas. O texto integral segue disponível no PDF do resultado. */
+        .mobile-intro-fine {
+          display: none
+        }
+
         /* Em telefones baixos, a pergunta contextual e as quatro respostas devem
            caber entre o cabeçalho e a barra fixa, sem esconder a alternativa D. */
         @media (max-height: 740px) {
@@ -214,10 +221,6 @@
 
           .mobile-intro-stat-num {
             font-size: 28px !important
-          }
-
-          .mobile-intro-fine {
-            display: none !important
           }
         }
       </style>
