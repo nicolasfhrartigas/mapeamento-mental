@@ -8,6 +8,7 @@ test('mobile reduz a tela inicial em telas baixas para caber sem cortar o CTA', 
   assert.match(source, /mainClass: s\.screen === 'question' \? 'mobile-question-main' : s\.screen === 'intro' \? 'mobile-intro-main'/);
   assert.match(source, /class="mobile-intro-step"/);
   assert.match(source, /class="mobile-intro-stats"/);
-  assert.match(source, /@media \(max-height: 740px\)[\s\S]*\.mobile-intro-main[\s\S]*padding: 16px 20px 20px !important/);
-  assert.match(source, /@media \(max-height: 740px\)[\s\S]*\.mobile-intro-title[\s\S]*font-size: 30px !important/);
+  assert.match(source, /@media \(max-height: 740px\)[\s\S]*\.mobile-intro-main[\s\S]*padding: 20px 20px 24px !important/);
+  assert.match(source, /@media \(max-height: 740px\)[\s\S]*\.mobile-intro-title[\s\S]*font-size: 34px !important/);
+  assert.match(source, /@media \(max-height: 740px\)[\s\S]*\.mobile-intro-fine[\s\S]*display: none !important/);
 });
