@@ -5,9 +5,8 @@
 // pageviews e eventos. Assim o painel não registra "/src/web.dc.html" nem cria
 // self-referrals falsos.
 
-// Cole aqui o Website ID exibido em Umami → Settings → Websites → Edit.
-// O rastreamento fica intencionalmente desativado enquanto houver placeholder.
-const WEBSITE_ID = 'COLE-AQUI-O-WEBSITE-ID';
+// Website ID de nicolasfhrartigas.github.io no Umami Cloud.
+const WEBSITE_ID = 'ed84c13c-92e0-4515-bf9c-06a475afc769';
 const SCRIPT_URL = 'https://cloud.umami.is/script.js';
 const LOCAL_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', ''];
 
