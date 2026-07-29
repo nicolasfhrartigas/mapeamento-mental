@@ -491,7 +491,7 @@ export function createEngine() {
   function result() {
     const prof = selectProfile();
     resolvedProfile = prof;
-    const waText = `Oi Nicolas! Concluí o mapeamento educativo de autoconhecimento com 11 perguntas. Minha leitura de hoje foi "${prof.name}". Quero entender melhor o resultado e como funciona o acompanhamento. | ${profile.name}`;
+    const waText = `Oi Nicolas, me chamo ${capitalizeFirstLetter(profile.name) || '[inserir nome]'}! \nConcluí o mapeamento de autoconhecimento. Quero entender melhor o resultado e como funciona o acompanhamento.`;
     const dims = FACTOR_ORDER.map(key => {
       const summary = factorSummary(key);
       return {
