@@ -147,21 +147,21 @@ import { generatePdfReport } from './pdf-report.js';
       {
         text: 'Você erra uma execução simples no treino, algo que normalmente acerta sem pensar. O que acontece na sua cabeça logo depois?', opts: [
           { text: 'O resto do treino fica contaminado. Você continua, mas a cabeça volta naquele erro.', d: { perf: 0, reg: 0 } },
-          { text: 'Irrita na hora, você xinga baixinho, e nas séries seguintes já passou.', d: { perf: 1, reg: 1 } },
+          { text: 'Irrita na hora, você xinga baixinho, mas nas séries seguintes já passou.', d: { perf: 1, reg: 1 } },
           { text: 'Você registra o que causou, corrige na repetição seguinte e segue.', d: { perf: 2, reg: 2 } },
           { text: 'Nem entra no radar. Errar num treino não é assunto.', d: { perf: 1 } },
         ]
       },
       {
         text: 'Se alguém te perguntasse, sem julgamento nenhum, qual é o motivo real de você continuar treinando, o que você responderia?', context: 'Não existe resposta certa aqui. A honestidade é o que torna o resultado preciso.', opts: [
-          { text: 'Sem o esporte, você não saberia bem o que sobra de você.', d: { ident: 0, motiv: 0 } },
-          { text: 'A superação em si. Você treinaria mesmo que ninguém soubesse.', d: { motiv: 2 } },
-          { text: 'O reconhecimento pesa. Ser visto como atleta faz parte do que te move.', d: { motiv: 1 }, flag: 'validação externa' },
+          { text: 'Sem o esporte, eu não saberia bem o que sobra de você.', d: { ident: 0, motiv: 0 } },
+          { text: 'A superação em si. Eu treinaria mesmo que ninguém soubesse.', d: { motiv: 2 } },
+          { text: 'O reconhecimento pesa. Ser visto como atleta faz parte do que me move.', d: { motiv: 1 }, flag: 'validação externa' },
           { text: 'Hoje é mais hábito do que escolha. Parar seria pior do que continuar.', d: { motiv: 0 } },
         ]
       },
       {
-        text: 'Momento decisivo: última série, ponto de partida, prova principal, gente olhando. Como seu corpo e sua cabeça reagem?', opts: [
+        text: 'Em momentos decisivos: última série, ponto de partida, prova principal, campeonatos, gente olhando. Como seu corpo e sua cabeça reagem?', opts: [
           { text: 'A tensão vira foco. Você costuma render mais quando o momento pesa.', d: { reg: 2, medo: 1 } },
           { text: 'A cabeça acelera, o corpo trava um pouco, e sai abaixo do que você treinou.', d: { reg: 0 }, flag: 'travamento sob pressão' },
           { text: 'Você tem um jeito próprio de se acalmar, com respiração, uma frase, um ritual. E funciona.', d: { reg: 2 } },
@@ -173,63 +173,63 @@ import { generatePdfReport } from './pdf-report.js';
           { text: 'O que mais pesa é como as pessoas vão te olhar depois.', d: { medo: 0 }, flag: 'avaliação social' },
           { text: 'Bate a sensação de que todo o trabalho até aqui não provou nada.', d: { medo: 0 }, flag: 'autoestima contingente' },
           { text: 'Vai doer, mas você já sabe que aquilo vira informação para a semana seguinte.', d: { medo: 2, reg: 1 } },
-          { text: 'Você não vai até lá. Pensar em perder antes da hora só atrapalha.', d: {}, flag: 'evitação/supressão a entender' },
+          { text: 'Eu nem penso nisso. Ficar imaginando a derrota antes da hora só atrapalha.', d: {}, flag: 'evitação/supressão a entender' },
         ]
       },
       {
-        text: 'Uma lesão te tira do esporte por três meses. Sem exceção, sem antecipar o prazo. Qual seria sua reação mais provável?', opts: [
-          { text: 'Seria o tipo de pausa que mexe com a base. Sem a rotina, você não sabe direito quem é.', d: { ident: 0 } },
-          { text: 'Frustrante, mas você redirecionaria o tempo para o que andou adiando.', d: { ident: 2, reg: 1 } },
-          { text: 'Você transformaria a recuperação em projeto, fisioterapia no limite para voltar antes.', d: {}, flag: 'pressa de retorno' },
-          { text: 'Continuaria por perto: acompanhando treino, mantendo o vínculo com o grupo.', d: { sup: 1 } },
+        text: 'Uma lesão te afasta do esporte por três meses, sem chance de encurtar esse prazo. Qual seria sua reação mais provável?', opts: [
+          { text: 'Mexeria comigo de verdade. Sem a rotina de treino, eu me sentiria meio perdido sobre quem sou.', d: { ident: 0 } },
+          { text: 'Frustrante, mas eu redirecionaria o tempo para o que andou adiando.', d: { ident: 2, reg: 1 } },
+          { text: 'Você transformaria a recuperação em projeto, fisioterapia no limite para voltar o quanto antes.', d: {}, flag: 'pressa de retorno' },
+          { text: 'Continuaria por perto, acompanhando os treinos e mantendo o vínculo com o grupo.', d: { sup: 1 } },
         ]
       },
       {
         text: 'Treino sólido, dentro do planejado, mas longe de perfeito. Como você avalia esse desempenho?', opts: [
           { text: 'Se não chegou perto do ideal, não conta muito.', d: { perf: 0 } },
-          { text: 'Você reconhece que bateu o planejado e fica satisfeito com isso.', d: { perf: 2 } },
+          { text: 'Eu reconheço que bateu o planejado e fico satisfeito com isso.', d: { perf: 2 } },
           { text: 'Fica a dúvida se foi suficiente e se os outros estão fazendo mais.', d: { perf: 0 }, flag: 'comparação e dúvida' },
-          { text: 'Cumpriu o combinado, tá bom. Você não costuma revisar muito além disso.', d: { perf: 1 } },
+          { text: 'Cumpri o combinado, tá bom. Eu não costumo revisar muito além disso.', d: { perf: 1 } },
         ]
       },
       {
         text: 'Sequência ruim: semanas de resultado estagnado, nada saindo como deveria. Como você costuma atravessar essa fase?', opts: [
-          { text: 'Você fecha. Não é assunto para dividir, resolve treinando mais.', d: { sup: 0, reg: 0 } },
-          { text: 'Você fala com quem confia. Não para resolver, mas para não carregar sozinho.', d: { sup: 2 } },
-          { text: 'Você busca a comissão técnica: revisar vídeo, ajustar plano. O lado técnico primeiro.', d: { sup: 2, reg: 1 } },
-          { text: 'Você reduz o contato com o ambiente até a fase passar.', d: { sup: 0 }, flag: 'afastamento' },
+          { text: 'Eu fecho. Não é assunto para dividir, resolvo treinando mais.', d: { sup: 0, reg: 0 } },
+          { text: 'Eu falo com quem confio. Não para resolver, mas para não carregar sozinho.', d: { sup: 2 } },
+          { text: 'Eu busco a comissão técnica: revisar vídeo, ajustar plano. O lado técnico primeiro.', d: { sup: 2, reg: 1 } },
+          { text: 'Eu reduzo o contato com o ambiente até a fase passar.', d: { sup: 0 }, flag: 'afastamento' },
         ]
       },
       {
-        text: 'Pensando nos últimos meses: como o esporte tem convivido com o resto da sua vida, família, amigos, trabalho, estudos?', opts: [
+        text: 'Pensando nos últimos meses: como o esporte tem disputado com o resto da sua vida, família, amigos, trabalho, estudos?', opts: [
           { text: 'Já custou presenças importantes e algumas relações. O treino não se negocia.', d: { ident: 0, reg: 0 } },
-          { text: 'Atropela às vezes, mas você reorganiza depois para compensar quem importa.', d: { ident: 1, reg: 1 } },
+          { text: 'Atropela às vezes, mas eu reorganizo depois para compensar quem importa.', d: { ident: 1, reg: 1 } },
           { text: 'O horário de treino é sagrado, mas o resto tem espaço garantido.', d: { ident: 2, reg: 1 } },
           { text: 'O treino é a primeira coisa que cai quando aparece outra coisa.', d: { ident: 1 } },
         ]
       },
       {
         text: 'Já aconteceu de você não entrar numa competição, num confronto direto ou num teste por causa de como poderia sair dali?', opts: [
-          { text: 'Já deixou de entrar em disputas onde a chance de aparecer mal era grande.', d: { medo: 0 } },
+          { text: 'Já deixei de entrar em disputas onde a chance de aparecer mal era grande.', d: { medo: 0 } },
           { text: 'Já aconteceu de achar um motivo para não ir e depois perceber que o motivo era outro.', d: { medo: 0 }, flag: 'justificativa/evitação percebida' },
-          { text: 'Você prefere perder tentando a ficar com a dúvida. Raramente recua por isso.', d: { medo: 2 } },
-          { text: 'Você recua quando a leitura objetiva mostra que não compensa e consegue distinguir isso do medo.', d: { medo: 1 } },
+          { text: 'Eu prefiro perder tentando do que ficar com a dúvida. Raramente desisto por isso.', d: { medo: 2 } },
+          { text: 'Eu recuo quando a análise objetiva mostra que não compensa e consegue distinguir isso do medo.', d: { medo: 1 } },
         ]
       },
       {
-        text: 'Quando o esporte pesa emocionalmente, cobrança, insegurança, frustração, com quem você realmente fala sobre isso?', opts: [
+        text: 'Quando o esporte pesa emocionalmente, cobrança, insegurança, frustração, com quem você fala sobre isso com sinceridade?', opts: [
           { text: 'Com ninguém. Quem está fora não entenderia mesmo.', d: { sup: 0 } },
           { text: 'Tem o pessoal do treino, mas a conversa fica no técnico. Essa parte não entra.', d: { sup: 1 }, flag: 'apoio principalmente técnico' },
-          { text: 'Tem gente que te sustenta independente de resultado família, parceiro(a), profissional.', d: { sup: 2 } },
-          { text: 'Só com quem vive o mesmo. Quem não treina não tem repertório para entender.', d: { sup: 1 }, flag: 'rede restrita ao esporte' },
+          { text: 'Tem gente que me sustenta independente de resultado: família, parceiro(a), profissional.', d: { sup: 2 } },
+          { text: 'Só com quem vive o mesmo que eu. Quem não treina não tem repertório para entender.', d: { sup: 1 }, flag: 'rede restrita ao esporte' },
         ]
       },
     ].map(question => ({ ...question, fixed: true }));
 
     const CONTEXTUAL_QUESTIONS = {
       fisiculturismo: {
-        sportName: 'Fisiculturismo', hook: 'Na avaliação física/apresentação, você descreveu como transforma uma impressão pontual em decisão de processo.', text: 'Em uma semana de avaliação, uma foto, medida ou apresentação isolada parece diferente do esperado. Como você decide o próximo passo?', opts: [
-          { text: 'Comparo com os registros e o plano do período; escolho um único ponto a acompanhar antes de mudar algo.', d: { reg: 2 } }, { text: 'Mudo a rotina na hora para compensar o que vi ou porque alguém parece melhor.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Paro de olhar ou registrar para não ter de lidar com isso.', d: { reg: 0 }, flag: 'afastamento da informação' }, { text: 'Levo a observação concreta para o critério já combinado com a equipe de saúde/técnica, antes de alterar o plano.', d: { reg: 1, sup: 1 } }]
+        sportName: 'Fisiculturismo', hook: 'Na avaliação física/apresentação, você descreveu como transforma uma impressão pontual em decisão de processo.', text: 'Em uma semana de avaliação, uma foto, medida ou apresentação isolada parece diferente do que você ou seu coach esperavam. Como você decide o próximo passo?', opts: [
+          { text: 'Comparo com os registros e o plano do período; escolho um único ponto a acompanhar antes de mudar algo.', d: { reg: 2 } }, { text: 'Mudo a rotina na hora, para compensar o que vi ou porque alguém parece melhor.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Evito/paro de olhar e registrar para não ter de lidar com isso.', d: { reg: 0 }, flag: 'afastamento da informação' }, { text: 'Levo a observação concreta para o critério já combinado com a equipe de saúde/técnica, antes de alterar o plano.', d: { reg: 1, sup: 1 } }]
       },
       futebol: {
         sportName: 'Futebol', hook: 'No ajuste tático em campo, apareceu a forma como você volta a uma função observável e coordena a próxima ação.', text: 'Quando o plano do time deixa de funcionar porque o adversário mudou a marcação, como você entra na próxima sequência de jogo?', opts: [

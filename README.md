@@ -2,10 +2,6 @@
 
 Landing page do teste "qual é o seu tipo mental como atleta?", de Nicolas Artigas (psicólogo do esporte). Ferramenta **educativa**: 10 perguntas fixas + 1 pergunta contextual da modalidade, resultado na tela e PDF para download.
 
-`index-original.html` — HTML, CSS e JS num arquivo só — é a versão **pré-redesign**, preservada e acessível diretamente por essa URL. Não é um fallback automático; não apague nem sobrescreva. O mapa de arquivo e o `BUGS.md` abaixo se referem a ele.
-
-'index-original.html' é legado nao precisa ser lido, editado, modificado.
-
 `index.html` é o roteador do redesign: detecta o dispositivo no carregamento e injeta `src/web.dc.html` ou `src/mobile.dc.html` num iframe de página inteira. Ao mergear `dev` em `main`, o GitHub Pages publicará esse novo `index.html` e, portanto, o redesign.
 
 ### Como `index.html` decide a versão
@@ -69,26 +65,6 @@ Eventos disponíveis para análise de funil:
 Nenhum nome, resposta, escolha de perfil ou perfil psicológico resultante é
 enviado. Os eventos registram somente etapas da interface, campos interagidos,
 número da pergunta e a variante web/mobile.
-
-## Mapa do arquivo (`index-original.html`, versão legada)
-
-Os números de linha envelhecem — procure pelo símbolo. A ordem é estável.
-
-| Região | Onde | O que é |
-|---|---|---|
-| `<style>` | ~16–784 | Tokens em `:root`, depois telas na ordem em que aparecem |
-| Bloco `@media (hover: hover)` | ~715 | **Todos** os `:hover` do arquivo, sem exceção — ver regra abaixo |
-| 4 telas | ~798–900 | `#s-intro`, `#s-setup`, `#s-question`, `#s-result` |
-| `DIMS` | ~906 | Os 6 fatores e seus nomes de exibição |
-| `PROFILES` | ~919 | Os 8 perfis do catálogo (7 pares + `equilibrado`) |
-| `FIXED_QUESTIONS` | ~994 | As 10 perguntas fixas |
-| `CONTEXTUAL_QUESTIONS` | ~1057 | A pergunta 11, uma por modalidade (11 chaves) |
-| `DIM_INSIGHTS` | ~1082 | Texto de cada fator, nas variantes `known` / `unknown` |
-| `CONTEXTUAL_PDF_TEXT`, `CONTEXTUAL_FLAG_INVITATIONS`, `FIXED_FLAG_PROMPTS` | ~1091–1113 | Textos derivados das flags das respostas |
-| Estado global | ~1142 | `profile`, `scores`, `evidenceMax`, `fixedEvidenceMax`, `answers`, `current`, `ACTIVE` |
-| Jornada | `startQuestions` → `renderQuestion` → `selectAnswer` / `goBack` | ~1234–1290 |
-| Algoritmo | `summarizeFactor`, `factorSummary`, `selectProfile` | ~1296–1333 |
-| Saídas | `showResult` (tela) e `downloadPDF` (jsPDF, desenho manual) | ~1335 e ~1404 |
 
 ## Como o resultado é calculado
 
