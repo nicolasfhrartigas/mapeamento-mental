@@ -39,6 +39,11 @@
           text-decoration: none
         }
 
+        .screen-title:focus-visible {
+          outline: 2px solid #DC5F28;
+          outline-offset: 6px
+        }
+
         @keyframes rise {
           from {
             opacity: 0;
@@ -138,13 +143,17 @@
 
         <aside
           style="flex: 1 1 300px; background: #2F381A; padding: clamp(26px, 4vw, 48px) clamp(22px, 3.6vw, 44px); display: flex; flex-direction: column; gap: clamp(28px, 5vw, 44px); border-right: 1px solid rgba(255,255,255,.07)">
-          <div>
-            <div
-              style="font-family: 'Oswald', sans-serif; font-size: clamp(15px, 2.4vw, 18px); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; line-height: 1.2">
-              Nicolas Artigas</div>
-            <div
-              style="font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-top: 6px">
-              Psicologia do esporte</div>
+          <div style="display: flex; align-items: center; gap: 14px">
+            <img src="assets/logo-na.svg" alt="Logo NA"
+              style="height: clamp(55px, 7.2vw, 72px); width: auto; flex-shrink: 0">
+            <div>
+              <div
+                style="font-family: 'Oswald', sans-serif; font-size: clamp(15px, 2.4vw, 18px); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; line-height: 1.2">
+                Nicolas Artigas</div>
+              <div
+                style="font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-top: 6px">
+                Psicologia do esporte</div>
+            </div>
           </div>
 
           <div style="display: flex; align-items: flex-end; gap: 14px">
@@ -178,23 +187,43 @@
         <main
           style="flex: 2.4 1 480px; min-width: 0; padding: clamp(20px, 3vw, 32px) clamp(22px, 4.6vw, 72px); display: flex; flex-direction: column">
 
+          <sc-if value="{{ isLoading }}" hint-placeholder-val="false">
+            <div role="status" aria-live="polite"
+              style="display: flex; flex-direction: column; gap: 12px; max-width: 560px; padding: clamp(32px, 8vw, 88px) 0">
+              <h1 class="screen-title"
+                style="font-family: 'Oswald', sans-serif; font-size: clamp(32px, 6vw, 52px); font-weight: 600; line-height: 1.02; text-transform: uppercase">Preparando
+                o mapeamento</h1>
+              <p style="font-size: 16px; color: rgba(255,255,255,.65)">Carregando as perguntas. Só um instante.</p>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ hasLoadError }}" hint-placeholder-val="false">
+            <div role="alert"
+              style="display: flex; flex-direction: column; gap: 12px; max-width: 560px; padding: clamp(32px, 8vw, 88px)">
+              <h1 class="screen-title"
+                style="font-family: 'Oswald', sans-serif; font-size: clamp(32px, 6vw, 52px); font-weight: 600; line-height: 1.02; text-transform: uppercase">Não foi possível
+                carregar o mapeamento</h1>
+              <p style="font-size: 16px; color: rgba(255,255,255,.65)">Atualize a página para tentar novamente.</p>
+            </div>
+          </sc-if>
+
           <sc-if value="{{ isIntro }}" hint-placeholder-val="{{ true }}">
             <div
               style="animation: rise .4s ease; display: flex; flex-direction: column; gap: clamp(12px, 1.2vw, 16px); max-width: 760px">
               <div
                 style="font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">
                 A performance começa antes do treino</div>
-              <h1
+              <h1 class="screen-title" ref="{{ refIntroHeading }}" tabIndex="-1"
                 style="font-family: 'Oswald', sans-serif; font-size: clamp(38px, 8.4vw, 76px); font-weight: 600; line-height: .96; text-transform: uppercase; letter-spacing: -.005em; text-wrap: balance">
                 Qual é o seu <span style="color: #DC5F28">tipo mental</span> como atleta?</h1>
               <div style="height: 1px; background: rgba(255,255,255,.14)"></div>
               <p
                 style="font-size: clamp(15px, 3.6vw, 17.5px); color: rgba(255,255,255,.74); line-height: 1.65; text-wrap: pretty; max-width: 62ch">
-                Todo atleta conhece o próprio corpo em detalhe: carga, pace, medidas, tempo de prova. Quase nenhum tem
-                formas de observar o que acontece nas situações que o esporte traz.</p>
+                Todo atleta conhece o próprio corpo em detalhe: carga, pace, medidas, tempo de prova. Porém são poucos
+                os atletas que têm formas de observar o que acontece na mente, que decide boa parte do resultado.</p>
               <p
                 style="font-size: clamp(14.5px, 3.4vw, 16px); color: rgba(255,255,255,.62); line-height: 1.7; text-wrap: pretty; max-width: 62ch">
-                Este mapeamento organiza tendências que apareceram nas suas respostas de hoje. São dez perguntas fixas e
+                Este mapeamento organiza tendências que aparecerão nas suas respostas de hoje. São dez perguntas fixas e
                 uma pergunta contextual para sua modalidade. <strong style="color: #FFFFFF; font-weight: 600">Não
                   existem respostas certas:</strong> responda pela situação que mais se parece com o seu momento.</p>
 
@@ -236,7 +265,7 @@
             <div
               style="animation: rise .4s ease; display: flex; flex-direction: column; gap: clamp(24px, 3vw, 34px); max-width: 760px">
               <div>
-                <h2
+                <h2 class="screen-title" ref="{{ refSetupHeading }}" tabIndex="-1"
                   style="font-family: 'Oswald', sans-serif; font-size: clamp(28px, 6.4vw, 48px); font-weight: 600; line-height: 1.02; text-transform: uppercase; text-wrap: balance">
                   Antes de começar,<br>me conta sobre você</h2>
                 <p
@@ -354,9 +383,9 @@
                 <div
                   style="font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">
                   {{ qCounter }}</div>
-                <div
+                <h2 class="screen-title" ref="{{ refQuestionHeading }}" tabIndex="-1"
                   style="font-size: clamp(21px, 5vw, 34px); font-weight: 500; line-height: 1.25; letter-spacing: -.005em; text-wrap: pretty">
-                  {{ qText }}</div>
+                  {{ qText }}</h2>
                 <sc-if value="{{ qContext }}" hint-placeholder-val="{{ false }}">
                   <div
                     style="font-size: clamp(13px, 3.2vw, 14.5px); color: rgba(255,255,255,.5); font-style: italic; line-height: 1.6; border-left: 1px solid rgba(220,95,40,.6); padding-left: 14px">
@@ -389,7 +418,7 @@
                 <div
                   style="font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: #A8B47F">
                   {{ profType }}</div>
-                <h2
+                <h2 class="screen-title" ref="{{ refResultHeading }}" tabIndex="-1"
                   style="font-family: 'Oswald', sans-serif; font-size: clamp(34px, 8vw, 68px); font-weight: 600; line-height: .98; text-transform: uppercase; text-wrap: balance">
                   {{ profName }}</h2>
                 <div style="width: 64px; height: 3px; background: #DC5F28"></div>
@@ -469,24 +498,39 @@
                 </sc-if>
               </div>
 
+              <sc-if value="{{ factorsReady }}" hint-placeholder-val="{{ false }}">
+                <div
+                  style="animation: rise .3s ease; display: flex; flex-direction: column; gap: 18px; border: 1px solid rgba(255,255,255,.14); padding: clamp(22px, 3.6vw, 36px)">
+                  <div>
+                    <div
+                      style="font-size: 10.5px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 10px">
+                      Salve e compartilhe seu resultado</div>
+                    <div
+                      style="font-family: 'Oswald', sans-serif; font-size: clamp(20px, 4.6vw, 28px); font-weight: 600; line-height: 1.1; text-transform: uppercase">
+                      Baixe o PDF do seu tipo mental</div>
+                    <div
+                      style="font-size: clamp(13px, 3.3vw, 14.5px); color: rgba(255,255,255,.55); line-height: 1.6; margin-top: 10px; max-width: 60ch">
+                      Salve o seu resultado e me envie pelo WhatsApp.<br>Assim, já conheço seu perfil antes da nossa
+                      conversa.</div>
+                  </div>
+                  <div style="display: grid; grid-template-columns: 1fr; gap: 8px">
+                    <button data-h="ghost" onClick="{{ downloadPDF }}" disabled="{{ factorsLoading }}"
+                      style="{{ pdfBtnStyle }}">{{
+                      pdfLabel }}</button>
+                  </div>
+                </div>
+              </sc-if>
               <div
-                style="display: flex; flex-direction: column; gap: 18px; border: 1px solid rgba(255,255,255,.14); padding: clamp(22px, 3.6vw, 36px)">
-                <div>
-                  <div
-                    style="font-size: 10.5px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: 10px">
-                    Salve e compartilhe seu resultado</div>
-                  <div
-                    style="font-family: 'Oswald', sans-serif; font-size: clamp(20px, 4.6vw, 28px); font-weight: 600; line-height: 1.1; text-transform: uppercase">
-                    Baixe o PDF do seu tipo mental</div>
-                  <div
-                    style="font-size: clamp(13px, 3.3vw, 14.5px); color: rgba(255,255,255,.55); line-height: 1.6; margin-top: 10px; max-width: 60ch">
-                    Salve o seu resultado para consultar quando quiser.</div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr; gap: 8px">
-                  <button data-h="ghost" onClick="{{ downloadPDF }}" disabled="{{ factorsLoading }}"
-                    style="{{ pdfBtnStyle }}">{{
-                    pdfLabel }}</button>
-                </div>
+                style="background: #2F381A; padding: clamp(24px, 4vw, 40px); display: flex; flex-direction: column; gap: 18px">
+                <div
+                  style="font-family: 'Oswald', sans-serif; font-size: clamp(22px, 5vw, 34px); font-weight: 600; line-height: 1.05; text-transform: uppercase">
+                  Esse resultado é o começo da conversa</div>
+                <div
+                  style="font-size: clamp(13.5px, 3.4vw, 15.5px); color: rgba(255,255,255,.72); line-height: 1.65; text-wrap: pretty; max-width: 62ch">
+                  Uma conversa de 15 minutos pode deixar muito mais claro o que fazer com esse perfil. Sem compromisso.</div>
+                <a data-h="cta" href="{{ waLink }}" target="_blank"
+                  style="align-self: flex-start; background: #DC5F28; color: #FFFFFF; font-size: clamp(12.5px, 3.2vw, 13.5px); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 18px 30px; min-height: 54px; display: flex; align-items: center; transition: background .15s; width: 100%; max-width: 380px">Falar
+                  com Nicolas pelo WhatsApp →</a>
               </div>
               <div
                 style="display: flex; flex-direction: column; gap: 16px; border-top: 1px solid rgba(255,255,255,.14); padding-top: 22px">
@@ -518,7 +562,7 @@ class Component extends DCLogic {
   state = {
     screen: 'intro', name: '', sport: '', sportLabel: '', level: '', goal: '',
     sportOpen: false, setupError: false, missing: [], tick: 0, result: null, animate: false, pdfBusy: false,
-    factorsLoading: false, resultOpen: false,
+    factorsLoading: false, resultOpen: false, loadState: 'loading',
   };
 
   toggleResult() {
@@ -526,6 +570,7 @@ class Component extends DCLogic {
   }
 
   fieldRefs = { name: React.createRef(), input: React.createRef(), sport: React.createRef(), level: React.createRef(), goal: React.createRef() };
+  headingRefs = { intro: React.createRef(), setup: React.createRef(), question: React.createRef(), result: React.createRef() };
 
   scrollToRef(key) {
     const el = this.fieldRefs[key] && this.fieldRefs[key].current;
@@ -537,6 +582,9 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.unmounted = false;
+    if (this.props.startScreen === 'setup') this.setState({ screen: 'setup' });
+    this.lastFocusedScreen = this.state.screen;
+    this.lastFocusedTick = this.state.tick;
     Promise.all([import('./quiz-flow.js'), import('./quiz-engine.js?v=2')]).then(([flow, mod]) => {
       if (this.unmounted) return;
       this.engine = mod.createEngine();
@@ -544,18 +592,33 @@ class Component extends DCLogic {
       this.flow = flow.createQuizFlow({
         engine: this.engine, getState: () => this.state, setState: patch => this.setState(patch),
         top: () => this.top(), scrollToRef: key => this.scrollToRef(key),
+        scrollOnQuestionChange: true,
         onAnswer: done => {
           if (!done) return;
           this.resultTimer = setTimeout(() => this.setState({ animate: true, factorsLoading: false }), 3000 + Math.random() * 3000);
         },
       });
       this.flow.attachOutsideClick(this.fieldRefs.sport);
-      this.forceUpdate();
+      this.setState({ loadState: 'ready' });
+    }).catch(() => {
+      if (!this.unmounted) this.setState({ loadState: 'error' });
     });
-    if (this.props.startScreen === 'setup') this.setState({ screen: 'setup' });
   }
 
-  componentWillUnmount() { this.unmounted = true; if (this.flow) this.flow.detachOutsideClick(); clearTimeout(this.resultTimer); }
+  componentDidUpdate() {
+    const screenChanged = this.state.screen !== this.lastFocusedScreen;
+    const questionChanged = this.state.screen === 'question' && this.state.tick !== this.lastFocusedTick;
+    this.lastFocusedScreen = this.state.screen;
+    this.lastFocusedTick = this.state.tick;
+    if (!screenChanged && !questionChanged) return;
+    const target = this.headingRefs[this.state.screen] && this.headingRefs[this.state.screen].current;
+    if (!target) return;
+    this.focusFrame = requestAnimationFrame(() => {
+      if (!this.unmounted) target.focus({ preventScroll: true });
+    });
+  }
+
+  componentWillUnmount() { this.unmounted = true; if (this.flow) this.flow.detachOutsideClick(); clearTimeout(this.resultTimer); cancelAnimationFrame(this.focusFrame); }
 
   top() { try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {} }
 
@@ -598,12 +661,19 @@ class Component extends DCLogic {
       railHint: rail.hint,
       progress: s.screen === 'result' ? '100%' : s.screen === 'question' ? Math.round(index / total * 100) + '%' : '0%',
 
-      isIntro: s.screen === 'intro',
-      isSetup: s.screen === 'setup',
-      isQuestion: s.screen === 'question',
-      isResult: s.screen === 'result',
+      isLoading: s.loadState === 'loading',
+      hasLoadError: s.loadState === 'error',
+      isIntro: s.loadState === 'ready' && s.screen === 'intro',
+      isSetup: s.loadState === 'ready' && s.screen === 'setup',
+      isQuestion: s.loadState === 'ready' && s.screen === 'question',
+      isResult: s.loadState === 'ready' && s.screen === 'result',
       goSetup: () => { if (this.flow) this.flow.trackSetupOpen(); this.setState({ screen: 'setup' }); this.top(); },
       goIntro: () => { this.setState({ screen: 'intro' }); this.top(); },
+
+      refIntroHeading: this.headingRefs.intro,
+      refSetupHeading: this.headingRefs.setup,
+      refQuestionHeading: this.headingRefs.question,
+      refResultHeading: this.headingRefs.result,
 
       refName: this.fieldRefs.name,
       refInput: this.fieldRefs.input,
@@ -652,6 +722,7 @@ class Component extends DCLogic {
       profName: r ? r.prof.name : '',
       profSubtitle: r ? r.prof.subtitle : '',
       profEssence: r ? '"' + r.prof.essence + '"' : '',
+      waLink: r ? r.waLink : '#',
       factorsLoading: s.factorsLoading,
       factorsReady: s.screen === 'result' && !s.factorsLoading,
       resultOpen: s.resultOpen,
