@@ -64,81 +64,81 @@ import { generatePdfReport } from './pdf-report.js';
       'O Perfeccionista em Chamas': {
         forces: [
           { title: 'Comprometimento real com o processo', text: 'Você raramente relaxa o padrão. Isso produz um nível de dedicação que separa atletas medianos de atletas consistentes.' },
-          { title: 'Capacidade de análise apurada', text: 'Você enxerga erros e pontos de melhora com precisão. Quando bem direcionada, essa habilidade é um recurso real de evolução técnica.' },
+          { title: 'Capacidade de análise apurada', text: 'Você enxerga erros e pontos que precisa melhorar com precisão. Quando bem direcionada, essa habilidade é um recurso real de evolução técnica.' },
         ],
         vulns: [
-          { title: 'Difícil desligar depois de errar', text: 'O ciclo de autocrítica consome energia que deveria ir para a recuperação e afeta o desempenho nos treinos seguintes.' },
-          { title: 'Tendência a evitar exposição de risco', text: 'O medo de falhar publicamente pode fazer você adiar competições, categorias ou desafios que seriam decisivos para o crescimento.' },
+          { title: 'Difícil desligar depois de um erro', text: 'A sua autocrítica ocupa muito espaço na sua cabeça, ao invés de gastar energia na recuperação, o que afeta seu desempenho em treinos seguintes.' },
+          { title: 'Tendência a evitar exposição de risco', text: 'O medo de falhar em público pode fazer você adiar competições, categorias ou desafios que seriam decisivos para o crescimento.' },
         ],
       },
       'O Navegador sem Bússola': {
         forces: [
-          { title: 'Honestidade consigo mesmo', text: 'Questionar o porquê do que faz é uma forma de integridade. Quando direcionada, essa disposição produz comprometimento genuíno, não apenas execução automática.' },
+          { title: 'Honestidade consigo mesmo', text: 'Questionar o porquê do que faz é uma forma de integridade. Quando direcionada, essa disposição resulta em comprometimento genuíno, não apenas fazer por fazer.' },
           { title: 'Consciência do custo-benefício', text: 'Você não se entrega cegamente. Isso pode ser um recurso real quando usado para tomar decisões mais alinhadas, não para evitar o desconforto necessário.' },
         ],
         vulns: [
-          { title: 'Motivação sem ancoragem interna', text: 'Sem uma razão clara vinda de dentro, o engajamento passa a depender de resultados, clima e validação externa, todos instáveis e fora do seu controle.' },
-          { title: 'Processamento solitário das dificuldades', text: 'Lidar com dúvidas e fases difíceis sem apoio externo amplifica o peso de cada obstáculo e reduz a perspectiva necessária para atravessá-los.' },
+          { title: 'Motivação sem ancoragem interna', text: 'Sem um porquê claro do que faz, o engajamento passa a depender de resultados, clima e validação externa, todos incertos e fora do seu controle.' },
+          { title: 'Processamento solitário das dificuldades', text: 'Lidar com dúvidas e fases difíceis sem apoio de outras pessoas aumenta o peso de cada obstáculo e reduz a perspectiva necessária para atravessá-los.' },
         ],
       },
       'O Atleta Pressão Constante': {
         forces: [
-          { title: 'Alta capacidade de tolerar pressão', text: 'Você consegue funcionar em condições que quebrariam outros atletas. Essa resistência é real. O problema é quando ela substitui o processamento em vez de complementá-lo.' },
-          { title: 'Independência funcional', text: 'Você não precisa de validação constante para continuar. Esse traço, combinado com suporte seletivo, produz uma autonomia atlética genuína.' },
+          { title: 'Alta capacidade de tolerar pressão', text: 'Sua cabeça e seu corpo funcionam em situações que fariam muitos atletas quebrar. Essa resistência é uma força real. O desafio é não deixar que ela tome o lugar de processar o que você sente.' },
+          { title: 'Independência funcional', text: 'Você não precisa de validação constante para continuar. Quando você combina essa independência com o apoio certo, nas horas certas, o resultado é uma autonomia atlética de verdade.' },
         ],
         vulns: [
-          { title: 'Emoções vazando para o desempenho', text: 'Sem ferramentas deliberadas de controle emocional, estados intensos tendem a afetar o foco, a tomada de decisão e a execução técnica nos momentos que mais importam.' },
-          { title: 'Apoio subutilizado', text: 'A tendência de processar tudo internamente impede o acesso a perspectivas externas que reduziriam o peso de situações que parecem maiores do que são.' },
+          { title: 'Emoções vazando para o desempenho', text: 'Sem saber como ter um controle emocional, estados intensos tendem a afetar seu foco, a tomada de decisão e a execução técnica nos momentos que mais importam.' },
+          { title: 'Apoio subutilizado', text: 'Tentar resolver tudo sozinho te afasta de visões de fora que poderiam te ajudar a ver os problemas em tamanho real, em vez de aumentados.' },
         ],
       },
       'O Atleta em Travessia': {
         forces: [
-          { title: 'Abertura genuína para redefinição', text: 'A fluidez que pode parecer instabilidade é também abertura para construir uma relação com o esporte mais autêntica e sustentável do que antes.' },
-          { title: 'Identidade não depende só do esporte', text: 'Você tem vida fora da prática. Isso é um fator protetivo real, especialmente em lesões, pausas ou transições de fase competitiva.' },
+          { title: 'Abertura genuína para redefinição', text: 'O que parece inconstância é, na verdade, uma chance de reconstruir sua relação com o esporte de um jeito mais verdadeiro e duradouro.' },
+          { title: 'Identidade não depende só do esporte', text: 'Você tem vida fora da prática do esporte. Isso é um fator protetivo real, especialmente em lesões, pausas ou transições de fase competitiva.' },
         ],
         vulns: [
-          { title: 'Propósito esportivo pouco claro agora', text: 'Sem uma razão interna clara, os dias difíceis não têm ancoragem, e a tentação de ceder é maior exatamente quando a persistência seria mais valiosa.' },
-          { title: 'Motivação oscilando com os resultados', text: 'Quando a identificação com o esporte é baixa, o engajamento sobe com bons resultados e cai com maus, criando uma instabilidade que prejudica a consistência do processo.' },
+          { title: 'Propósito esportivo pouco claro agora', text: 'Quando você não tem um propósito claro vindo de dentro, os dias ruins ficam sem chão firme para pisar. E é justo nesses momentos que a vontade de desistir aparece com mais força, bem quando persistir valeria mais a pena.' },
+          { title: 'Motivação oscilando com os resultados', text: 'Quando a identificação com o esporte é baixa, o engajamento sobe com bons resultados e cai com resultados ruins, criando uma instabilidade que prejudica a consistência do processo.' },
         ],
       },
       'O Motor Sem Freio': {
         forces: [
-          { title: 'Intensidade competitiva real', text: 'Sua capacidade de mobilizar energia e foco em momentos decisivos é genuína. Quando regulada, essa intensidade é um diferencial concreto de performance.' },
-          { title: 'Comprometimento com o processo', text: 'Você não foge do esforço. Mesmo nos dias difíceis, há uma parte que insiste em aparecer e entregar. Isso é raro.' },
+          { title: 'Intensidade competitiva real', text: 'Sua capacidade de juntar energia e foco nos momentos decisivos é real. Quando você aprende a controlar essa intensidade, ela vira uma vantagem excelente na sua performance.' },
+          { title: 'Comprometimento com o processo', text: 'Você não foge do esforço. Mesmo nos dias ruins, tem uma parte de você que insiste em aparecer e entregar. Isso é raro de ver.' },
         ],
         vulns: [
-          { title: 'Ciclo de autoataque e desestabilização', text: 'A combinação de autocobrança intensa com dificuldade de regular emoções cria um ciclo que se retroalimenta e drena energia que deveria ir para a performance.' },
-          { title: 'Risco de esgotamento silencioso', text: 'O padrão de alta entrega com alto custo interno tende a ser invisível até atingir um ponto de ruptura, que muitas vezes coincide com competições ou momentos de maior pressão.' },
+          { title: 'Ciclo de autoataque e desestabilização', text: 'Quando você se cobra demais e ainda tem dificuldade de controlar as emoções, cria-se um ciclo que se alimenta sozinho e consome a energia que deveria ir para sua performance.' },
+          { title: 'Risco de esgotamento silencioso', text: 'Esse padrão de entregar muito com um custo interno alto costuma passar despercebido até chegar num ponto de ruptura, que muitas vezes acontece justo nas competições ou nos momentos de mais pressão.' },
         ],
       },
       'A Mente Calibrada': {
         forces: [
-          { title: 'Base mental equilibrada', text: 'Você tem funcionamento funcional nas principais dimensões da mente esportiva. Essa base é o que permite consistência, não apenas picos isolados.' },
-          { title: 'Aprende com as fases difíceis', text: 'Sua relação com erros e fracassos está calibrada de forma que permite extrair aprendizado sem se paralisar. É um diferencial real no longo prazo.' },
+          { title: 'Base mental equilibrada', text: 'Sua mente funciona bem nas principais áreas que sustentam um atleta. É essa base que garante consistência, e não só picos isolados de bom desempenho.' },
+          { title: 'Aprende com as fases difíceis', text: 'Você lida com erros e derrotas de um jeito que te permite aprender sem travar. No longo prazo, isso faz toda diferença.' },
         ],
         vulns: [
-          { title: 'Risco de acomodação', text: 'Quando o sistema funciona, a tendência é não investir no desenvolvimento. As dimensões sutis que fazem diferença no alto nível raramente aparecem sozinhas.' },
-          { title: 'Refinamento avançado ainda disponível', text: 'Há ganhos reais disponíveis nas habilidades mais sofisticadas: rotinas de alta performance, gestão de pressão em momentos decisivos e identidade atlética em transições.' },
+          { title: 'Risco de acomodação', text: 'Quando tudo está funcionando bem, é fácil parar de investir no seu próprio desenvolvimento. Mas os detalhes que fazem diferença no alto nível não aparecem por acaso, eles exigem atenção.' },
+          { title: 'Refinamento avançado ainda disponível', text: 'Ainda dá para ganhar muito nas habilidades mais avançadas: rotinas de alta performance, controle da pressão nos momentos decisivos e uma identidade atlética que se sustenta mesmo nas transições.' },
         ],
       },
       'O Gigante Contido': {
         forces: [
-          { title: 'Comprometimento genuíno com o esporte', text: 'A intensidade do medo de falhar é proporcional ao quanto você se importa. Esse nível de comprometimento, redirecionado, é um recurso real.' },
-          { title: 'Leitura aguçada do ambiente', text: 'Você percebe expectativas, dinâmicas e pressões com precisão. Desacoplada do medo de julgamento, essa habilidade vira inteligência situacional real.' },
+          { title: 'Comprometimento genuíno com o esporte', text: 'O quanto você tem medo de falhar mostra o quanto você se importa. Se você direcionar esse comprometimento do jeito certo, ele vira um recurso valioso de verdade.' },
+          { title: 'Leitura aguçada do ambiente', text: 'Você percebe expectativas, dinâmicas e pressões com muita clareza. Quando essa percepção se solta do medo de ser julgado, ela vira uma inteligência situacional real.' },
         ],
         vulns: [
-          { title: 'Evitação de exposição de alto risco', text: 'O medo de falhar publicamente limita a participação em competições, categorias ou desafios que seriam decisivos para o crescimento.' },
-          { title: 'Identidade ameaçada pelo resultado', text: 'Quando quem você é está muito ligado ao esporte, cada resultado negativo toca além do desempenho: toca em quem você é. Isso aumenta o custo emocional de cada exposição.' },
+          { title: 'Evitação de exposição de alto risco', text: 'O medo de falhar publicamente pode te afastar de competições, categorias ou desafios que fariam você crescer de verdade.' },
+          { title: 'Identidade ameaçada pelo resultado', text: 'Quando sua identidade está muito ligada ao esporte, um resultado ruim não fica só no desempenho, ele mexe com quem você é. Isso faz cada competição pesar mais emocionalmente e nas suas escolhas.' },
         ],
       },
       'O Atleta de Dois Tempos': {
         forces: [
-          { title: 'Alta sensibilidade ao contexto', text: 'Você captura nuances do ambiente competitivo com precisão. Regulada, essa sensibilidade é um recurso de leitura e adaptação que atletas menos sensíveis não têm.' },
-          { title: 'Consciência dos próprios padrões', text: 'O fato de que você percebe a dificuldade já é um passo importante. Atletas que não se veem nunca trabalham o padrão. Consciência é o ponto de partida.' },
+          { title: 'Alta sensibilidade ao contexto', text: 'Você percebe os detalhes do ambiente competitivo com muita precisão. Quando você aprende a controlar essa sensibilidade, ela vira uma capacidade de leitura e adaptação que muitos atletas não têm.' },
+          { title: 'Consciência dos próprios padrões', text: 'Perceber que existe uma dificuldade já é um passo importante. Quem não se enxerga nunca consegue trabalhar o próprio padrão. E você já enxerga, então já está no caminho certo.' },
         ],
         vulns: [
-          { title: 'Travamento nos momentos decisivos', text: 'Nos momentos de maior importância, o estado interno pode comprometer execução técnica, foco e tomada de decisão, independentemente do nível de preparo físico.' },
-          { title: 'Antecipação do fracasso antes de acontecer', text: 'O medo ativa um processamento antecipatório negativo que aumenta a tensão antes da performance, tornando o ciclo de desestabilização mais intenso e mais precoce.' },
+          { title: 'Travamento nos momentos decisivos', text: 'Nos momentos que mais importam, o que você sente por dentro pode atrapalhar sua execução, seu foco e suas decisões, não importa o quanto seu corpo esteja preparado.' },
+          { title: 'Antecipação do fracasso antes de acontecer', text: 'O medo faz você pensar no pior antes mesmo de começar a agir, e isso aumenta a ansiedade antes da hora. Com isso, o ciclo de desestabilização chega mais forte e mais cedo.' },
         ],
       },
     };
@@ -147,21 +147,21 @@ import { generatePdfReport } from './pdf-report.js';
       {
         text: 'Você erra uma execução simples no treino, algo que normalmente acerta sem pensar. O que acontece na sua cabeça logo depois?', opts: [
           { text: 'O resto do treino fica contaminado. Você continua, mas a cabeça volta naquele erro.', d: { perf: 0, reg: 0 } },
-          { text: 'Irrita na hora, você xinga baixinho, e nas séries seguintes já passou.', d: { perf: 1, reg: 1 } },
+          { text: 'Irrita na hora, você xinga baixinho, mas nas séries seguintes já passou.', d: { perf: 1, reg: 1 } },
           { text: 'Você registra o que causou, corrige na repetição seguinte e segue.', d: { perf: 2, reg: 2 } },
           { text: 'Nem entra no radar. Errar num treino não é assunto.', d: { perf: 1 } },
         ]
       },
       {
         text: 'Se alguém te perguntasse, sem julgamento nenhum, qual é o motivo real de você continuar treinando, o que você responderia?', context: 'Não existe resposta certa aqui. A honestidade é o que torna o resultado preciso.', opts: [
-          { text: 'Sem o esporte, você não saberia bem o que sobra de você.', d: { ident: 0, motiv: 0 } },
-          { text: 'A superação em si. Você treinaria mesmo que ninguém soubesse.', d: { motiv: 2 } },
-          { text: 'O reconhecimento pesa. Ser visto como atleta faz parte do que te move.', d: { motiv: 1 }, flag: 'validação externa' },
+          { text: 'Sem o esporte, eu não saberia bem o que sobra de você.', d: { ident: 0, motiv: 0 } },
+          { text: 'A superação em si. Eu treinaria mesmo que ninguém soubesse.', d: { motiv: 2 } },
+          { text: 'O reconhecimento pesa. Ser visto como atleta faz parte do que me move.', d: { motiv: 1 }, flag: 'validação externa' },
           { text: 'Hoje é mais hábito do que escolha. Parar seria pior do que continuar.', d: { motiv: 0 } },
         ]
       },
       {
-        text: 'Momento decisivo: última série, ponto de partida, prova principal, gente olhando. Como seu corpo e sua cabeça reagem?', opts: [
+        text: 'Em momentos decisivos: última série, ponto de partida, prova principal, campeonatos, gente olhando. Como seu corpo e sua cabeça reagem?', opts: [
           { text: 'A tensão vira foco. Você costuma render mais quando o momento pesa.', d: { reg: 2, medo: 1 } },
           { text: 'A cabeça acelera, o corpo trava um pouco, e sai abaixo do que você treinou.', d: { reg: 0 }, flag: 'travamento sob pressão' },
           { text: 'Você tem um jeito próprio de se acalmar, com respiração, uma frase, um ritual. E funciona.', d: { reg: 2 } },
@@ -173,63 +173,63 @@ import { generatePdfReport } from './pdf-report.js';
           { text: 'O que mais pesa é como as pessoas vão te olhar depois.', d: { medo: 0 }, flag: 'avaliação social' },
           { text: 'Bate a sensação de que todo o trabalho até aqui não provou nada.', d: { medo: 0 }, flag: 'autoestima contingente' },
           { text: 'Vai doer, mas você já sabe que aquilo vira informação para a semana seguinte.', d: { medo: 2, reg: 1 } },
-          { text: 'Você não vai até lá. Pensar em perder antes da hora só atrapalha.', d: {}, flag: 'evitação/supressão a entender' },
+          { text: 'Eu nem penso nisso. Ficar imaginando a derrota antes da hora só atrapalha.', d: {}, flag: 'evitação/supressão a entender' },
         ]
       },
       {
-        text: 'Uma lesão te tira do esporte por três meses. Sem exceção, sem antecipar o prazo. Qual seria sua reação mais provável?', opts: [
-          { text: 'Seria o tipo de pausa que mexe com a base. Sem a rotina, você não sabe direito quem é.', d: { ident: 0 } },
-          { text: 'Frustrante, mas você redirecionaria o tempo para o que andou adiando.', d: { ident: 2, reg: 1 } },
-          { text: 'Você transformaria a recuperação em projeto, fisioterapia no limite para voltar antes.', d: {}, flag: 'pressa de retorno' },
-          { text: 'Continuaria por perto: acompanhando treino, mantendo o vínculo com o grupo.', d: { sup: 1 } },
+        text: 'Uma lesão te afasta do esporte por três meses, sem chance de encurtar esse prazo. Qual seria sua reação mais provável?', opts: [
+          { text: 'Mexeria comigo de verdade. Sem a rotina de treino, eu me sentiria meio perdido sobre quem sou.', d: { ident: 0 } },
+          { text: 'Frustrante, mas eu redirecionaria o tempo para o que andou adiando.', d: { ident: 2, reg: 1 } },
+          { text: 'Você transformaria a recuperação em projeto, fisioterapia no limite para voltar o quanto antes.', d: {}, flag: 'pressa de retorno' },
+          { text: 'Continuaria por perto, acompanhando os treinos e mantendo o vínculo com o grupo.', d: { sup: 1 } },
         ]
       },
       {
         text: 'Treino sólido, dentro do planejado, mas longe de perfeito. Como você avalia esse desempenho?', opts: [
           { text: 'Se não chegou perto do ideal, não conta muito.', d: { perf: 0 } },
-          { text: 'Você reconhece que bateu o planejado e fica satisfeito com isso.', d: { perf: 2 } },
+          { text: 'Eu reconheço que bateu o planejado e fico satisfeito com isso.', d: { perf: 2 } },
           { text: 'Fica a dúvida se foi suficiente e se os outros estão fazendo mais.', d: { perf: 0 }, flag: 'comparação e dúvida' },
-          { text: 'Cumpriu o combinado, tá bom. Você não costuma revisar muito além disso.', d: { perf: 1 } },
+          { text: 'Cumpri o combinado, tá bom. Eu não costumo revisar muito além disso.', d: { perf: 1 } },
         ]
       },
       {
         text: 'Sequência ruim: semanas de resultado estagnado, nada saindo como deveria. Como você costuma atravessar essa fase?', opts: [
-          { text: 'Você fecha. Não é assunto para dividir, resolve treinando mais.', d: { sup: 0, reg: 0 } },
-          { text: 'Você fala com quem confia. Não para resolver, mas para não carregar sozinho.', d: { sup: 2 } },
-          { text: 'Você busca a comissão técnica: revisar vídeo, ajustar plano. O lado técnico primeiro.', d: { sup: 2, reg: 1 } },
-          { text: 'Você reduz o contato com o ambiente até a fase passar.', d: { sup: 0 }, flag: 'afastamento' },
+          { text: 'Eu fecho. Não é assunto para dividir, resolvo treinando mais.', d: { sup: 0, reg: 0 } },
+          { text: 'Eu falo com quem confio. Não para resolver, mas para não carregar sozinho.', d: { sup: 2 } },
+          { text: 'Eu busco a comissão técnica: revisar vídeo, ajustar plano. O lado técnico primeiro.', d: { sup: 2, reg: 1 } },
+          { text: 'Eu reduzo o contato com o ambiente até a fase passar.', d: { sup: 0 }, flag: 'afastamento' },
         ]
       },
       {
-        text: 'Pensando nos últimos meses: como o esporte tem convivido com o resto da sua vida, família, amigos, trabalho, estudos?', opts: [
+        text: 'Pensando nos últimos meses: como o esporte tem disputado com o resto da sua vida, família, amigos, trabalho, estudos?', opts: [
           { text: 'Já custou presenças importantes e algumas relações. O treino não se negocia.', d: { ident: 0, reg: 0 } },
-          { text: 'Atropela às vezes, mas você reorganiza depois para compensar quem importa.', d: { ident: 1, reg: 1 } },
+          { text: 'Atropela às vezes, mas eu reorganizo depois para compensar quem importa.', d: { ident: 1, reg: 1 } },
           { text: 'O horário de treino é sagrado, mas o resto tem espaço garantido.', d: { ident: 2, reg: 1 } },
           { text: 'O treino é a primeira coisa que cai quando aparece outra coisa.', d: { ident: 1 } },
         ]
       },
       {
         text: 'Já aconteceu de você não entrar numa competição, num confronto direto ou num teste por causa de como poderia sair dali?', opts: [
-          { text: 'Já deixou de entrar em disputas onde a chance de aparecer mal era grande.', d: { medo: 0 } },
+          { text: 'Já deixei de entrar em disputas onde a chance de aparecer mal era grande.', d: { medo: 0 } },
           { text: 'Já aconteceu de achar um motivo para não ir e depois perceber que o motivo era outro.', d: { medo: 0 }, flag: 'justificativa/evitação percebida' },
-          { text: 'Você prefere perder tentando a ficar com a dúvida. Raramente recua por isso.', d: { medo: 2 } },
-          { text: 'Você recua quando a leitura objetiva mostra que não compensa e consegue distinguir isso do medo.', d: { medo: 1 } },
+          { text: 'Eu prefiro perder tentando do que ficar com a dúvida. Raramente desisto por isso.', d: { medo: 2 } },
+          { text: 'Eu recuo quando a análise objetiva mostra que não compensa e consegue distinguir isso do medo.', d: { medo: 1 } },
         ]
       },
       {
-        text: 'Quando o esporte pesa emocionalmente, cobrança, insegurança, frustração, com quem você realmente fala sobre isso?', opts: [
+        text: 'Quando o esporte pesa emocionalmente, cobrança, insegurança, frustração, com quem você fala sobre isso com sinceridade?', opts: [
           { text: 'Com ninguém. Quem está fora não entenderia mesmo.', d: { sup: 0 } },
           { text: 'Tem o pessoal do treino, mas a conversa fica no técnico. Essa parte não entra.', d: { sup: 1 }, flag: 'apoio principalmente técnico' },
-          { text: 'Tem gente que te sustenta independente de resultado família, parceiro(a), profissional.', d: { sup: 2 } },
-          { text: 'Só com quem vive o mesmo. Quem não treina não tem repertório para entender.', d: { sup: 1 }, flag: 'rede restrita ao esporte' },
+          { text: 'Tem gente que me sustenta independente de resultado: família, parceiro(a), profissional.', d: { sup: 2 } },
+          { text: 'Só com quem vive o mesmo que eu. Quem não treina não tem repertório para entender.', d: { sup: 1 }, flag: 'rede restrita ao esporte' },
         ]
       },
     ].map(question => ({ ...question, fixed: true }));
 
     const CONTEXTUAL_QUESTIONS = {
       fisiculturismo: {
-        sportName: 'Fisiculturismo', hook: 'Na avaliação física/apresentação, você descreveu como transforma uma impressão pontual em decisão de processo.', text: 'Em uma semana de avaliação, uma foto, medida ou apresentação isolada parece diferente do esperado. Como você decide o próximo passo?', opts: [
-          { text: 'Comparo com os registros e o plano do período; escolho um único ponto a acompanhar antes de mudar algo.', d: { reg: 2 } }, { text: 'Mudo a rotina na hora para compensar o que vi ou porque alguém parece melhor.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Paro de olhar ou registrar para não ter de lidar com isso.', d: { reg: 0 }, flag: 'afastamento da informação' }, { text: 'Levo a observação concreta para o critério já combinado com a equipe de saúde/técnica, antes de alterar o plano.', d: { reg: 1, sup: 1 } }]
+        sportName: 'Fisiculturismo', hook: 'Na avaliação física/apresentação, você descreveu como transforma uma impressão pontual em decisão de processo.', text: 'Em uma semana de avaliação, uma foto, medida ou apresentação isolada parece diferente do que você ou seu coach esperavam. Como você decide o próximo passo?', opts: [
+          { text: 'Comparo com os registros e o plano do período; escolho um único ponto a acompanhar antes de mudar algo.', d: { reg: 2 } }, { text: 'Mudo a rotina na hora, para compensar o que vi ou porque alguém parece melhor.', d: { reg: 0 }, flag: 'resultado/compensação' }, { text: 'Evito/paro de olhar e registrar para não ter de lidar com isso.', d: { reg: 0 }, flag: 'afastamento da informação' }, { text: 'Levo a observação concreta para o critério já combinado com a equipe de saúde/técnica, antes de alterar o plano.', d: { reg: 1, sup: 1 } }]
       },
       futebol: {
         sportName: 'Futebol', hook: 'No ajuste tático em campo, apareceu a forma como você volta a uma função observável e coordena a próxima ação.', text: 'Quando o plano do time deixa de funcionar porque o adversário mudou a marcação, como você entra na próxima sequência de jogo?', opts: [
@@ -274,7 +274,7 @@ import { generatePdfReport } from './pdf-report.js';
     };
 
     const DIM_INSIGHTS = {
-      perf: { known: 'Nas suas respostas, apareceram maneiras de lidar com erro e com a própria régua de desempenho. Pode valer observar o que ajuda a transformar revisão em ajuste, sem transformar um resultado em julgamento pessoal.', unknown: 'As respostas não trazem evidência suficiente para concluir como você lida com erro e padrões. Vale observar isso em treinos e competições.' },
+      perf: { known: 'Nas suas respostas, apareceram maneiras de lidar com erros e com a própria régua de desempenho. Pode valer observar o que ajuda a transformar a revisão em ajuste, sem transformar um resultado em julgamento pessoal.', unknown: 'As respostas não trazem evidência suficiente para concluir como você lida com erros e padrões. Vale observar isso em treinos e competições.' },
       motiv: { known: 'Apareceram pistas sobre o que sustenta sua prática neste momento. Pode valer notar como interesse pessoal, metas, reconhecimento e rotina participam dessa escolha.', unknown: 'As respostas não permitem concluir o que mais sustenta sua prática hoje.' },
       reg: { known: 'Você descreveu recursos ou dificuldades em momentos de demanda. Observe quais sinais e estratégias ajudam você a escolher a próxima ação.', unknown: 'Não há evidência suficiente, neste resultado, para resumir suas estratégias sob pressão.' },
       medo: { known: 'Suas respostas indicaram como a possibilidade de falhar entra em decisões de exposição e preparo. Pode valer diferenciar cuidado estratégico de afastamento por receio.', unknown: 'As respostas não distinguem com clareza como a possibilidade de falhar entra nas suas decisões.' },
@@ -286,7 +286,7 @@ import { generatePdfReport } from './pdf-report.js';
       'resultado/compensação': 'No seu contexto de {modalidade}, o resultado imediato ou a urgência de compensar parece ganhar espaço na decisão. Pode valer experimentar definir, antes da situação, uma referência controlável para a próxima ação e só então revisar o resultado. A ideia não é reduzir sua ambição, e sim separar o que você consegue executar agora do que o placar ainda não mostra.',
       'afastamento da informação': 'No seu contexto de {modalidade}, sua resposta não mostra com clareza se se afastar da informação é uma pausa que ajuda ou se deixa o ajuste para depois. Observe, sem se julgar, o que acontece quando você volta a olhar para um sinal simples da tarefa: isso facilita uma escolha mais clara ou aumenta o peso do momento?',
       process: 'No seu contexto de {modalidade}, você descreveu voltar a uma referência de processo antes de decidir a próxima ação. Isso pode ser uma base útil para observar o que funciona: mantenha o sinal simples, confira o efeito ao longo de mais de uma situação e ajuste com calma quando os dados não confirmarem o plano.',
-      alignment: 'No seu contexto de {modalidade}, você descreveu usar uma observação objetiva, um critério combinado ou uma comunicação curta para retomar a tarefa. Pode valer deixar esse sinal explícito antes de competir: o que cada pessoa observa, quando ele é usado e qual é a próxima ação possível. Isso mantém o foco na tarefa, não em provar algo pelo resultado.',
+      alignment: 'No seu contexto de {modalidade}, você descreveu usar uma observação objetiva, um critério combinado ou uma comunicação curta para retomar a tarefa. Pode valer deixar esse sinal explícito antes de competir: o que cada pessoa observa, quando ele é usado e qual é a próxima ação possível. Isso mantém o foco no quê precisa fazer, não em provar algo pelo resultado.',
     };
 
     const CONTEXTUAL_FLAG_INVITATIONS = {
