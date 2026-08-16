@@ -274,7 +274,7 @@ import { generatePdfReport } from './pdf-report.js';
     };
 
     const DIM_INSIGHTS = {
-      perf: { known: 'Nas suas respostas, apareceram maneiras de lidar com erro e com a própria régua de desempenho. Pode valer observar o que ajuda a transformar revisão em ajuste, sem transformar um resultado em julgamento pessoal.', unknown: 'As respostas não trazem evidência suficiente para concluir como você lida com erro e padrões. Vale observar isso em treinos e competições.' },
+      perf: { known: 'Nas suas respostas, apareceram maneiras de lidar com erros e com a própria régua de desempenho. Pode valer observar o que ajuda a transformar a revisão em ajuste, sem transformar um resultado em julgamento pessoal.', unknown: 'As respostas não trazem evidência suficiente para concluir como você lida com erros e padrões. Vale observar isso em treinos e competições.' },
       motiv: { known: 'Apareceram pistas sobre o que sustenta sua prática neste momento. Pode valer notar como interesse pessoal, metas, reconhecimento e rotina participam dessa escolha.', unknown: 'As respostas não permitem concluir o que mais sustenta sua prática hoje.' },
       reg: { known: 'Você descreveu recursos ou dificuldades em momentos de demanda. Observe quais sinais e estratégias ajudam você a escolher a próxima ação.', unknown: 'Não há evidência suficiente, neste resultado, para resumir suas estratégias sob pressão.' },
       medo: { known: 'Suas respostas indicaram como a possibilidade de falhar entra em decisões de exposição e preparo. Pode valer diferenciar cuidado estratégico de afastamento por receio.', unknown: 'As respostas não distinguem com clareza como a possibilidade de falhar entra nas suas decisões.' },
