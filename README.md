@@ -34,12 +34,12 @@ quando o analytics está ativado, o tracker do Umami Cloud.
 
 ## Estatísticas com Umami
 
-O tracker já está integrado às telas web e mobile, mas fica desativado enquanto
-`WEBSITE_ID` em `src/analytics.js` contiver o placeholder. Para ativar:
+O tracker já está integrado às telas web e mobile e ativo, com o `WEBSITE_ID`
+configurado em `src/analytics.js`. Para trocar de site no Umami Cloud:
 
 1. No Umami Cloud, abra **Settings → Websites**, crie/edite o site e copie o
    **Website ID** (UUID).
-2. Substitua `COLE-AQUI-O-WEBSITE-ID` no início de `src/analytics.js`.
+2. Substitua o valor de `WEBSITE_ID` no início de `src/analytics.js`.
 3. Publique a página e confirme no DevTools que `cloud.umami.is/script.js` e a
    requisição de coleta carregam sem erro. Em `localhost`, o tracker permanece
    desativado de propósito.
