@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mapeamento-mental-results",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-12",
+  "vars": {
+    "PUBLIC_ORIGIN": "https://nicolasfhrartigas.github.io"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mapeamento-mental-results",
+      "database_id": "d7b55b5e-f00b-4b32-a6cb-593ca96198bb",
+      "migrations_dir": "worker/migrations"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "SUBMISSION_RATE_LIMITER",
+      "namespace_id": "1209202601",
+      "simple": { "limit": 5, "period": 60 }
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "logs": { "enabled": true, "head_sampling_rate": 1 },
+    "traces": { "enabled": true, "head_sampling_rate": 0.1 }
+  }
+}

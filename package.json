@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "worker:dev": "wrangler dev",
+    "worker:deploy": "wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply mapeamento-mental-results --local",
+    "db:migrate:remote": "wrangler d1 migrations apply mapeamento-mental-results --remote"
+  },
+  "devDependencies": {
+    "wrangler": "4.39.0"
+  }
+}

@@ -3,3 +3,4 @@ Thumbs.db
 *.tmp
 artifacts/
 node_modules/
+.wrangler/

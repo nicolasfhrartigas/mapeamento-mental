@@ -464,6 +464,9 @@
                 </div>
               </div>
 
+              <p style="font-size: 11px; color: rgba(255,255,255,.42); line-height: 1.6; margin: 0">
+                Ao continuar, seu nome, suas respostas e seu resultado serão armazenados para permitir a recuperação deste mapeamento.</p>
+
             </div>
           </sc-if>
 
@@ -590,6 +593,21 @@
                       o seu resultado e me envie pelo WhatsApp.<br>Assim, já conheço seu perfil antes da nossa
                       conversa.</div>
                   </div>
+                  <sc-if value="{{ savePending }}" hint-placeholder-val="{{ false }}">
+                    <div aria-live="polite" style="font-size: 13px; color: rgba(255,255,255,.62)">Salvando uma cópia segura…</div>
+                  </sc-if>
+                  <sc-if value="{{ saveSaved }}" hint-placeholder-val="{{ false }}">
+                    <div aria-live="polite" style="background: rgba(101,117,66,.22); border-left: 3px solid #A8B47F; padding: 12px 14px; font-size: 13px; line-height: 1.6">
+                      Resultado salvo automaticamente. Se o PDF falhar, envie este código pelo WhatsApp:<br>
+                      <strong style="font-family: 'Oswald', sans-serif; font-size: 18px; letter-spacing: .08em">{{ saveCode }}</strong>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ saveFailed }}" hint-placeholder-val="{{ false }}">
+                    <div aria-live="polite" style="font-size: 13px; color: #F0B39A; line-height: 1.6">
+                      Não foi possível salvar automaticamente.
+                      <button data-h="quiet" sc-camel-on-click="{{ retrySave }}" style="background: none; border: none; color: #FFFFFF; text-decoration: underline; cursor: pointer; font: inherit; padding: 8px">Tentar novamente</button>
+                    </div>
+                  </sc-if>
                   <div style="display: flex; flex-direction: column; gap: 8px">
                     <button data-h="ghost" sc-camel-on-click="{{ downloadPDF }}" disabled="{{ factorsLoading }}"
                       style="{{ pdfBtnStyle }}">{{
@@ -660,7 +678,7 @@ class Component extends DCLogic {
   state = {
     screen: 'intro', name: '', sport: '', sportLabel: '', level: '', goal: '',
     sportOpen: false, setupError: false, missing: [], tick: 0, result: null, animate: false, pdfBusy: false,
-    factorsLoading: false, resultOpen: false,
+    factorsLoading: false, resultOpen: false, saveStatus: 'idle', saveCode: '',
   };
 
   toggleResult() {
@@ -669,7 +687,7 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.unmounted = false;
-    Promise.all([import('./quiz-flow.js'), import(window.__resources ? window.__resources.quizEngine : './quiz-engine.js')]).then(([flow, mod]) => {
+    Promise.all([import('./quiz-flow.js?v=2'), import(window.__resources ? window.__resources.quizEngine : './quiz-engine.js?v=3')]).then(([flow, mod]) => {
       if (this.unmounted) return;
       this.engine = mod.createEngine();
       this.SPORTS = flow.SPORTS; this.OTHERS = flow.OTHER_SPORTS; this.LEVELS = flow.LEVELS; this.GOALS = flow.GOALS;
@@ -798,7 +816,7 @@ class Component extends DCLogic {
       profName: r ? r.prof.name : '',
       profSubtitle: r ? r.prof.subtitle : '',
       profEssence: r ? '"' + r.prof.essence + '"' : '',
-      waLink: r ? r.waLink : '#',
+      waLink: r ? r.waLink + (s.saveCode ? encodeURIComponent('\nCódigo de recuperação: ' + s.saveCode) : '') : '#',
       factorsLoading: s.factorsLoading,
       factorsReady: s.screen === 'result' && !s.factorsLoading,
       resultOpen: s.resultOpen,
@@ -814,6 +832,11 @@ class Component extends DCLogic {
       })) : [],
       pdfBtnStyle: "background: transparent; border: 1px solid rgba(255,255,255,.28); color: #FFFFFF; font-family: 'DM Sans', sans-serif; font-size: 15.5px; font-weight: 600; letter-spacing: .04em; padding: 16px 18px; min-height: 54px; transition: all .15s" + (s.factorsLoading ? '; opacity: .35; cursor: not-allowed; pointer-events: none; filter: grayscale(1)' : '; cursor: pointer'),
       pdfLabel: s.pdfBusy ? '⏳ Gerando PDF…' : '⤓ Baixar PDF do resultado',
+      savePending: s.saveStatus === 'saving',
+      saveSaved: s.saveStatus === 'saved',
+      saveFailed: s.saveStatus === 'failed',
+      saveCode: s.saveCode,
+      retrySave: () => this.flow && this.flow.retrySave(),
       downloadPDF: () => {
         if (s.factorsLoading) return;
         if (this.flow) this.flow.trackPdf();

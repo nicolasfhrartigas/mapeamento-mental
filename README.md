@@ -62,9 +62,32 @@ Eventos disponíveis para análise de funil:
 | `quiz-reiniciado` | reinício após o resultado |
 | `quiz-abandonado` | retorno da primeira pergunta para o setup |
 
-Nenhum nome, resposta, escolha de perfil ou perfil psicológico resultante é
-enviado. Os eventos registram somente etapas da interface, campos interagidos,
-número da pergunta e a variante web/mobile.
+O **Umami** não recebe nome, respostas, escolha de perfil ou perfil psicológico
+resultante. Os eventos registram somente etapas da interface, campos interagidos,
+número da pergunta e a variante web/mobile. O salvamento do resultado descrito
+abaixo é separado do analytics.
+
+## Salvamento e recuperação dos resultados
+
+Ao chegar ao resultado, o navegador envia automaticamente o retrato completo em
+JSON para um Cloudflare Worker. O Worker grava no banco D1
+`mapeamento-mental-results` e devolve um código de recuperação exibido na tela.
+Se a conexão cair, o envio permanece pendente no `localStorage` e é tentado
+novamente no próximo acesso.
+
+Não existe rota pública de leitura. Para localizar um resultado, abra o banco no
+painel da Cloudflare (**Workers & Pages → D1 → mapeamento-mental-results →
+Console**) e execute, substituindo o código:
+
+```sql
+SELECT recovery_code, created_at, athlete_name, sport, payload
+FROM submissions
+WHERE recovery_code = 'ABCD-1234-EF56-7890';
+```
+
+O campo `payload` contém tudo que um gerador posterior precisa para reconstruir
+o PDF. Antes de divulgar o formulário, ainda deve ser definida uma política de
+retenção e exclusão desses dados pessoais.
 
 ## Como o resultado é calculado
 
