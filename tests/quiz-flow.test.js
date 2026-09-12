@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { createEngine } from '../src/quiz-engine.js';
-import { SPORTS, createQuizFlow } from '../src/quiz-flow.js';
+import { SPORTS, createQuizFlow, retryPendingResults, saveResult } from '../src/quiz-flow.js';
 
 function harness(options = {}) {
   let state = { screen: 'setup', name: '', sport: '', sportLabel: '', level: '', goal: '', sportOpen: false, missing: [], tick: 0 };
@@ -12,6 +12,8 @@ function harness(options = {}) {
     engine: createEngine(), getState: () => state,
     setState: patch => { patches.push(patch); state = { ...state, ...patch }; },
     top: () => { topCalls += 1; }, scrollToRef: () => {},
+    storeResult: async () => 'TEST-0000-0000-0000',
+    retryStoredResults: async () => {},
     ...options,
   });
   return { flow, state: () => state, patches, topCalls: () => topCalls };
@@ -27,6 +29,34 @@ test('valida setup, seleciona modalidade e inicia o questionário', () => {
   app.state().name = 'Ana';
   assert.equal(app.flow.start(), true);
   assert.equal(app.state().screen, 'question');
+});
+
+test('mantém resultado pendente no navegador e o reenvia com o mesmo id', async () => {
+  const values = new Map();
+  const storage = {
+    getItem: key => values.get(key) || null,
+    setItem: (key, value) => values.set(key, value),
+  };
+  const createId = () => '123e4567-e89b-42d3-a456-426614174000';
+  await assert.rejects(saveResult({ schemaVersion: 1 }, {
+    storage,
+    createId,
+    fetchImpl: async () => ({ ok: false }),
+  }));
+
+  const queued = JSON.parse(values.get('mapeamento-mental:pending-results'));
+  assert.equal(queued[0].submissionId, createId());
+
+  let resent;
+  await retryPendingResults({
+    storage,
+    fetchImpl: async (_, options) => {
+      resent = JSON.parse(options.body);
+      return { ok: true, json: async () => ({ recoveryCode: 'ABCD-1234-EF56-7890' }) };
+    },
+  });
+  assert.equal(resent.submissionId, createId());
+  assert.deepEqual(JSON.parse(values.get('mapeamento-mental:pending-results')), []);
 });
 
 test('fecha Outros esportes ao clicar fora e remove o listener', () => {
@@ -47,7 +77,7 @@ test('fecha Outros esportes ao clicar fora e remove o listener', () => {
   globalThis.document = originalDocument;
 });
 
-test('controla responder, voltar e reiniciar a jornada compartilhada', () => {
+test('controla responder, salvar, voltar e reiniciar a jornada compartilhada', async () => {
   const app = harness();
   app.state().name = 'Ana';
   app.flow.pick('sport', SPORTS[0]);
@@ -59,7 +89,10 @@ test('controla responder, voltar e reiniciar a jornada compartilhada', () => {
   assert.equal(app.flow.back(), true);
   app.flow.answer(1);
   while (app.state().screen !== 'result') app.flow.answer(0);
+  await Promise.resolve();
   assert.equal(app.state().result.dims.length, 6);
+  assert.equal(app.state().saveStatus, 'saved');
+  assert.equal(app.state().saveCode, 'TEST-0000-0000-0000');
   app.flow.restart();
   assert.equal(app.state().screen, 'intro');
   assert.equal(app.state().result, null);

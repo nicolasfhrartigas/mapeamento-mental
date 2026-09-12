@@ -422,6 +422,7 @@ export function createEngine() {
       const contextual = contextualReading();
       const slug = (profile.name || 'atleta').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'atleta';
       return {
+        schemaVersion: 1,
         prof,
         profileFields: PDF_PROFILE_FIELDS[prof?.name] || prof,
         athleteName: capitalizeFirstLetter(profile.name) || 'Atleta',
@@ -514,6 +515,6 @@ export function createEngine() {
     getCurrent: () => current,
     getQuestion: () => ACTIVE[current],
     getTotal: () => ACTIVE.length,
-    start, select, back, result, downloadPDF, resetState,
+    start, select, back, result, getReportData: buildReportData, downloadPDF, resetState,
   };
 }

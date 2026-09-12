@@ -7,6 +7,63 @@
 
 import { track } from './analytics.js';
 
+const SUBMISSIONS_URL = 'https://mapeamento-mental-results.mapeamento-mental-psi.workers.dev/submissions';
+const PENDING_KEY = 'mapeamento-mental:pending-results';
+
+function browserStorage() {
+  return typeof localStorage === 'undefined' ? null : localStorage;
+}
+
+function readPending(storage) {
+  try {
+    const value = JSON.parse(storage?.getItem(PENDING_KEY) || '[]');
+    return Array.isArray(value) ? value : [];
+  } catch { return []; }
+}
+
+function newSubmissionId() {
+  if (crypto.randomUUID) return crypto.randomUUID();
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  bytes[6] = (bytes[6] & 0x0f) | 0x40;
+  bytes[8] = (bytes[8] & 0x3f) | 0x80;
+  const hex = [...bytes].map(value => value.toString(16).padStart(2, '0')).join('');
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`;
+}
+
+async function sendPending(record, fetchImpl) {
+  const response = await fetchImpl(SUBMISSIONS_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(record),
+  });
+  if (!response.ok) throw new Error('Não foi possível salvar o resultado.');
+  const data = await response.json();
+  if (typeof data.recoveryCode !== 'string') throw new Error('Código de recuperação ausente.');
+  return data.recoveryCode;
+}
+
+export async function saveResult(payload, {
+  storage = browserStorage(), fetchImpl = globalThis.fetch, createId = newSubmissionId,
+} = {}) {
+  const record = { submissionId: createId(), payload };
+  const pending = [...readPending(storage), record];
+  try { storage?.setItem(PENDING_KEY, JSON.stringify(pending)); } catch {}
+  const recoveryCode = await sendPending(record, fetchImpl);
+  try {
+    storage?.setItem(PENDING_KEY, JSON.stringify(readPending(storage).filter(item => item.submissionId !== record.submissionId)));
+  } catch {}
+  return recoveryCode;
+}
+
+export async function retryPendingResults({ storage = browserStorage(), fetchImpl = globalThis.fetch } = {}) {
+  for (const record of readPending(storage)) {
+    await sendPending(record, fetchImpl);
+    try {
+      storage?.setItem(PENDING_KEY, JSON.stringify(readPending(storage).filter(item => item.submissionId !== record.submissionId)));
+    } catch {}
+  }
+}
+
 export const SPORTS = [
   { value: 'fisiculturismo', label: '🏋️ Fisiculturismo' },
   { value: 'futebol', label: '⚽ Futebol' },
@@ -40,7 +97,7 @@ export const GOALS = [
 const EMPTY_JOURNEY = {
   screen: 'intro', name: '', sport: '', sportLabel: '', level: '', goal: '',
   sportOpen: false, setupError: false, missing: [], result: null, animate: false,
-  pdfBusy: false, factorsLoading: false, resultOpen: false,
+  pdfBusy: false, factorsLoading: false, resultOpen: false, saveStatus: 'idle', saveCode: '',
 };
 
 export function createQuizFlow({
@@ -52,6 +109,8 @@ export function createQuizFlow({
   onAnswer,
   scrollOnQuestionChange = false,
   trackEvent = track,
+  storeResult = saveResult,
+  retryStoredResults = retryPendingResults,
 }) {
   let outsideTarget = null;
   let outsideHandler = null;
@@ -67,6 +126,22 @@ export function createQuizFlow({
   // Perguntas já contabilizadas nesta rodada. Sem isso, voltar e responder de
   // novo inflaria o funil e faria a etapa parecer ter mais gente que a anterior.
   let answered = new Set();
+  let journey = 0;
+
+  retryStoredResults().catch(() => {});
+
+  const persistCurrentResult = () => {
+    const currentJourney = journey;
+    setState({ saveStatus: 'saving', saveCode: '' });
+    return storeResult(engine.getReportData()).then(recoveryCode => {
+      if (journey === currentJourney && currentState().screen === 'result') {
+        setState({ saveStatus: 'saved', saveCode: recoveryCode });
+      }
+      return recoveryCode;
+    }).catch(() => {
+      if (journey === currentJourney && currentState().screen === 'result') setState({ saveStatus: 'failed' });
+    });
+  };
 
   return {
     clearMissing,
@@ -104,6 +179,7 @@ export function createQuizFlow({
       }
       engine.setProfileField('name', state.name.trim());
       engine.start();
+      journey += 1;
       answered = new Set();
       setState({ setupError: false, missing: [], screen: 'question', tick: state.tick + 1 });
       trackEvent('quiz-iniciado');
@@ -122,8 +198,9 @@ export function createQuizFlow({
       }
       if (done) {
         const result = engine.result();
-        setState({ screen: 'result', result, animate: false, factorsLoading: true, resultOpen: false });
+        setState({ screen: 'result', result, animate: false, factorsLoading: true, resultOpen: false, saveStatus: 'saving', saveCode: '' });
         trackEvent('quiz-concluido');
+        persistCurrentResult();
       } else {
         setState({ tick: currentState().tick + 1 });
       }
@@ -145,6 +222,7 @@ export function createQuizFlow({
     },
     restart() {
       trackEvent('quiz-reiniciado');
+      journey += 1;
       engine.resetState();
       answered = new Set();
       setState({ ...EMPTY_JOURNEY });
@@ -152,6 +230,9 @@ export function createQuizFlow({
     },
     toggleOther() {
       setState({ sportOpen: !currentState().sportOpen });
+    },
+    retrySave() {
+      return persistCurrentResult();
     },
     attachOutsideClick(target) {
       outsideTarget = target;
